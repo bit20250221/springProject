@@ -1,0 +1,21 @@
+# ?? ?? ??
+server:
+    port: 8080
+
+# database ?? ??
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/db_springProject?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+        username: user_springProject
+        password: 1234
+    thymeleaf:
+        cache: false
+
+# spring data jpa ??
+    jpa:
+        database-platform: org.hibernate.dialect.MySQL8Dialect
+        open-in-view: false
+        show-sql: true
+        hibernate:
+            ddl-auto: create
