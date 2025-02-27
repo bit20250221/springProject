@@ -9,5 +9,5 @@ public class AttractionApplication {
     public static void main(String[] args) {
         SpringApplication.run(AttractionApplication.class, args);
     }
-
+    // 메인 테스트
 }
