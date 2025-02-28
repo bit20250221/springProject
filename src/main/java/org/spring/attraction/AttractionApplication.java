@@ -8,6 +8,5 @@ public class AttractionApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AttractionApplication.class, args);
-        //되돌리기 테스트
     }
 }
