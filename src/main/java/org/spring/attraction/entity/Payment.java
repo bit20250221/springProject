@@ -17,7 +17,7 @@ public class Payment {
     private Long id;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdate;
+    private LocalDateTime createDate;
 
     @ManyToOne
     @JoinColumn(name="paymentTypeId", nullable = false)
