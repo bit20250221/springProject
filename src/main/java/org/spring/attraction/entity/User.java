@@ -23,13 +23,13 @@ public class User {
     private Long id;
 
     @Column(length = 45, nullable = false, unique = true, insertable = false, updatable = false)
-    private String user_login_Id;
+    private String userLoginId;
 
     @Column(length = 45, nullable = false)
     private String pass;
 
     @Column(nullable = false)
-    private Date birthdate;
+    private Date birthDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

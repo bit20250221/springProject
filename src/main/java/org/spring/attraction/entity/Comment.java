@@ -17,13 +17,13 @@ public class Comment {
     private Long id;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdate;
+    private LocalDateTime createDate;
 
     @Column(length = 300, nullable = false)
     private String content;
 
     @Column(updatable = true)
-    private LocalDateTime updatedate;
+    private LocalDateTime updateDate;
 
     @ManyToOne
     @JoinColumn(name="userId", nullable = false)
