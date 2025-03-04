@@ -9,12 +9,14 @@ import org.spring.attraction.entity.Board;
 import org.spring.attraction.entity.Comment;
 import org.spring.attraction.entity.User;
 import org.spring.attraction.repository.Board_repository;
+import org.spring.attraction.repository.User_repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -27,6 +29,9 @@ public class Board_service {
     @Autowired
     public Board_repository repository;
 
+    @Autowired
+    User_repository userRepository;
+
     //게시글 한개 읽기, 댓글은 따로 처리
     public Board_dto getBoard(Long Board_id){
         Optional<Board> board=repository.findById(Board_id);
@@ -38,7 +43,7 @@ public class Board_service {
             if(exboard.getAttraction()!=null) {
                 attraction_id = exboard.getAttraction().getId();
             }
-            boardDto=Board_dto.to_dto(exboard,user_id,attraction_id);
+            boardDto=Board_dto.to_dto_2(exboard,user_id,attraction_id);
         }else{
             boardDto=null;
         }
@@ -46,6 +51,7 @@ public class Board_service {
     }
 
     //게시글 전체 리스트 읽어오기(게시글 아이디, 게시글)
+    @Transactional
     public HashMap<Long,Board_dto> getBoardList(){
         List<Board> boards=repository.findAll();
         HashMap<Long,Board_dto> dtoMap=new HashMap<>();
@@ -57,7 +63,7 @@ public class Board_service {
                 if(entity.getAttraction()!=null) {
                     attraction_id = entity.getAttraction().getId();
                 }
-                Board_dto dto=Board_dto.to_dto(entity,user_id,attraction_id);
+                Board_dto dto=Board_dto.to_dto_2(entity,user_id,attraction_id);
                 dtoMap.put(entity.getId(),dto);
             }
 
@@ -73,22 +79,22 @@ public class Board_service {
         HashMap<Long,Board_dto> dtoMap =new HashMap<>();
         switch (type){
             case "title":
-                boards=repository.boardTitleSearch(tab,keyword);
+                boards=repository.boardTitleSearch(Tab.valueOf(tab),keyword);
                 break;
             case "content":
-                boards=repository.boardContentSearch(tab,keyword);
+                boards=repository.boardContentSearch(Tab.valueOf(tab),keyword);
                 break;
             case "writer":
-                boards=repository.boardWriterSearch(tab,keyword);
+                boards=repository.boardWriterSearch(Tab.valueOf(tab),keyword);
                 break;
         }
         if(!boards.isEmpty()){
             for(Board entity:boards){
                 if(entity.getAttraction()!=null) {
-                    Board_dto dto = Board_dto.to_dto(entity, entity.getUser().getId(), entity.getAttraction().getId());
+                    Board_dto dto = Board_dto.to_dto_2(entity, entity.getUser().getId(), entity.getAttraction().getId());
                     dtoMap.put(entity.getId(), dto);
                 }else{
-                    Board_dto dto=Board_dto.to_dto(entity,entity.getUser().getId(),null);
+                    Board_dto dto=Board_dto.to_dto_2(entity,entity.getUser().getId(),null);
                     dtoMap.put(entity.getId(), dto);
                 }
             }
@@ -99,18 +105,19 @@ public class Board_service {
     }
 
     //게시판 검색(페이징 처리 포함)
+    @Transactional
     public Page<Board_dto> getSearchPageBoard(String tab,  String type, String keyword, int pageNum, int pageAmount){
         List<Sort.Order> sorts=new ArrayList<>();
-        sorts.add(Sort.Order.asc("id"));
+        sorts.add(Sort.Order.desc("id"));
         Pageable pageable= PageRequest.of(pageNum,pageAmount,Sort.by(sorts));
 
         Page<Board> entityPage;
         if(!tab.isEmpty() && !type.isEmpty() && !keyword.isEmpty()) {
             //탭과 타입, 키워드 셋 다 존재
             entityPage = switch (type) {
-                case "title" -> repository.boardTitleSearch(tab, keyword, pageable);
-                case "content" -> repository.boardContentSearch(tab, keyword, pageable);
-                case "writer" -> repository.boardWriterSearch(tab, keyword, pageable);
+                case "title" -> repository.boardTitleSearch(Tab.valueOf(tab), keyword, pageable);
+                case "content" -> repository.boardContentSearch(Tab.valueOf(tab), keyword, pageable);
+                case "writer" -> repository.boardWriterSearch(Tab.valueOf(tab), keyword, pageable);
                 default -> null;
             };
         }else if(tab.isEmpty() && !type.isEmpty() && !keyword.isEmpty()){
@@ -123,11 +130,11 @@ public class Board_service {
             };
         }else if(!tab.isEmpty() && type.isEmpty() && !keyword.isEmpty()){
             //탭, 키워드만 존재
-            entityPage=repository.findByTabSearch(tab, keyword, pageable);
+            entityPage=repository.findByTabSearch(Tab.valueOf(tab), keyword, pageable);
         }
         else if(!tab.isEmpty() && type.isEmpty() && keyword.isEmpty()){
             //탭만 존재
-            entityPage=repository.findByTab(tab,pageable);
+            entityPage=repository.findByTab(Tab.valueOf(tab),pageable);
         }else if(tab.isEmpty() && type.isEmpty() && !keyword.isEmpty()){
             //키워드만 존재
             entityPage=repository.findByAllKeyword(keyword,pageable);
@@ -137,22 +144,31 @@ public class Board_service {
             entityPage=repository.findAll(pageable);
         }
         return Objects.requireNonNull(entityPage).map(
-                entity-> Board_dto.to_dto(
+                entity-> Board_dto.to_dto_2(
                         entity,
                         entity.getUser().getId(),
-                        entity.getAttraction() != null ? entity.getAttraction().getId() : null));
+                        entity.getAttraction() != null ? entity.getAttraction().getId() : null)
+            );
     }
 
     /*
     게시글 쓰기(유저의 아이디, 관광지 아이디 포함), 초기 게시글 생성시 댓글 0개
     나중에 유저 DTO, 관광지 DTO 인수로 받아야한다.
     */
+    @Transactional
     public boolean writeBoard(Board_dto write){
 
         //나중에 따로 수정
-        User user=new User();
+        //User user=new User();
+        Optional<User> optionalUser=userRepository.findById(write.getUser_id());
+        User user;
+        if(optionalUser.isPresent()) {
+            user = optionalUser.get();
+        }else{
+            return false;
+        }
         Board entity;
-
+        write.setCreartedate(LocalDateTime.now());
         if(write.getAttraction_id()!=null) {
             //나중에 따로 수정
             Attraction attraction=new Attraction();
@@ -217,7 +233,7 @@ public class Board_service {
     //Board_dto를 받아서 엔티티로 변환시키는 메소드(단순 변환)
     public static Board toEntity(Board_dto dto, User user, Attraction attraction, List<Comment> comments){
         Board entity=new Board();
-        if(dto.getBoard_id()>0){
+        if(dto.getBoard_id()!=null){
             entity.setId(dto.getBoard_id());
         }
         entity.setTitle(dto.getTitle());
@@ -225,7 +241,9 @@ public class Board_service {
         entity.setCreateDate(dto.getCreartedate());
         entity.setUpdateDate(dto.getUpdatedate());
         entity.setTab(Tab.valueOf(dto.getTab()));
-        entity.setRate(dto.getRate());
+        if(dto.getRate()!=null) {
+            entity.setRate(dto.getRate());
+        }
         entity.setUser(user);
         entity.setAttraction(attraction);
         entity.setComments(comments);

@@ -19,7 +19,7 @@ public class Board_controller {
     private final Board_service boardService;
     private final Comment_service commentService;
 
-    //검색, 페이징 기능 포함
+    //검색, 페이징 기능 포함, 탭에 따라 ui 변경
     @GetMapping("/list")
     public String list(Model model,
                        @RequestParam(name = "pageAmount",defaultValue = "10") int pageAmount,
@@ -30,22 +30,29 @@ public class Board_controller {
     {
         Page<Board_dto> boardPageList=boardService.getSearchPageBoard(tab,type,Keyword,page,pageAmount);
         Integer boardSize=boardPageList.getSize();
+
+
         if(!boardPageList.isEmpty()) {
             model.addAttribute("result","NORMAL");
+            model.addAttribute("pageNum",page);
+            model.addAttribute("pageAmount",pageAmount);
             model.addAttribute("boardList", boardPageList);
+            model.addAttribute("boardContent",boardPageList.getContent());
             model.addAttribute("boardSize", boardSize);
         }else{
             model.addAttribute("result","NONE");
         }
-        return "board_list";
+        model.addAttribute("tab",tab);
+        return "boardList";
     }
 
     /*
     사용자와 탭, 글 작성자에 따라서 비공개 처리 로직이 있어야한다.(아직 미포함)
-    탭(리뷰, 문의, 신고, 일반, 공지)에 따라 화면에 다르게 표현해야한다.
+    탭(리뷰, 문의, 신고, 일반, 공지)에 따라 화면에 다르게 표현해야한다.)
     댓글 추가 로직 필요
     Principal 활용해서 사용자 아이디 가져온다.
     */
+
     @GetMapping("/getBoard/{id}")
     public String getBoard(Model model,
                            @PathVariable("id") Long id){
@@ -69,13 +76,14 @@ public class Board_controller {
 
     //나중에 Spring Security 활용해서 권한 관련 기능 추가
     /*
-    로그인된 사용자, 탭(리뷰, 문의, 신고, 일반, 공지)에 따라서 작성 제한 필요(입력 폼에 들어가는 것 제한),
-    탭(리뷰, 문의)에 따라서 글 작성 폼 차별화 필요,
+    로그인된 사용자, 탭(리뷰, 문의, 신고, 일반, 공지)에 따라서 작성 제한 필요(탭 고르는 것을 제한),
+    탭에 따라 글 작성 폼 UI 변화
     관광지 관리자로 접속하면 리뷰 상에서 별점 부여, 관광지 선택 제한 필요
     */
     @GetMapping("/insertBoard")
-    public String InsertBoardView(Model model,String tab){
-        //탭과 사용자에 따라 다르게 적용
+    public String InsertBoardView(Model model, Board_dto boardDto, String tab){
+
+        //탭과 사용자에 따라 다르게 적용(사용자의 권한 여부를 확인하는 로직 필요)
         if((tab.compareTo("문의")==0||tab.compareTo("신고")==0)){
             model.addAttribute("authority","권한이 없습니다");
             log.info("권한 부족!!!");
@@ -83,7 +91,16 @@ public class Board_controller {
         }else{
             log.info("게시글 작성 화면 출력!!!");
             model.addAttribute("tab",tab);
-            return "insertBoard";
+            //아래 두줄은 나중에 수정(로그인 기능에 따라서)
+            model.addAttribute("writer","testuser");
+            model.addAttribute("user_id",1L);
+            switch (tab){
+                case "일반", "공지", "신고","리뷰", "문의":
+                    return "insertBoardForm";
+                default:
+                    return "error";
+
+            }
         }
     }
 

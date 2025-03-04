@@ -3,6 +3,7 @@ package org.spring.attraction.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 import org.spring.attraction.ENUM.Tab;
 
 import java.time.LocalDateTime;
@@ -47,4 +48,10 @@ public class Board {
 
     @OneToMany(mappedBy = "board")
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "board")
+    private List<BoardImage> boardImages;
+
+    @Formula("(select count(*) from comment c where c.board_id = board_id)")
+    private int commentCount;
 }
