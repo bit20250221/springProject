@@ -11,6 +11,9 @@ spring:
         password: 1234
     thymeleaf:
         cache: false
+        prefix: classpath:/template/
+        suffix: .html
+
 
 # spring data jpa ??
     jpa:
