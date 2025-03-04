@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>전체 게시판</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/board.css}">
+</head>
+<body>
+
+<table class="board_all">
+    <thead>
+        <tr class="board_column">
+            <th>게시글 번호</th>
+            <th>게시글 탭</th>
+            <th>게시글 제목</th>
+            <th>관광지의 이름</th>
+            <th>별점</th>
+            <th>회원의 아이디</th>
+            <th>댓글 수</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <div th:if="${boardList != null}">
+        <tr class="board_element" th:each="board, loop : ${boardList}">
+            <td th:text="${board.board_id}"></td>
+            <td th:text="${board.tab}"></td>
+            <td th:text="${board.title}"></td>
+            <td th:text="${board.attraction_Name}"></td>
+            <td th:text="${board.rate}"></td>
+            <td th:text="${board.user_login_Id}"></td>
+            <td th:text="${board.comment_Num}"></td>
+        </tr>
+        </div>
+
+        <div th:if="${boardList == null}">
+        <tr class="board_nothing">
+            <h2>게시글이 존재하지 않습니다.</h2>
+        </tr>
+        </div>
+
+    </tbody>
+</table>
+<div class="page_list" th:if="${!boardList.isEmpty()}">
+    <ul class="pagenation">
+        <li th:if="${boardList.hasPrevious()}">
+            <a th:href="@{/board/list(page=${boardList.number - 1}, pageAmount=${pageAmount}, type=${param.type}, tab=${param.tab}, Keyword=${param.Keyword})}">이전</a>
+        </li>
+        <li th:each="i : ${#numbers.sequence(0, boardList.totalPages - 1)}"
+            th:if="${ i >= boardList.number - 5 and i <= boardList.number + 5}"
+            th:classappend="${i == boardList.number} ? 'active'">
+            <a th:href="@{/board/list(page=${i}, pageAmount=${pageAmount}, type=${param.type}, tab=${param.tab}, Keyword=${param.Keyword})}"
+               th:text="${i + 1}">1</a>
+        </li>
+        <li th:if="${boardList.hasNext()}">
+            <a th:href="@{/board/list(page=${boardList.number + 1}, pageAmount=${pageAmount}, type=${param.type}, tab=${param.tab}, Keyword=${param.Keyword})}">다음</a>
+        </li>
+    </ul>
+</div>
+<div>
+<div class="search_box">
+    <input class="search_keyword" type="text">
+    <button>찾기</button>
+</div>
+
+    <select class="write_type">
+        <option value="일반">일반</option>
+        <option value="리뷰">리뷰</option>
+        <option value="문의">문의</option>
+        <option value="신고">신고</option>
+
+        <option value="공지">공지</option>
+
+    </select>
+<button id="write_btn" onclick="writeForm()">글쓰기</button>
+</div>
+<script>
+    function writeForm(){
+        var tabvalue = document.querySelector('.write_type').value;
+        window.location.href="/board/insertBoard?tab="+tabvalue;
+    }
+</script>
+
+</body>
+</html>
