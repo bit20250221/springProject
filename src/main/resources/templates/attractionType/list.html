@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>관광지 구분 리스트</title>
+    <script src="/js/alert.js"></script>
+    <script src="/js/attractionType.js"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h2>관광지 구분 리스트</h2>
+<table>
+    <tr>
+        <th>id</th>
+        <th>구분</th>
+        <th>삭제</th>
+    </tr>
+    <tr th:each="attractionTypeDto, index: ${attractionTypeDtoList}">
+        <td th:text="${attractionTypeDto.getId()}"></td>
+        <td th:text="${attractionTypeDto.getType()}"></td>
+        <td><button th:onclick="|attractionTypeDeleteLink(${attractionTypeDto.getId()})|">삭제</button></td>
+    </tr>
+</table>
+<button onclick="attractionTypeSaveLink()">관광지 구분 등록</button>
+
+<script th:inline="javascript">
+    alertMessage([[${message}]])
+</script>
+</body>
+</html>

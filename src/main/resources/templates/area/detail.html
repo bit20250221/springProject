@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>지역 상세</title>
+    <script src="/js/alert.js"></script>
+    <script src="/js/area.js"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h2>지역 상세 페이지</h2>
+<form action="#">
+    <label for="id">아이디</label><input th:value="${areaDto.getId()}" type="text" id="id" name="id" readonly><br/>
+    <label for="country">도시</label><input th:value="${areaDto.getCountry()}" type="text" id="country" name="country" readonly><br/>
+    <label for="city">지역</label><input th:value="${areaDto.getCity()}" type="text" id="city" name="city" readonly><br/>
+</form>
+<button th:onclick="|areaListLink(${areaDto.getId()})|">지역 리스트 페이지</button>
+</body>
+</html>

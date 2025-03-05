@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>관광지 리스트</title>
+    <script src="/js/alert.js"></script>
+    <script src="/js/attraction.js"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h2>관광지 리스트</h2>
+<table>
+    <tr>
+        <th>id</th>
+        <th>이름</th>
+        <th>평점</th>
+        <th>가격</th>
+        <th>여는시간</th>
+        <th>닫는시간</th>
+        <th>구분</th>
+        <th>지역</th>
+        <th>상세</th>
+        <th>수정</th>
+    </tr>
+    <tr th:each="attractionDto, index: ${attractionDtoList}">
+        <td th:text="${attractionDto.getId()}"></td>
+        <td th:text="${attractionDto.getName()}"></td>
+        <td th:text="${attractionDto.getAvgrate()}"></td>
+        <td th:text="${attractionDto.getPrice()}"></td>
+        <td th:text="${attractionDto.getOpenTime()}"></td>
+        <td th:text="${attractionDto.getCloseTime()}"></td>
+        <td th:text="${attractionDto.getAttractionTypeDtoList()}"></td>
+        <td th:text="${attractionDto.getArea()}"></td>
+        <td><button th:onclick="|attractionDetailLink(${attractionDto.getId()})|">상세</button></td>
+        <td><button th:onclick="|attractionUpdateLink(${attractionDto.getId()})|">수정</button></td>
+    </tr>
+</table>
+<button onclick="attractionSaveLink()">관광지 등록</button>
+
+<script th:inline="javascript">
+    alertMessage([[${message}]])
+</script>
+</body>
+</html>

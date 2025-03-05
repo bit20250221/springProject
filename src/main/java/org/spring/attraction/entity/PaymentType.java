@@ -22,6 +22,6 @@ public class PaymentType {
     @Column(nullable = false)
     private PayType type;
 
-    @OneToMany(mappedBy = "paymentType")
+    @OneToMany(mappedBy = "paymentType", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Payment> payments;
 }

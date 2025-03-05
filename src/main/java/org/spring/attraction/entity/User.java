@@ -22,7 +22,7 @@ public class User {
     @Column(name = "userId")
     private Long id;
 
-    @Column(length = 45, nullable = false, unique = true, insertable = false, updatable = false)
+    @Column(name = "user_login_Id", length = 45, nullable = false, unique = true, insertable = false, updatable = false)
     private String user_login_Id;
 
     @Column(length = 45, nullable = false)
@@ -46,7 +46,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Comment> comments;
 
-    @OneToMany(mappedBy =  "user")
+    @OneToMany(mappedBy =  "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Reservation> reservations;
 
     @OneToOne

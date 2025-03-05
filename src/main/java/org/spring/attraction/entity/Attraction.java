@@ -4,8 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-
+import org.spring.attraction.dto.AttractionDto;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -43,15 +44,29 @@ public class Attraction{
     @JoinColumn(name = "areaId", nullable = false)
     private Area area;
 
-    @OneToMany(mappedBy = "attraction")
-    private Set<AttractionTypeList> attractionsTypeLists;
+    @OneToMany(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AttractionTypeList> attractionsTypeLists = new HashSet<>();
 
     @OneToMany(mappedBy = "attraction")
-    private Set<Board> Boards;
+    private Set<Board> Boards = new HashSet<>();
 
     @OneToOne(mappedBy = "attraction")
     private User user;
 
-    @OneToMany(mappedBy = "attraction")
-    private Set<Reservation> reservations;
+    @OneToMany(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Reservation> reservations = new HashSet<>();
+
+
+    public static Attraction toAttractionEntity(AttractionDto attractionDto) {
+        Attraction attraction = new Attraction();
+        attraction.setId(attractionDto.getId());
+        attraction.setName(attractionDto.getName());
+        attraction.setAvgrate(attractionDto.getAvgrate());
+        attraction.setPrice(attractionDto.getPrice());
+        attraction.setExplanation(attractionDto.getExplanation());
+
+        return attraction;
+    }
+
+
 }
