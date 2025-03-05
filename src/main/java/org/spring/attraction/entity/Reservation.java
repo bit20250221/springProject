@@ -25,7 +25,7 @@ public class Reservation {
     @Column(nullable = false)
     private int peplenum;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private LocalDateTime reservedate;
 
     @ManyToOne

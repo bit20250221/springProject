@@ -97,7 +97,6 @@ public class AttractionService {
     public AttractionDto findById(Long id) {
         Optional<Attraction> attraction = attractionRepository.findById(id);
         if(attraction.isPresent()) {
-            System.out.println(attraction.get().getOpentime());
             AttractionDto attractionDto = AttractionDto.toDto(attraction.get());
             attractionDto.setOpenTime(attractionDto.getOpenTime().substring(Math.max(0, attractionDto.getOpenTime().length() - 5)));
             attractionDto.setCloseTime(attractionDto.getCloseTime().substring(Math.max(0, attractionDto.getCloseTime().length() - 5)));
@@ -109,7 +108,6 @@ public class AttractionService {
     @Transactional
     public boolean update(AttractionDto attractionDto) {
         try{
-            System.out.println("attractionDto" + attractionDto.getId());
             Attraction attraction = attractionRepository.findById(attractionDto.getId()).orElse(null);
             if(attraction != null) {
                 attraction.setName(attractionDto.getName());
@@ -128,7 +126,6 @@ public class AttractionService {
                 return false;
             }
             for(Long id : attractionDto.getAttractionTypeDtoIdList()) {
-                System.out.println(id);
                 AttractionType attractionType = attractionTypeRepository.findById(id).orElse(null);
                 if(attractionType != null) {
                     AttractionTypeList attractionTypeList = attractionTypeListRepository.findByAttractionIdAndAttractionTypeId(attraction.getId(), attractionType.getId());

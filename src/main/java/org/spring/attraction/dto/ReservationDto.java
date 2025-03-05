@@ -22,7 +22,7 @@ public class ReservationDto {
     private LocalDateTime reservedate;
     private User user;
     private Attraction attraction;
-    private Set<Payment> payments;
+    private Long paymentId;
 
     public static ReservationDto toDto(Reservation reservation) {
         ReservationDto reservationDto = new ReservationDto();
@@ -32,7 +32,6 @@ public class ReservationDto {
         reservationDto.setReservedate(reservation.getReservedate());
         reservationDto.setUser(reservation.getUser());
         reservationDto.setAttraction(reservation.getAttraction());
-        reservationDto.setPayments(reservation.getPayments());
         return reservationDto;
     }
 }

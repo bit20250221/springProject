@@ -3,6 +3,7 @@ package org.spring.attraction.service;
 import lombok.RequiredArgsConstructor;
 import org.spring.attraction.dto.PaymentDto;
 import org.spring.attraction.dto.PaymentTypeDto;
+import org.spring.attraction.dto.ReservationUpdateDto;
 import org.spring.attraction.entity.Payment;
 import org.spring.attraction.entity.PaymentType;
 import org.spring.attraction.entity.Reservation;
@@ -24,7 +25,6 @@ public class PaymentService {
     public Payment save(PaymentDto paymentDto) {
         Payment payment = new Payment();
         PaymentType paymentType = paymentTypeRepository.findById(paymentDto.getPaymentTypeId()).orElse(null);
-        System.out.println(paymentDto.getReservationId());
         Reservation reservation = reservationRepository.findById(paymentDto.getReservationId()).orElse(null);
 
         if (paymentType != null && reservation != null) {
@@ -39,4 +39,28 @@ public class PaymentService {
     }
 
 
+    public PaymentDto findById(Long paymentId) {
+        Payment payment = paymentRepository.findById(paymentId).orElse(null);
+        if (payment != null) {
+            PaymentDto paymentDto = PaymentDto.toDto(payment);
+            return paymentDto;
+        }
+        return null;
+    }
+
+    public Payment update(ReservationUpdateDto reservationUpdateDto) {
+        Payment payment = paymentRepository.findByReservationId(reservationUpdateDto.getId());
+        if (payment != null) {
+            PaymentType paymentType = paymentTypeRepository.findById(reservationUpdateDto.getPaymentTypeId()).orElse(null);
+            Reservation reservation = reservationRepository.findById(reservationUpdateDto.getId()).orElse(null);
+            if (paymentType != null && reservation != null) {
+                payment.setPaymentType(paymentType);
+                payment.setReservation(reservation);
+                return paymentRepository.save(payment);
+
+            }
+            return null;
+        }
+        return null;
+    }
 }
