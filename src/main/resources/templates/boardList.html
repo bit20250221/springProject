@@ -25,7 +25,11 @@
         <tr class="board_element" th:each="board, loop : ${boardList}">
             <td th:text="${board.board_id}"></td>
             <td th:text="${board.tab}"></td>
-            <td th:text="${board.title}"></td>
+            <td>
+                <a th:href="@{/board/getBoard/{id}(id=${board.board_id})}">
+                    [[${board.title}]]
+                </a>
+            </td>
             <td th:text="${board.attraction_Name}"></td>
             <td th:text="${board.rate}"></td>
             <td th:text="${board.user_login_Id}"></td>
@@ -44,7 +48,7 @@
 <div class="page_list" th:if="${!boardList.isEmpty()}">
     <ul class="pagenation">
         <li th:if="${boardList.hasPrevious()}">
-            <a th:href="@{/board/list(page=${boardList.number - 1}, pageAmount=${pageAmount}, type=${param.type}, tab=${param.tab}, Keyword=${param.Keyword})}">이전</a>
+            <a th:href="@{/board/list(page=${boardList.number - 5}, pageAmount=${pageAmount}, type=${param.type}, tab=${param.tab}, Keyword=${param.Keyword})}">이전</a>
         </li>
         <li th:each="i : ${#numbers.sequence(0, boardList.totalPages - 1)}"
             th:if="${ i >= boardList.number - 5 and i <= boardList.number + 5}"
@@ -53,7 +57,7 @@
                th:text="${i + 1}">1</a>
         </li>
         <li th:if="${boardList.hasNext()}">
-            <a th:href="@{/board/list(page=${boardList.number + 1}, pageAmount=${pageAmount}, type=${param.type}, tab=${param.tab}, Keyword=${param.Keyword})}">다음</a>
+            <a th:href="@{/board/list(page=${boardList.number + 5}, pageAmount=${pageAmount}, type=${param.type}, tab=${param.tab}, Keyword=${param.Keyword})}">다음</a>
         </li>
     </ul>
 </div>

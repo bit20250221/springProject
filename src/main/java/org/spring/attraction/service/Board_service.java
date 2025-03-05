@@ -156,7 +156,7 @@ public class Board_service {
     나중에 유저 DTO, 관광지 DTO 인수로 받아야한다.
     */
     @Transactional
-    public boolean writeBoard(Board_dto write){
+    public Board writeBoard(Board_dto write){
 
         //나중에 따로 수정
         //User user=new User();
@@ -165,7 +165,7 @@ public class Board_service {
         if(optionalUser.isPresent()) {
             user = optionalUser.get();
         }else{
-            return false;
+            return null;
         }
         Board entity;
         write.setCreartedate(LocalDateTime.now());
@@ -179,12 +179,12 @@ public class Board_service {
         }
 
         try {
-            repository.save(entity);
-            return true;
+            Board savedEntity=repository.save(entity);
+            return savedEntity;
         }catch (Exception e){
             System.out.println("게시글 저장에 실패했습니다.");
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
 

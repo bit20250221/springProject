@@ -5,6 +5,7 @@
     <title>게시글 입력</title>
 </head>
 <body>
+<div class="normal_form" th:if="${tab =='일반'}">
     <form th:object="${boardDto}" action="/board/insertBoard" method="post">
         <input type="hidden" name="user_id" th:value="${user_id}">
         <div class="board_element">
@@ -16,7 +17,7 @@
 
         <div class="board_element">
             <label for="id_tab">게시글 탭</label>
-            <input type="hidden" name="tab" th:value="${tab}" disabled>
+            <input type="hidden" name="tab" th:value="${tab}">
             <p id="id_tab" th:text="${tab}"></p>
         </div>
         <br>
@@ -30,14 +31,211 @@
 
         <div class="board_element">
             <label for="id_writer">작성자 아이디</label>
-            <input type="hidden" name="user_login_Id" th:value="${writer}" disabled>
-            <p id="id_writer" th:text="${writer}">
+            <input type="hidden" name="user_login_Id" th:value="${writer}">
+            <p id="id_writer" th:text="${writer}"></p>
         </div>
         <br>
 
-        <input type="submit" value="게시">
+    </form>
+
+</div>
+
+<div class="review_from" th:if="${tab =='리뷰'}">
+    <form th:object="${boardDto}" action="/board/insertBoard" method="post">
+        <input type="hidden" name="user_id" th:value="${user_id}">
+        <div class="board_element">
+            <label for="review_title">게시글 제목</label>
+            <br>
+            <input type="text" id="review_title" name="title" >
+        </div>
+        <br>
+
+        <div class="board_element">
+            <label for="review_tab">게시글 탭</label>
+            <input type="hidden" name="tab" th:value="${tab}">
+            <p id="review_tab" th:text="${tab}"></p>
+        </div>
+        <br>
+
+        <div class="board_element">
+            <label for="review_content">게시글 내용</label>
+            <br>
+            <textarea id="review_content" name="content" rows="10" cols="30"></textarea>
+        </div>
+        <br>
+
+        <div class="board_element">
+            <label for="review_writer">작성자 아이디</label>
+            <input type="hidden" name="user_login_Id" th:value="${writer}">
+            <p id="review_writer" th:text="${writer}"></p>
+        </div>
+        <br>
+
+        <div class="board_element">
+            <label for="review_image">리뷰 이미지 업로드</label>
+            <input type="file" class="board_image" id="review_image" name="image">
+        </div>
+        <div class="board_image_result">
+
+        </div>
+        <br>
 
     </form>
+
+</div>
+
+<div th:if="${tab =='문의'}">
+    <form th:object="${boardDto}" action="/board/insertBoard" method="post">
+        <input type="hidden" name="user_id" th:value="${user_id}">
+        <div class="board_element">
+            <label for="inquiry_title">게시글 제목</label>
+            <br>
+            <input type="text" id="inquiry_title" name="title" >
+        </div>
+        <br>
+
+        <div class="board_element">
+            <label for="inquiry_tab">게시글 탭</label>
+            <input type="hidden" name="tab" th:value="${tab}" disabled>
+            <p id="inquiry_tab" th:text="${tab}"></p>
+        </div>
+        <br>
+
+        <div class="board_element">
+            <label for="inquiry_content">게시글 내용</label>
+            <br>
+            <textarea id="inquiry_content" name="content" rows="10" cols="30"></textarea>
+        </div>
+        <br>
+
+        <div class="board_element">
+            <label for="inquiry_writer">작성자 아이디</label>
+            <input type="hidden" name="user_login_Id" th:value="${writer}" disabled>
+            <p id="inquiry_writer" th:text="${writer}"></p>
+        </div>
+        <br>
+
+        <div class="board_element">
+            <label for="inquiry_image">문의 이미지 업로드</label>
+            <input type="file" class="board_image" id="inquiry_image" name="image">
+        </div>
+        <div class="board_image_result">
+
+        </div>
+
+    </form>
+
+</div>
+
+<div th:if="${tab =='신고'}">
+    <form th:object="${boardDto}" action="/board/insertBoard" method="post">
+        <input type="hidden" name="user_id" th:value="${user_id}">
+        <div class="board_element">
+            <label for="report_title">게시글 제목</label>
+            <br>
+            <input type="text" id="report_title" name="title" >
+        </div>
+        <br>
+
+        <div class="board_element">
+            <label for="report_tab">게시글 탭</label>
+            <input type="hidden" name="tab" th:value="${tab}" disabled>
+            <p id="report_tab" th:text="${tab}"></p>
+        </div>
+        <br>
+
+        <div class="board_element">
+            <label for="report_content">게시글 내용</label>
+            <br>
+            <textarea id="report_content" name="content" rows="10" cols="30"></textarea>
+        </div>
+        <br>
+
+        <div class="board_element">
+            <label for="report_writer">작성자 아이디</label>
+            <input type="hidden" name="user_login_Id" th:value="${writer}" disabled>
+            <p id="report_writer" th:text="${writer}"></p>
+        </div>
+        <br>
+
+        <div class="board_element">
+            <label for="report_image">신고 이미지 업로드</label>
+            <input type="file" class="board_image" id="report_image" name="image">
+        </div>
+        <div class="board_image_result">
+
+        </div>
+    </form>
+
+</div>
+
+<div th:if="${tab =='공지'}">
+    <form th:object="${boardDto}" action="/board/insertBoard" method="post">
+        <input type="hidden" name="user_id" th:value="${user_id}">
+        <div class="board_element">
+            <label for="announce_title">게시글 제목</label>
+            <br>
+            <input type="text" id="announce_title" name="title" >
+        </div>
+        <br>
+
+        <div class="board_element">
+            <label for="announce_tab">게시글 탭</label>
+            <input type="hidden" name="tab" th:value="${tab}" disabled>
+            <p id="announce_tab" th:text="${tab}"></p>
+        </div>
+        <br>
+
+        <div class="board_element">
+            <label for="announce_content">게시글 내용</label>
+            <br>
+            <textarea id="announce_content" name="content" rows="10" cols="30"></textarea>
+        </div>
+        <br>
+
+        <div class="board_element">
+            <label for="announce_writer">작성자 아이디</label>
+            <input type="hidden" name="user_login_Id" th:value="${writer}" disabled>
+            <p id="announce_writer" th:text="${writer}"></p>
+        </div>
+        <br>
+
+        <div class="board_element">
+            <label for="announce_image">공지 이미지 업로드</label>
+            <input type="file" class="board_image" id="announce_image" name="image">
+        </div>
+        <div class="board_image_result">
+
+        </div>
+
+    </form>
+
+</div>
+    <button class="boardFormSubmit">작성</button>
     <a href="/board/list">목록으로</a>
+<script>
+    // TODO: review_image file upload event
+    document.getElementByClass('board_image').addEventListener('change', function(e){
+        var file = e.target.files[0];
+        var reader = new FileReader();
+        reader.onload = function(event) {
+            document.querySelector('.board_image_result').innerHTML = '<img src="' + event.target.result + '" alt="review_image">';
+        };
+        reader.readAsDataURL(file);
+    });
+
+    var submitButton = document.querySelector('.boardFormSubmit');
+    submitButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        var form = document.querySelector('form');
+        var tab = document.querySelector('input[name="tab"]').value;
+        if(tab === '리뷰' or tab === '문의' or tab === '신고' or tab === '공지') {
+            // var image = document.querySelector('input[name="image"]').files[0];
+
+            // form.append('image', image);
+            form.submit();
+        }
+    });
+</script>
 </body>
 </html>

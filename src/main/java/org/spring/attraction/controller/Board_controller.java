@@ -1,14 +1,21 @@
 package org.spring.attraction.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.spring.attraction.dto.BoardImage_dto;
 import org.spring.attraction.dto.Board_dto;
+import org.spring.attraction.entity.Board;
+import org.spring.attraction.service.BoardImage_service;
 import org.spring.attraction.service.Board_service;
 import org.spring.attraction.service.Comment_service;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/board")
 @RequiredArgsConstructor
@@ -17,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class Board_controller {
 
     private final Board_service boardService;
+    private final BoardImage_service boardImageService;
     private final Comment_service commentService;
 
     //검색, 페이징 기능 포함, 탭에 따라 ui 변경
@@ -81,10 +89,13 @@ public class Board_controller {
     관광지 관리자로 접속하면 리뷰 상에서 별점 부여, 관광지 선택 제한 필요
     */
     @GetMapping("/insertBoard")
-    public String InsertBoardView(Model model, Board_dto boardDto, String tab){
+    public String InsertBoardView(Model model, Board_dto boardDto, String tab, HttpSession session){
 
         //탭과 사용자에 따라 다르게 적용(사용자의 권한 여부를 확인하는 로직 필요)
-        if((tab.compareTo("문의")==0||tab.compareTo("신고")==0)){
+        //유저 관련은 일단 일시적인 값을 넣고 세션 활용
+        session.setAttribute("orgTab",tab);
+        session.setAttribute("userLoginId","testuser");
+        if((tab.compareTo("문의")==0||tab.compareTo("공지")==0)){
             model.addAttribute("authority","권한이 없습니다");
             log.info("권한 부족!!!");
             return "redirect:/board/list";
@@ -95,7 +106,7 @@ public class Board_controller {
             model.addAttribute("writer","testuser");
             model.addAttribute("user_id",1L);
             switch (tab){
-                case "일반", "공지", "신고","리뷰", "문의":
+                case "일반","공지","신고","리뷰","문의":
                     return "insertBoardForm";
                 default:
                     return "error";
@@ -104,19 +115,45 @@ public class Board_controller {
         }
     }
 
-    //따로 유저 DTO, 관광지 DTO 받아오는 로직 필요
+    //따로 유저 DTO, 관광지 DTO 받아오는 로직 필요, 검증 코드 필요(회원의 아이디, 탭, 파일)
     @PostMapping("/insertBoard")
-    public String InsertBoardAction(Board_dto dto){
-        if(boardService.writeBoard(dto)){
+    public String InsertBoardAction(Board_dto dto, List<BoardImage_dto> boardImageDtoList , HttpSession session){
 
+        //만약 로그인된 사용자와 작성자 아이디 다르면 취소(사용자 아이디 조작 방지)(스프링 시큐리티 활용)(일단 세션 활용)
+        if(dto.getUser_login_Id().compareTo(session.getAttribute("userLoginId").toString())!=0){
+            return "redirect:/board/error";
+        }
+        //제출된 탭과 처음 입력하려는 탭을 비교할 필요 있음(탭 조작 방지)
+        if(session.getAttribute("orgTab").toString().compareTo(dto.getTab())!=0){
+            return "redirect:/board/error";
+        }
+        //관광지 확인 필요(실제 존재하는지 검증)
+
+        //이미지도 본인이 해당 게시글에 올린게 맞는지 검증 필요(파일 조작 방지)
+        Board writeBoard=boardService.writeBoard(dto);
+        if(writeBoard!=null){
+            List<BoardImage_dto> images=(List<BoardImage_dto>)session.getAttribute("tempImages");
+            if(images!=null){
+                for(int i=0;i<images.size();i++){
+                    //if(boardImageDtoList.get(i).getUUIDName().compareTo(images.get(i).getUUIDName())!=0){
+                      if(!boardImageDtoList.contains(boardImageDtoList.get(i))){
+                        return "redirect:/board/error";
+                    }
+                }
+                for(BoardImage_dto tempImage:images){
+                    boardImageService.saveImageFile(tempImage,writeBoard);
+                }
+
+            }
+            session.invalidate();
             return "redirect:/board/list";
         }else{
-
+            session.invalidate();
             return "redirect:/board/insertBoard";
         }
     }
 
-    //오직 글 작성자만 수정 가능하도록 한다.
+    //오직 글 작성자만 수정 가능하도록 한다.(일단 파일 수정은 제외)
     @GetMapping("/updateBoard/{id}")
     public String updateBoardView(Model model,
                                   @PathVariable("id") Long id){
@@ -132,7 +169,7 @@ public class Board_controller {
         return "updateBoard";
     }
 
-    //탭을 임의로 수정 못하도록 막는 로직 필요
+    //탭을 임의로 수정 못하도록 막는 로직 필요(일단 파일 수정은 제외)
     @PostMapping("/updateBoard/{id}")
     public String updateBoardAction(Board_dto dto){
         boardService.updateBoard(dto);
