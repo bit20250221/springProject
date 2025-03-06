@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -68,4 +69,12 @@ public class ReservationController {
         model.addAttribute("viewReservationDtoList", viewReservationDtoList);
         return "reservation/list";
     }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("message", reservationService.delete(id));
+        return "redirect:/reservation/list";
+
+    }
+
 }

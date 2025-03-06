@@ -7,3 +7,6 @@ const reservationListLink = () => {
 const reservationDetailLink = (id) => {
     location.href = "/reservation/detail/" + id;
 }
+const reservationDeleteLink = (id) => {
+    location.href = "/reservation/delete/" + id;
+}

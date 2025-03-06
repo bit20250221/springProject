@@ -101,4 +101,14 @@ public class ReservationService {
         }
         return false;
     }
+    @Transactional
+    public String delete(Long id) {
+        Reservation reservation = reservationRepository.findById(id).orElse(null);
+        if(reservation != null) {
+            reservation.getPayments().clear();
+            reservationRepository.delete(reservation);
+            return "성공적으로 삭제가 되었습니다.";
+        }
+        return null;
+    }
 }
