@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>main</title>
+</head>
+<body>
+  <h2>메인 화면</h2>
+  userLoginId 세션 값 : <p th:text="${session.userLoginId}"></p>
+  <!-- Enum 타입 안가져와짐 -->
+  userType 세션 값 : <p th:text="${session.userType?.name()}"></p>
+  <a href="/logout">로그 아웃</a>
+</body>
+</html>

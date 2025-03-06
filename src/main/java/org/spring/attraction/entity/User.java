@@ -7,7 +7,7 @@ import org.spring.attraction.ENUM.Grade;
 import org.spring.attraction.ENUM.UserType;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -22,14 +22,14 @@ public class User {
     @Column(name = "userId")
     private Long id;
 
-    @Column(length = 45, nullable = false, unique = true, insertable = false, updatable = false)
+    @Column(length = 45, nullable = false, unique = true)
     private String userLoginId;
 
-    @Column(length = 45, nullable = false)
+    @Column(length = 255, nullable = false)
     private String pass;
 
     @Column(nullable = false)
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
