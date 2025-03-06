@@ -7,6 +7,10 @@
 </head>
 <body>
 
+<div class="top">
+
+</div>
+
 <table class="board_all">
     <thead>
         <tr class="board_column">
@@ -21,7 +25,7 @@
     </thead>
     <tbody>
 
-        <div th:if="${boardList != null}">
+        <div th:if="${boardList != null and !boardList.isEmpty()}">
         <tr class="board_element" th:each="board, loop : ${boardList}">
             <td th:text="${board.board_id}"></td>
             <td th:text="${board.tab}"></td>
@@ -37,7 +41,7 @@
         </tr>
         </div>
 
-        <div th:if="${boardList == null}">
+        <div th:if="${boardList == null or boardList.isEmpty()}">
         <tr class="board_nothing">
             <h2>게시글이 존재하지 않습니다.</h2>
         </tr>
@@ -45,7 +49,8 @@
 
     </tbody>
 </table>
-<div class="page_list" th:if="${!boardList.isEmpty()}">
+
+<div class="page_list" th:if="${boardList != null and !boardList.isEmpty()}">
     <ul class="pagenation">
         <li th:if="${boardList.hasPrevious()}">
             <a th:href="@{/board/list(page=${boardList.number - 5}, pageAmount=${pageAmount}, type=${param.type}, tab=${param.tab}, Keyword=${param.Keyword})}">이전</a>
@@ -61,12 +66,36 @@
         </li>
     </ul>
 </div>
-<div>
-<div class="search_box">
-    <input class="search_keyword" type="text">
-    <button>찾기</button>
+<div th:if="${boardList == null or boardList.isEmpty()}">
+
 </div>
 
+<div class="bottom">
+
+    <div class="search_box">
+        <label for="search_type_1">탭</label>
+        <select id="search_type_1">
+            <option value="전체">전체</option>
+            <option value="일반">일반</option>
+            <option value="리뷰">리뷰</option>
+            <option value="문의">문의</option>
+            <option value="신고">신고</option>
+            <option value="공지">공지</option>
+        </select>
+
+        <label for="search_type_2">타입</label>
+        <select id="search_type_2">
+            <option value="전체">전체</option>
+            <option value="title">제목</option>
+            <option value="content">내용</option>
+            <option value="writer">작성자</option>
+        </select>
+
+        <input class="search_keyword" type="text">
+        <button id="search_button">찾기</button>
+    </div>
+
+    <div class="write_div">
     <select class="write_type">
         <option value="일반">일반</option>
         <option value="리뷰">리뷰</option>
@@ -76,13 +105,31 @@
         <option value="공지">공지</option>
 
     </select>
-<button id="write_btn" onclick="writeForm()">글쓰기</button>
+    <button id="write_btn" onclick="writeForm()">글쓰기</button>
+    </div>
+
 </div>
+
 <script>
     function writeForm(){
         var tabvalue = document.querySelector('.write_type').value;
         window.location.href="/board/insertBoard?tab="+tabvalue;
     }
+
+    var searchbtn=document.getElementById('search_button');
+    searchbtn.addEventListener('click', function(){
+        var tabValue = document.querySelector('#search_type_1').value;
+        var typeValue = document.querySelector('#search_type_2').value;
+        var keywordValue = document.querySelector('.search_keyword').value;
+        if(tabValue === '전체'){
+            tabValue = '';
+        }
+        if(typeValue === '전체'){
+            typeValue = '';
+        }
+        window.location.href="/board/list?page=0&pageAmount=10&type="+typeValue+"&tab="+tabValue+"&Keyword="+keywordValue;
+
+    });
 </script>
 
 </body>

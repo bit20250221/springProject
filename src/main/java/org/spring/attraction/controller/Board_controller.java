@@ -117,7 +117,7 @@ public class Board_controller {
 
     //따로 유저 DTO, 관광지 DTO 받아오는 로직 필요, 검증 코드 필요(회원의 아이디, 탭, 파일)
     @PostMapping("/insertBoard")
-    public String InsertBoardAction(Board_dto dto, List<BoardImage_dto> boardImageDtoList , HttpSession session){
+    public String InsertBoardAction(Board_dto dto, HttpSession session){
 
         //만약 로그인된 사용자와 작성자 아이디 다르면 취소(사용자 아이디 조작 방지)(스프링 시큐리티 활용)(일단 세션 활용)
         if(dto.getUser_login_Id().compareTo(session.getAttribute("userLoginId").toString())!=0){
@@ -131,19 +131,16 @@ public class Board_controller {
 
         //이미지도 본인이 해당 게시글에 올린게 맞는지 검증 필요(파일 조작 방지)
         Board writeBoard=boardService.writeBoard(dto);
+
         if(writeBoard!=null){
             List<BoardImage_dto> images=(List<BoardImage_dto>)session.getAttribute("tempImages");
             if(images!=null){
                 for(int i=0;i<images.size();i++){
-                    //if(boardImageDtoList.get(i).getUUIDName().compareTo(images.get(i).getUUIDName())!=0){
-                      if(!boardImageDtoList.contains(boardImageDtoList.get(i))){
-                        return "redirect:/board/error";
-                    }
+                      log.info("세션 내 파일 정보: "+images.get(i).getUUIDName());
                 }
                 for(BoardImage_dto tempImage:images){
                     boardImageService.saveImageFile(tempImage,writeBoard);
                 }
-
             }
             session.invalidate();
             return "redirect:/board/list";
@@ -179,8 +176,9 @@ public class Board_controller {
 
     //글 작성자만 삭제하도록 필요
     @PostMapping("/deleteBoard/{id}")
-    public String deleteBoard(Long id){
+    public String deleteBoard(@PathVariable("id") Long id){
         boardService.deleteBoard(id);
+
         log.info("아이디 "+id+" 글 삭제 완료");
         return "redirect:/board/list";
     }

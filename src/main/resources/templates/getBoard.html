@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${board.title}"></title>
+<style>
+    .boardimgElement{
+        max-width: 300px;
+        max-height: 300px;
+    }
+</style>
+</head>
+<body>
+    <div class="top_button_list">
+        <button onclick="back()">목록</button>
+        <button onclick="deleteboard()">삭제하기</button>
+    </div>
+    <p class="boardID" th:text="${board.board_id}"></p>
+    <div th:if="${board.tab=='일반'}">
+        <h1 id="nomal_title" th:text="${board.title}"></h1>
+
+        <div class="boardElement">
+            <p th:text="${board.tab}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.content}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.user_login_Id}"></p>
+        </div>
+
+    </div>
+
+    <div th:if="${board.tab=='리뷰'}">
+        <h1 id="review_title" th:text="${board.title}"></h1>
+
+        <div class="boardElement">
+            <p th:text="${board.tab}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.content}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.user_login_Id}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.attraction_Name}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.rate}"></p>
+        </div>
+
+        <!-- 리뷰 이미지 목록 -->
+        <div class="boardElement">
+            <div th:each="image : ${board.boardImages}">
+                <div class="imageElement">
+                    <p th:text="${image.name}"></p>
+                    <img class="boardimgElement" th:src="@{/resources/upload/{UUIDName}(UUIDName=${image.UUIDName})}" alt="게시글 이미지" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${board.tab=='문의'}">
+
+        <h1 id="inquiry_title" th:text="${board.title}"></h1>
+
+        <div class="boardElement">
+            <p th:text="${board.tab}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.content}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.user_login_Id}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.attraction_Name}"></p>
+        </div>
+
+        <!-- 문의 이미지 목록 -->
+        <div class="boardElement">
+            <div th:each="image : ${board.boardImages}">
+                <div class="imageElement">
+                    <p th:text="${image.name}"></p>
+                    <img class="boardimgElement" th:src="@{/resources/upload/{UUIDName}(UUIDName=${image.UUIDName})}" alt="게시글 이미지" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div th:if="${board.tab=='신고'}">
+
+        <h1 id="report_title" th:text="${board.title}"></h1>
+
+        <div class="boardElement">
+            <p th:text="${board.tab}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.content}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.user_login_Id}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.attraction_Name}"></p>
+        </div>
+
+        <!-- 신고 이미지 목록 -->
+        <div class="boardElement">
+            <div th:each="image : ${board.boardImages}">
+                <div class="imageElement">
+                    <p th:text="${image.name}"></p>
+                    <img class="boardimgElement" th:src="@{/resources/upload/{UUIDName}(UUIDName=${image.UUIDName})}" alt="게시글 이미지" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div th:if="${board.tab=='공지'}">
+
+        <label for="announce_title">일반</label>
+        <h1 id="announce_title" th:text="${board.title}"></h1>
+
+        <div class="boardElement">
+            <p th:text="${board.tab}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.content}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.user_login_Id}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.attraction_Name}"></p>
+        </div>
+
+        <!-- 공지 이미지 목록 -->
+        <div class="boardElement">
+            <div th:each="image : ${board.boardImages}">
+                <div class="imageElement">
+                    <p th:text="${image.name}"></p>
+                    <img class="boardimgElement" th:src="@{/resources/upload/{UUIDName}(UUIDName=${image.UUIDName})}" alt="게시글 이미지"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<script>
+    function back() {
+        window.history.back();
+    }
+    function deleteboard(){
+        var result = confirm("삭제하시겠습니까?");
+        if (result) {
+
+            var board_id = document.querySelector(".boardID").textContent;
+            var form = document.createElement("form");
+            console.log(board_id);
+            form.id = "deleteForm";
+            form.method = "post";
+            form.action = "/board/deleteBoard/" + board_id;
+
+            var input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "board_id";
+            input.value = board_id;
+            form.appendChild(input);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
+</body>
+</html>

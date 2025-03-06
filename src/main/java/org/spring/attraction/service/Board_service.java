@@ -3,6 +3,7 @@ package org.spring.attraction.service;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.spring.attraction.ENUM.Tab;
+import org.spring.attraction.dto.BoardImage_dto;
 import org.spring.attraction.dto.Board_dto;
 import org.spring.attraction.entity.Attraction;
 import org.spring.attraction.entity.Board;
@@ -30,9 +31,13 @@ public class Board_service {
     public Board_repository repository;
 
     @Autowired
-    User_repository userRepository;
+    public BoardImage_service boardImageService;
+
+    @Autowired
+    public User_repository userRepository;
 
     //게시글 한개 읽기, 댓글은 따로 처리
+    @Transactional
     public Board_dto getBoard(Long Board_id){
         Optional<Board> board=repository.findById(Board_id);
         Board_dto boardDto;
@@ -43,7 +48,9 @@ public class Board_service {
             if(exboard.getAttraction()!=null) {
                 attraction_id = exboard.getAttraction().getId();
             }
+            List<BoardImage_dto> boardImages=boardImageService.getImagesByBoardId(exboard.getId());
             boardDto=Board_dto.to_dto_2(exboard,user_id,attraction_id);
+            boardDto.setBoardImages(boardImages);
         }else{
             boardDto=null;
         }

@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 입력</title>
+    <style>
+        .board_image_result img {
+            max-width: 300px;
+            max-height: 300px;
+        }
+    </style>
 </head>
 <body>
 <div class="normal_form" th:if="${tab =='일반'}">
@@ -73,7 +79,9 @@
 
         <div class="board_element">
             <label for="review_image">리뷰 이미지 업로드</label>
-            <input type="file" class="board_image" id="review_image" name="image">
+            <input class="board_image" type="file" id="review_image" name="tempImage" />
+            <button class="uploadBtn" type="button">업로드</button>
+
         </div>
         <div class="board_image_result">
 
@@ -117,7 +125,8 @@
 
         <div class="board_element">
             <label for="inquiry_image">문의 이미지 업로드</label>
-            <input type="file" class="board_image" id="inquiry_image" name="image">
+            <input class="board_image" type="file" id="inquiry_image" name="tempImage" />
+            <button class="uploadBtn" type="button">업로드</button>
         </div>
         <div class="board_image_result">
 
@@ -160,7 +169,8 @@
 
         <div class="board_element">
             <label for="report_image">신고 이미지 업로드</label>
-            <input type="file" class="board_image" id="report_image" name="image">
+            <input class="board_image" type="file" id="report_image" name="tempImage" />
+            <button class="uploadBtn" type="button">업로드</button>
         </div>
         <div class="board_image_result">
 
@@ -202,7 +212,9 @@
 
         <div class="board_element">
             <label for="announce_image">공지 이미지 업로드</label>
-            <input type="file" class="board_image" id="announce_image" name="image">
+            <input class="board_image" type="file" id="announce_image" name="tempImage" />
+            <button class="uploadBtn" type="button">업로드</button>
+
         </div>
         <div class="board_image_result">
 
@@ -211,31 +223,65 @@
     </form>
 
 </div>
+<div class="boardImageList">
+
+</div>
+    <button class="boardFormTempSubmit">임시저장</button>
     <button class="boardFormSubmit">작성</button>
     <a href="/board/list">목록으로</a>
 <script>
-    // TODO: review_image file upload event
-    document.getElementByClass('board_image').addEventListener('change', function(e){
-        var file = e.target.files[0];
-        var reader = new FileReader();
-        reader.onload = function(event) {
-            document.querySelector('.board_image_result').innerHTML = '<img src="' + event.target.result + '" alt="review_image">';
-        };
-        reader.readAsDataURL(file);
-    });
+    var fileInput=document.querySelector('.board_image');
+    var ImageFileDataList=document.querySelector('.boardImageList');
+    var fileTempUploadButton = document.querySelector('.uploadBtn');
+    var ImageTempResult = document.querySelector('.board_image_result')
+    var imageIndex = 0;
+
+    fileTempUploadButton.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        var formData = new FormData();
+        var imgFile=fileInput.files[0];
+
+        if(imgFile==null){
+            alert('업로드할 파일을 선택하세요.');
+            return;
+        }
+
+        formData.append('tempImage',imgFile);
+
+        fetch('/image/TempSave',{
+         method: 'POST',
+         body: formData,
+        credentials: "include"
+        })
+        .then(response => response.json())
+        .then(data => {
+            // UUIDName 받아서 boardImageList 에 추가하고 정상적으로 추가되면 이미지를 사용자에게 보여준다.
+            var ImageDTO=data.ImageDTO;
+            console.log(ImageDTO);
+            ImageFileDataList.innerHTML  += '<div class="imageDTOValue">' +
+            '<input type="hidden" name="boardImageDtoList[' + imageIndex + '].imageSize" value="' + ImageDTO['imageSize'] + '">' +
+            '<input type="hidden" name="boardImageDtoList[' + imageIndex + '].isTemporary" value="' + ImageDTO['isTemporary'] + '">' +
+            '<input type="hidden" name="boardImageDtoList[' + imageIndex + '].name" value="' + ImageDTO['name'] + '">' +
+            '<input type="hidden" name="boardImageDtoList[' + imageIndex + '].uuid" value="' + ImageDTO['uuid'] + '">' +
+            '<input type="hidden" name="boardImageDtoList[' + imageIndex + '].uuidname" value="' + ImageDTO['uuidname'] + '">' +
+            '</div>';
+            imageIndex++;
+            //document.querySelector('.board_image_result').innerHTML += '<img src="/resources/upload/' + ImageDTO['uuidname'] + '" alt="board_image">';
+
+        });
+
+    })
 
     var submitButton = document.querySelector('.boardFormSubmit');
     submitButton.addEventListener('click', function(e) {
         e.preventDefault();
-        var form = document.querySelector('form');
-        var tab = document.querySelector('input[name="tab"]').value;
-        if(tab === '리뷰' or tab === '문의' or tab === '신고' or tab === '공지') {
-            // var image = document.querySelector('input[name="image"]').files[0];
 
-            // form.append('image', image);
-            form.submit();
-        }
+        var form = document.querySelector('form');
+        form.submit();
     });
+
+
 </script>
 </body>
 </html>

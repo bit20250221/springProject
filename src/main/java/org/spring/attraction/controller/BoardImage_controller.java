@@ -52,6 +52,7 @@ public class BoardImage_controller {
             response.put("ImageUrl", ImageUrl);
             response.put("ImageName", saveTempImageFile.getName());
             response.put("ImageUUIDName",saveTempImageFile.getUUIDName());
+            response.put("ImageDTO", saveTempImageFile);
             response.put("message", "Success");
 
         }catch (Exception e) {
