@@ -32,7 +32,6 @@ public class PaymentService {
             payment.setCreatedate(paymentDto.getCreatedate());
             payment.setReservation(reservation);
 
-
             return paymentRepository.save(payment);
         }
         return null;

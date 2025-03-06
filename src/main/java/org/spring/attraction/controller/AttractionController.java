@@ -110,8 +110,8 @@ public class AttractionController {
     }
 
 
-    @GetMapping("/delete")
-    public String delete(Long id, RedirectAttributes redirectAttributes) {
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("message", attractionService.delete(id));
         return "redirect:/attraction/list";
 

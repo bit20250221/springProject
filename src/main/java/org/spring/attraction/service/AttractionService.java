@@ -145,13 +145,18 @@ public class AttractionService {
 
     }
 
+    @Transactional
     public String delete(Long id) {
         List<Reservation> reservationList = reservationRepository.findByAttractionId(id);
-        if(reservationList != null) {
+        if(reservationList.isEmpty()) {
             return "예약된 정보가 있어 삭제할 수 없습니다.";
         }
-
-
+        Attraction attraction = attractionRepository.findById(id).orElse(null);
+        if(attraction != null) {
+            attraction.getAttractionsTypeLists().clear();
+            attractionRepository.delete(attraction);
+            return "삭제가 완료되었습니다.";
+        }
         return null;
     }
 }

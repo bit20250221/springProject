@@ -34,7 +34,7 @@
         <td th:text="${attractionDto.getArea()}"></td>
         <td><button th:onclick="|attractionDetailLink(${attractionDto.getId()})|">상세</button></td>
         <td><button th:onclick="|attractionUpdateLink(${attractionDto.getId()})|">수정</button></td>
-        <td><button th:onclick="|attractionDeleteLink(${attractionDto.getId()})|">수정</button></td>
+        <td><button th:onclick="|attractionDeleteLink(${attractionDto.getId()})|">삭제</button></td>
     </tr>
 </table>
 <button onclick="attractionSaveLink()">관광지 등록</button>
