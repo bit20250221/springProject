@@ -6,14 +6,8 @@ import org.spring.attraction.dto.AreaDto;
 import org.spring.attraction.dto.AttractionDto;
 import org.spring.attraction.dto.AttractionTypeDto;
 import org.spring.attraction.dto.AttractionTypeListDto;
-import org.spring.attraction.entity.Area;
-import org.spring.attraction.entity.Attraction;
-import org.spring.attraction.entity.AttractionType;
-import org.spring.attraction.entity.AttractionTypeList;
-import org.spring.attraction.repository.AreaRepository;
-import org.spring.attraction.repository.AttractionRepository;
-import org.spring.attraction.repository.AttractionTypeListRepository;
-import org.spring.attraction.repository.AttractionTypeRepository;
+import org.spring.attraction.entity.*;
+import org.spring.attraction.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -32,6 +26,7 @@ public class AttractionService {
     private final AttractionTypeListService attractionTypeListService;
     private final AttractionTypeRepository attractionTypeRepository;
     private final AttractionTypeListRepository attractionTypeListRepository;
+    private final ReservationRepository reservationRepository;
 
     @Transactional
     public boolean save(AttractionDto attractionDto) {
@@ -67,6 +62,7 @@ public class AttractionService {
             AttractionDto attractionDto = AttractionDto.toDto(attraction);
             attractionDto.setOpenTime(attractionDto.getOpenTime().substring(Math.max(0, attractionDto.getOpenTime().length() - 5)));
             attractionDto.setCloseTime(attractionDto.getCloseTime().substring(Math.max(0, attractionDto.getCloseTime().length() - 5)));
+
             List<AttractionTypeList> attractionTypeLists = attractionTypeListRepository.findByAttractionId(attractionDto.getId());
             List<String> attractionTypeStringList = new ArrayList<>();
 
@@ -147,5 +143,15 @@ public class AttractionService {
         }
 
 
+    }
+
+    public String delete(Long id) {
+        List<Reservation> reservationList = reservationRepository.findByAttractionId(id);
+        if(reservationList != null) {
+            return "예약된 정보가 있어 삭제할 수 없습니다.";
+        }
+
+
+        return null;
     }
 }

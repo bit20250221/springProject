@@ -21,6 +21,7 @@
         <th>지역</th>
         <th>상세</th>
         <th>수정</th>
+        <th>삭제</th>
     </tr>
     <tr th:each="attractionDto, index: ${attractionDtoList}">
         <td th:text="${attractionDto.getId()}"></td>
@@ -33,6 +34,7 @@
         <td th:text="${attractionDto.getArea()}"></td>
         <td><button th:onclick="|attractionDetailLink(${attractionDto.getId()})|">상세</button></td>
         <td><button th:onclick="|attractionUpdateLink(${attractionDto.getId()})|">수정</button></td>
+        <td><button th:onclick="|attractionDeleteLink(${attractionDto.getId()})|">수정</button></td>
     </tr>
 </table>
 <button onclick="attractionSaveLink()">관광지 등록</button>

@@ -2,9 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>관광지 예약 리스트</title>
+    <script src="/js/alert.js"></script>
+    <script src="/js/attraction.js"></script>
+    <script src="/js/reservation.js"></script>
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
+<h2>관광지 예약 리스트</h2>
+<table>
+    <tr>
+        <th>id</th>
+        <th>관광지명</th>
+        <th>가격</th>
+        <th>인원수</th>
+        <th>예약자</th>
+        <th>예약일자</th>
+        <th>결제방법</th>
+        <th>총 비용</th>
+        <th>상세</th>
+        <th>삭제</th>
+    </tr>
+    <tr th:each="viewReservationDto, index: ${viewReservationDtoList}">
+        <td th:text="${viewReservationDto.getId()}"></td>
+        <td th:text="${viewReservationDto.getAttractionName()}"></td>
+        <td th:text="${viewReservationDto.getAttractionPrice()}"></td>
+        <td th:text="${viewReservationDto.getReservationPeplenum()}"></td>
+        <td th:text="${viewReservationDto.getUserLoginId()}"></td>
+        <td th:text="${viewReservationDto.getReservationReservedate()}"></td>
+        <td th:text="${viewReservationDto.getPaymentTypeType()}"></td>
+        <td th:text="${viewReservationDto.getTotalPrice()}"></td>
+        <td><button th:onclick="|reservationDetailLink(${viewReservationDto.getId()})|">상세</button></td>
+        <td><button th:onclick="|reservationDeleteLink(${viewReservationDto.getId()})|">삭제</button></td>
+    </tr>
+</table>
+<button onclick="attractionListLink()">관광지 리스트</button>
 
+<script th:inline="javascript">
+    alertMessage([[${message}]])
+</script>
 </body>
 </html>

@@ -61,4 +61,11 @@ public class ReservationController {
         return "redirect:/reservation/detail/" + reservationUpdateDto.getId();
 
     }
+
+    @GetMapping("/list")
+    public String list(Model model) {
+        List<ViewReservationDto> viewReservationDtoList = reservationService.findAllByView();
+        model.addAttribute("viewReservationDtoList", viewReservationDtoList);
+        return "reservation/list";
+    }
 }

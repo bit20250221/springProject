@@ -2,24 +2,17 @@ package org.spring.attraction.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.spring.attraction.dto.AttractionDto;
-import org.spring.attraction.dto.PaymentDto;
-import org.spring.attraction.dto.ReservationDto;
-import org.spring.attraction.dto.ReservationUpdateDto;
-import org.spring.attraction.entity.Attraction;
-import org.spring.attraction.entity.Payment;
-import org.spring.attraction.entity.Reservation;
-import org.spring.attraction.entity.User;
-import org.spring.attraction.repository.AttractionRepository;
-import org.spring.attraction.repository.PaymentRepository;
-import org.spring.attraction.repository.ReservationRepository;
-import org.spring.attraction.repository.UserRepository;
+import org.spring.attraction.dto.*;
+import org.spring.attraction.entity.*;
+import org.spring.attraction.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,12 +22,23 @@ public class ReservationService {
     private final AttractionRepository attractionRepository;
     private final PaymentService paymentService;
     private final PaymentRepository paymentRepository;
+    private final ViewReservationRepository viewReservationRepository;
+
+    public List<ViewReservationDto> findAllByView() {
+        List<ViewReservation> viewReservationList = viewReservationRepository.findAll();
+        List<ViewReservationDto> viewReservationDtoList = new ArrayList<>();
+        for (ViewReservation viewReservation : viewReservationList) {
+            ViewReservationDto viewReservationDto = ViewReservationDto.toDto(viewReservation);
+            viewReservationDtoList.add(viewReservationDto);
+        }
+        return viewReservationDtoList;
+    }
 
     @Transactional
     public ReservationDto save(AttractionDto attractionDto) {
         try{
             Reservation reservation = new Reservation();
-            User user = userRepository.findById(1L).orElse(null);
+            User user = userRepository.findById(4L).orElse(null);
             Attraction attraction = attractionRepository.findById(attractionDto.getId()).orElse(null);
             if(user == null || attraction == null) {
                 return null;

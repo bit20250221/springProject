@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>관광지 예약 정보 화면</title>
+    <script src="/js/reservation.js"></script>
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
@@ -25,6 +26,7 @@
         </select><br/>
         <button type="submit">수정하기</button>
     </form>
+    <button onclick="reservationListLink()">관광지 예약 리스트 확인</button>
 </div>
 </body>
 </html>
