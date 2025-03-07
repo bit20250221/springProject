@@ -1,9 +1,9 @@
-
 package org.spring.attraction.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.spring.attraction.dto.PaymentDto;
 
 import java.time.LocalDateTime;
 
@@ -27,4 +27,13 @@ public class Payment {
     @ManyToOne
     @JoinColumn(name="reservationId", nullable = false)
     private Reservation reservation;
+
+    public static Payment toEntity(PaymentDto paymentDto) {
+        Payment payment = new Payment();
+        payment.setId(paymentDto.getId());
+        payment.setCreatedate(paymentDto.getCreatedate());
+        payment.setPaymentType(paymentDto.getPaymentType());
+        payment.setReservation(paymentDto.getReservation());
+        return payment;
+    }
 }

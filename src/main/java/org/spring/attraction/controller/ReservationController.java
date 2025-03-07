@@ -1,9 +1,8 @@
 package org.spring.attraction.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.spring.attraction.ENUM.PayType;
+import org.spring.attraction.ENUM.ReservationMessage;
 import org.spring.attraction.dto.*;
-import org.spring.attraction.entity.Payment;
 import org.spring.attraction.service.AttractionService;
 import org.spring.attraction.service.PaymentService;
 import org.spring.attraction.service.PaymentTypeService;
@@ -37,9 +36,13 @@ public class ReservationController {
     }
 
     @PostMapping("/save")
-    public String save(AttractionDto attractionDto, Model model) {
-        ReservationDto reservationDto = reservationService.save(attractionDto);
-        return "redirect:/reservation/detail/" + reservationDto.getId();
+    public String save(AttractionDto attractionDto, RedirectAttributes redirectAttributes) {
+        ReservationMessage result = reservationService.save(attractionDto);
+        redirectAttributes.addFlashAttribute("message", result.getMessage());
+        if(result.getId() < 0){
+            return "redirect:/reservation/save/" + attractionDto.getId();
+        }
+        return "redirect:/reservation/list";
     }
 
     @GetMapping("/detail/{id}")
@@ -57,10 +60,13 @@ public class ReservationController {
     }
 
     @PostMapping("/update")
-    public String update(ReservationUpdateDto reservationUpdateDto, Model model) {
-        reservationService.update(reservationUpdateDto);
-        return "redirect:/reservation/detail/" + reservationUpdateDto.getId();
-
+    public String update(ReservationUpdateDto reservationUpdateDto, RedirectAttributes redirectAttributes) {
+        ReservationMessage result = reservationService.update(reservationUpdateDto);
+        redirectAttributes.addFlashAttribute("message", result.getMessage());
+        if(result.getId() < 0){
+            return "redirect:/reservation/detail/" + reservationUpdateDto.getId();
+        }
+        return "redirect:/reservation/list";
     }
 
     @GetMapping("/list")
@@ -72,9 +78,9 @@ public class ReservationController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("message", reservationService.delete(id));
+        ReservationMessage result = reservationService.delete(id);
+        redirectAttributes.addFlashAttribute("message", result.getMessage());
         return "redirect:/reservation/list";
-
     }
 
 }

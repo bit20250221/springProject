@@ -16,16 +16,16 @@ public class PaymentDto {
 
     private Long id;
     private LocalDateTime createdate;
-    private Long paymentTypeId;
-    private Long reservationId;
+    private PaymentType paymentType;
+    private Reservation reservation;
 
 
     public static PaymentDto toDto(Payment payment) {
         PaymentDto paymentDto = new PaymentDto();
         paymentDto.setId(payment.getId());
         paymentDto.setCreatedate(payment.getCreatedate());
-        paymentDto.setPaymentTypeId(payment.getPaymentType().getId());
-        paymentDto.setReservationId(payment.getReservation().getId());
+        paymentDto.setPaymentType(payment.getPaymentType());
+        paymentDto.setReservation(payment.getReservation());
         return paymentDto;
     }
 }

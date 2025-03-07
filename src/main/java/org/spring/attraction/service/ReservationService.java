@@ -2,15 +2,12 @@ package org.spring.attraction.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.spring.attraction.ENUM.ReservationMessage;
 import org.spring.attraction.dto.*;
 import org.spring.attraction.entity.*;
 import org.spring.attraction.repository.*;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +20,7 @@ public class ReservationService {
     private final PaymentService paymentService;
     private final PaymentRepository paymentRepository;
     private final ViewReservationRepository viewReservationRepository;
+    private final PaymentTypeRepository paymentTypeRepository;
 
     public List<ViewReservationDto> findAllByView() {
         List<ViewReservation> viewReservationList = viewReservationRepository.findAll();
@@ -35,43 +33,53 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationDto save(AttractionDto attractionDto) {
-        try{
-            Reservation reservation = new Reservation();
-            User user = userRepository.findById(4L).orElse(null);
-            Attraction attraction = attractionRepository.findById(attractionDto.getId()).orElse(null);
-            if(user == null || attraction == null) {
-                return null;
-            }
+    public ReservationMessage save(AttractionDto attractionDto) {
+        ReservationUpdateDto reservationUpdateDto = new ReservationUpdateDto();
+        reservationUpdateDto.setPeplenum(attractionDto.getPeplenum());
+        reservationUpdateDto.setReservedate(attractionDto.getReservedate());
+        reservationUpdateDto.setPaymentTypeId(attractionDto.getPaymentTypeId());
 
-            reservation.setCreatedate(LocalDateTime.now());
-            reservation.setPeplenum(attractionDto.getPeplenum());
-            reservation.setReservedate(stringToLocalDateTime(attractionDto.getReservedate()));
-            reservation.setUser(user);
-            reservation.setAttraction(attraction);
-            user.getReservations().add(reservation);
-            attraction.getReservations().add(reservation);
-
-            reservationRepository.save(reservation);
-
-            PaymentDto paymentDto = new PaymentDto();
-            paymentDto.setReservationId(reservation.getId());
-            paymentDto.setPaymentTypeId(attractionDto.getPaymentTypeId());
-            paymentDto.setCreatedate(LocalDateTime.now());
-            Payment payment = paymentService.save(paymentDto);
-            reservation.getPayments().add(payment);
-
-            return ReservationDto.toDto(reservation);
-        }catch (Exception e){
-            e.printStackTrace();
-            return null;
+        ReservationMessage result = ReservationUpdateDto.validate(reservationUpdateDto);
+        if (result != null) {
+            return result;
         }
 
-    }
-    public static LocalDateTime stringToLocalDateTime(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-        LocalTime localTime = LocalTime.parse(date, formatter);
-        return LocalDateTime.of(LocalDate.now(), localTime);
+        User user = userRepository.findById(4L).orElse(null);
+        if(user == null) {
+            return ReservationMessage.getTypeById(-1);
+        }
+
+        Attraction attraction = attractionRepository.findById(attractionDto.getId()).orElse(null);
+        if(attraction == null) {
+            return ReservationMessage.getTypeById(-2);
+        }
+
+        PaymentType paymentType = paymentTypeRepository.findById(attractionDto.getPaymentTypeId()).orElse(null);
+        if(paymentType == null) {
+            return ReservationMessage.getTypeById(-3);
+        }
+
+        Reservation reservation = new Reservation();
+        reservation.setCreatedate(LocalDateTime.now());
+        reservation.setPeplenum(attractionDto.getPeplenum());
+        reservation.setReservedate(attractionDto.getReservedate());
+        reservation.setUser(user);
+        reservation.setAttraction(attraction);
+        user.getReservations().add(reservation);
+        attraction.getReservations().add(reservation);
+
+        reservationRepository.save(reservation);
+
+        PaymentDto paymentDto = new PaymentDto();
+        paymentDto.setReservation(reservation);
+        paymentDto.setPaymentType(paymentType);
+        paymentDto.setCreatedate(LocalDateTime.now());
+
+        Payment payment = Payment.toEntity(paymentDto);
+        reservation.getPayments().add(paymentRepository.save(payment));
+
+        return ReservationMessage.getTypeById(1);
+
     }
 
     public ReservationDto findById(Long id) {
@@ -87,7 +95,12 @@ public class ReservationService {
     }
 
     @Transactional
-    public boolean update(ReservationUpdateDto reservationUpdateDto) {
+    public ReservationMessage update(ReservationUpdateDto reservationUpdateDto) {
+        ReservationMessage result = ReservationUpdateDto.validate(reservationUpdateDto);
+        if (result != null) {
+            return result;
+        }
+
         Reservation reservation = reservationRepository.findById(reservationUpdateDto.getId()).orElse(null);
         if(reservation != null) {
             reservation.setPeplenum(reservationUpdateDto.getPeplenum());
@@ -97,18 +110,22 @@ public class ReservationService {
             Payment payment = paymentService.update(reservationUpdateDto);
             if(payment != null) {
                 reservation.getPayments().add(payment);
+                return ReservationMessage.getTypeById(2);
             }
+
+            return ReservationMessage.getTypeById(-3);
         }
-        return false;
+        return ReservationMessage.getTypeById(-4);
     }
+
     @Transactional
-    public String delete(Long id) {
+    public ReservationMessage delete(Long id) {
         Reservation reservation = reservationRepository.findById(id).orElse(null);
         if(reservation != null) {
             reservation.getPayments().clear();
             reservationRepository.delete(reservation);
-            return "성공적으로 삭제가 되었습니다.";
+            return ReservationMessage.getTypeById(3);
         }
-        return null;
+        return ReservationMessage.getTypeById(-4);
     }
 }

@@ -1,9 +1,12 @@
 package org.spring.attraction.service;
 
 import lombok.RequiredArgsConstructor;
+import org.spring.attraction.ENUM.AreaMessage;
 import org.spring.attraction.dto.AreaDto;
 import org.spring.attraction.entity.Area;
+import org.spring.attraction.entity.Attraction;
 import org.spring.attraction.repository.AreaRepository;
+import org.spring.attraction.repository.AttractionRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +18,19 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AreaService {
     private final AreaRepository areaRepository;
+    private final AttractionRepository attractionRepository;
 
-    public boolean save(AreaDto areaDto) {
+    public AreaMessage save(AreaDto areaDto) {
+        AreaMessage result = AreaDto.validate(areaDto);
+        if(result != null) {
+            return result;
+        }
         List<Area> areaList = areaRepository.findByCountryAndCity(areaDto.getCountry(), areaDto.getCity());
         if(areaList.isEmpty()) {
             areaRepository.save(Area.toAreaEntity(areaDto));
-            return true;
+            return AreaMessage.getTypeById(1);
         }
-        return false;
+        return AreaMessage.getTypeById(-1);
     }
 
     public List<AreaDto> findAll() {
@@ -40,9 +48,9 @@ public class AreaService {
 
     public AreaDto findById(Long id) {
         try{
-            Optional<Area> optionalArea = areaRepository.findById(id);
-            if(optionalArea.isPresent()) {
-                return AreaDto.toDto(optionalArea.get());
+            Area optionalArea = areaRepository.findById(id).orElse(null);
+            if(optionalArea != null) {
+                return AreaDto.toDto(optionalArea);
             }
             return null;
         }catch (Exception e) {
@@ -50,12 +58,13 @@ public class AreaService {
         }
     }
 
-    public void delete(Long id) {
-        try{
-            areaRepository.deleteById(id);
-        }catch (DataIntegrityViolationException e) {
-            throw new IllegalStateException("삭제할 수 없습니다. 다른 데이터에서 참조 중입니다.");
+    public AreaMessage delete(Long id) {
+        List<Attraction> attraction = attractionRepository.findByAreaId(id);
+        if(!attraction.isEmpty()) {
+            return AreaMessage.getTypeById(-2);
         }
+        areaRepository.deleteById(id);
+        return AreaMessage.getTypeById(2);
     }
 
 

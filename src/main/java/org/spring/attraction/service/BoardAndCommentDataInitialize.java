@@ -35,9 +35,9 @@ public class BoardAndCommentDataInitialize implements CommandLineRunner {
         Date birthDate=birthCalender.getTime();
 
         User user=new User();
-        user.setUserLoginId("testuser");
+        user.setUser_login_Id("testuser");
         user.setPass("1111");
-        user.setBirthDate(birthDate);
+        user.setBirthdate(birthDate);
         user.setGrade(Grade.bronze);
         user.setUserType(UserType.nomal);
 

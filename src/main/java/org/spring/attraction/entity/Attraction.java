@@ -1,4 +1,3 @@
-
 package org.spring.attraction.entity;
 
 import jakarta.persistence.*;
@@ -6,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.spring.attraction.dto.AttractionDto;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,10 +31,10 @@ public class Attraction{
     private int price;
 
     @Column(nullable = false)
-    private LocalDateTime opentime;
+    private LocalTime opentime;
 
     @Column(nullable = false)
-    private LocalDateTime closetime;
+    private LocalTime closetime;
 
     @ColumnDefault("''")
     @Column(length = 500)
@@ -48,10 +47,10 @@ public class Attraction{
     @OneToMany(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AttractionTypeList> attractionsTypeLists = new HashSet<>();
 
-    @OneToMany(mappedBy = "attraction")
+    @OneToMany(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Board> Boards = new HashSet<>();
 
-    @OneToOne(mappedBy = "attraction")
+    @OneToOne(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
     private User user;
 
     @OneToMany(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -62,10 +61,11 @@ public class Attraction{
         Attraction attraction = new Attraction();
         attraction.setId(attractionDto.getId());
         attraction.setName(attractionDto.getName());
-        attraction.setAvgrate(attractionDto.getAvgrate());
         attraction.setPrice(attractionDto.getPrice());
+        attraction.setOpentime(attractionDto.getOpenTime());
+        attraction.setClosetime(attractionDto.getCloseTime());
+        attraction.setAvgrate(attractionDto.getAvgrate());
         attraction.setExplanation(attractionDto.getExplanation());
-
         return attraction;
     }
 

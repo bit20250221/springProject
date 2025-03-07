@@ -38,7 +38,7 @@ public class BoardImage_service {
     }
 
 
-    //게시글 내 이미지 파일 임시 입력(나중에)
+    //게시글 내 이미지 파일 임시 입력
     public BoardImage_dto saveTempImageFile(MultipartFile temp,BoardImage_dto tempFile){
 
         BoardImage boardImage = boardImage(tempFile,null);

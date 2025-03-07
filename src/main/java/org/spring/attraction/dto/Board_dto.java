@@ -56,7 +56,7 @@ public class Board_dto {
         dto.setUser_id(user_id);
         dto.setAttraction_id(attraction_id);
 
-        dto.setUser_login_Id(entity.getUser().getUserLoginId());
+        dto.setUser_login_Id(entity.getUser().getUser_login_Id());
         if(entity.getAttraction()!=null) {
             dto.setAttraction_Name(entity.getAttraction().getName());
         }else{
