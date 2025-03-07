@@ -29,10 +29,6 @@ public class UserService {
         }
 
         User user = new User();
-        log.info(userDTO.getId().toString());
-        log.info(userDTO.getUserLoginId());
-        log.info(userDTO.getPass());
-        log.info(userDTO.getBirthDate().toString());
 
         user.setId(userDTO.getId());
         user.setUserLoginId(userDTO.getUserLoginId());

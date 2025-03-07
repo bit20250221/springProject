@@ -17,18 +17,26 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/","/index","/login","/register", "/loginProc","/registerProc").permitAll()
+                        .requestMatchers("/","/index","/user/login","/user/register", "/user/loginProc","/user/registerProc").permitAll()
                         //.requestMatchers("/경로 추가 필요").hasAnyRole("attraction","manager")
                         .requestMatchers("/admin").hasAuthority(manager.name())
                         .anyRequest().authenticated()
                 );
 
         http
-                .formLogin((auth) -> auth.loginPage("/login") // 접근을 제한한 폼이 login 폼으로 바뀜
-                        .loginProcessingUrl("/loginProc")     // 로그인 데이터를 form 태그의 경로로 보냄
+                .formLogin((auth) -> auth.loginPage("/user/login") // 접근을 제한한 폼이 login 폼으로 바뀜
+                        .loginProcessingUrl("/user/loginProc")     // 로그인 데이터를 form 태그의 경로로 보냄
                         .usernameParameter("userLoginId")     // 시큐리티 기본 파라미터는 username
                         .passwordParameter("pass")            // 시큐리티 기본 파라미터는 userPassword
                         .defaultSuccessUrl("/main")
+                        .permitAll()
+                );
+
+        http
+                .logout((auth) -> auth.logoutUrl("/user/logout")
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
                 );
 
@@ -39,7 +47,6 @@ public class SecurityConfig {
                 .sessionManagement((auth) -> auth
                         .maximumSessions(1)
                         .maxSessionsPreventsLogin(true));
-
 
         return http.build();
     }
