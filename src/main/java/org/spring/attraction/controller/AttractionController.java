@@ -1,11 +1,11 @@
 package org.spring.attraction.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.spring.attraction.ENUM.AttractionMessage;
 import org.spring.attraction.dto.AreaDto;
 import org.spring.attraction.dto.AttractionDto;
 import org.spring.attraction.dto.AttractionTypeDto;
 import org.spring.attraction.dto.AttractionTypeListDto;
-import org.spring.attraction.entity.Area;
 import org.spring.attraction.service.AreaService;
 import org.spring.attraction.service.AttractionService;
 import org.spring.attraction.service.AttractionTypeListService;
@@ -46,9 +46,9 @@ public class AttractionController {
 
     @PostMapping("/save")
     public String save(AttractionDto attractionDto, RedirectAttributes redirectAttributes) {
-        String result = attractionService.save(attractionDto);
-        if(result != null){
-            redirectAttributes.addFlashAttribute("message", result);
+        AttractionMessage result = attractionService.save(attractionDto);
+        redirectAttributes.addFlashAttribute("message", result.getMessage());
+        if(result.getId() < 0){
             redirectAttributes.addFlashAttribute("areaDto", attractionDto);
             return "redirect:/attraction/save";
         }
@@ -58,7 +58,6 @@ public class AttractionController {
     @GetMapping("/list")
     public String list(Model model) {
         List<AttractionDto> attractionDtoList = attractionService.findAll();
-
         model.addAttribute("attractionDtoList", attractionDtoList);
         return "/attraction/list";
     }
@@ -101,9 +100,9 @@ public class AttractionController {
 
     @PostMapping("/update")
     public String update(AttractionDto attractionDto, RedirectAttributes redirectAttributes) {
-        String result = attractionService.update(attractionDto);
-        if(result != null){
-            redirectAttributes.addFlashAttribute("message", result);
+        AttractionMessage result = attractionService.update(attractionDto);
+        redirectAttributes.addFlashAttribute("message", result.getMessage());
+        if(result.getId() < 0){
             redirectAttributes.addFlashAttribute("areaDto", attractionDto);
             return "redirect:/attraction/update/" + attractionDto.getId();
         }
@@ -113,11 +112,8 @@ public class AttractionController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        String result = attractionService.delete(id);
-        if(result != null){
-            redirectAttributes.addFlashAttribute("message", result);
-        }
-
+        AttractionMessage result = attractionService.delete(id);
+        redirectAttributes.addFlashAttribute("message", result.getMessage());
         return "redirect:/attraction/list";
 
     }

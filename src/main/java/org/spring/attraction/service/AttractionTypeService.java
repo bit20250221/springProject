@@ -1,6 +1,7 @@
 package org.spring.attraction.service;
 
 import lombok.RequiredArgsConstructor;
+import org.spring.attraction.ENUM.AttractionMessage;
 import org.spring.attraction.ENUM.AttractionTypeMessage;
 import org.spring.attraction.dto.AttractionTypeDto;
 import org.spring.attraction.entity.Attraction;
@@ -21,17 +22,17 @@ public class AttractionTypeService {
     private final AttractionTypeRepository attractionTypeRepository;
     private final AttractionTypeListRepository attractionTypeListRepository;
 
-    public String save(AttractionTypeDto attractionTypeDto) {
-        String result =  AttractionTypeDto.validate(attractionTypeDto);
+    public AttractionTypeMessage save(AttractionTypeDto attractionTypeDto) {
+        AttractionTypeMessage result =  AttractionTypeDto.validate(attractionTypeDto);
         if(result != null) {
             return result;
         }
         AttractionType attractionType = attractionTypeRepository.findByType(attractionTypeDto.getType());
         if(attractionType == null) {
             attractionTypeRepository.save(AttractionType.toEntity(attractionTypeDto));
-            return AttractionTypeMessage.getMessageById(1);
+            return AttractionTypeMessage.getTypeById(1);
         }
-        return AttractionTypeMessage.getMessageById(-1);
+        return AttractionTypeMessage.getTypeById(-1);
     }
 
     public List<AttractionTypeDto> findAll() {
@@ -47,13 +48,13 @@ public class AttractionTypeService {
         return null;
     }
 
-    public String delete(Long id) {
+    public AttractionTypeMessage delete(Long id) {
         List<AttractionTypeList> attractionTypeListList = attractionTypeListRepository.findByAttractionTypeId(id);
         if(!attractionTypeListList.isEmpty()) {
-            return AttractionTypeMessage.getMessageById(-2);
+            return AttractionTypeMessage.getTypeById(-2);
         }
         attractionTypeRepository.deleteById(id);
 
-        return AttractionTypeMessage.getMessageById(2);
+        return AttractionTypeMessage.getTypeById(2);
     }
 }

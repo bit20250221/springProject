@@ -1,6 +1,7 @@
 package org.spring.attraction.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.spring.attraction.ENUM.AttractionTypeMessage;
 import org.spring.attraction.dto.AttractionTypeDto;
 import org.spring.attraction.service.AttractionTypeService;
 import org.springframework.stereotype.Controller;
@@ -26,9 +27,9 @@ public class AttractionTypeController {
 
     @PostMapping("/save")
     public String save(AttractionTypeDto attractionTypeDto, RedirectAttributes redirectAttributes) {
-        String result = attractionTypeService.save(attractionTypeDto);
-        if(result != null) {
-            redirectAttributes.addFlashAttribute("message", result);
+        AttractionTypeMessage result = attractionTypeService.save(attractionTypeDto);
+        redirectAttributes.addFlashAttribute("message", result.getMessage());
+        if(result.getId() < 0){
             return "redirect:/attractionType/save";
         }
         return "redirect:/attractionType/list";
@@ -43,10 +44,8 @@ public class AttractionTypeController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        String result = attractionTypeService.delete(id);
-        if(result != null) {
-            redirectAttributes.addFlashAttribute("message", result);
-        }
+        AttractionTypeMessage result = attractionTypeService.delete(id);
+        redirectAttributes.addFlashAttribute("message", result.getMessage());
         return "redirect:/attractionType/list";
     }
 

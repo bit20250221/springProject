@@ -1,9 +1,8 @@
 package org.spring.attraction.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.spring.attraction.ENUM.PayType;
+import org.spring.attraction.ENUM.ReservationMessage;
 import org.spring.attraction.dto.*;
-import org.spring.attraction.entity.Payment;
 import org.spring.attraction.service.AttractionService;
 import org.spring.attraction.service.PaymentService;
 import org.spring.attraction.service.PaymentTypeService;
@@ -38,9 +37,9 @@ public class ReservationController {
 
     @PostMapping("/save")
     public String save(AttractionDto attractionDto, RedirectAttributes redirectAttributes) {
-        String result = reservationService.save(attractionDto);
-        if(result != null){
-            redirectAttributes.addFlashAttribute("message", result);
+        ReservationMessage result = reservationService.save(attractionDto);
+        redirectAttributes.addFlashAttribute("message", result.getMessage());
+        if(result.getId() < 0){
             return "redirect:/reservation/save/" + attractionDto.getId();
         }
         return "redirect:/reservation/list";
@@ -62,9 +61,9 @@ public class ReservationController {
 
     @PostMapping("/update")
     public String update(ReservationUpdateDto reservationUpdateDto, RedirectAttributes redirectAttributes) {
-        String result = reservationService.update(reservationUpdateDto);
-        if(result != null){
-            redirectAttributes.addFlashAttribute("message", result);
+        ReservationMessage result = reservationService.update(reservationUpdateDto);
+        redirectAttributes.addFlashAttribute("message", result.getMessage());
+        if(result.getId() < 0){
             return "redirect:/reservation/detail/" + reservationUpdateDto.getId();
         }
         return "redirect:/reservation/list";
@@ -79,12 +78,9 @@ public class ReservationController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        String result = reservationService.delete(id);
-        if(result != null){
-            redirectAttributes.addFlashAttribute("message", result);
-        }
+        ReservationMessage result = reservationService.delete(id);
+        redirectAttributes.addFlashAttribute("message", result.getMessage());
         return "redirect:/reservation/list";
-
     }
 
 }

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>관광지 예약 화면</title>
+  <script src="/js/alert.js"></script>
   <script src="/js/attractionLink.js"></script>
   <script src="/js/reservationFormValidate.js" defer></script>
 </head>
@@ -30,5 +31,8 @@
   </form>
   <button onclick="attractionListLink()">관광지 리스트 확인</button>
 </div>
+<script th:inline="javascript">
+  alertMessage([[${message}]])
+</script>
 </body>
 </html>

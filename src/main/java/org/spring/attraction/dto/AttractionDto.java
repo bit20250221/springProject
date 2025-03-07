@@ -1,7 +1,7 @@
 package org.spring.attraction.dto;
 
 import lombok.*;
-import org.spring.attraction.ENUM.PayType;
+import org.spring.attraction.ENUM.AttractionMessage;
 import org.spring.attraction.entity.Attraction;
 
 import java.time.LocalDateTime;
@@ -43,26 +43,26 @@ public class AttractionDto {
         return attractionDto;
     }
 
-    public static String validate(AttractionDto attractionDto) {
+    public static AttractionMessage validate(AttractionDto attractionDto) {
         String attractionName = attractionDto.getName().trim();
         if(attractionName.isEmpty()) {
-            return "이름이 입력되지 않았습니다.";
+            return AttractionMessage.getTypeById(-5);
         }else if(attractionName.length() > 10) {
-            return "이름은 1~10자로 입력이 가능합니다.";
+            return AttractionMessage.getTypeById(-6);
         }
 
         int attractionPrice = attractionDto.getPrice();
         if(attractionPrice < 0) {
-            return "가격은 음수를 입력할 수 없습니다.";
+            return AttractionMessage.getTypeById(-7);
         }else if(attractionPrice > 500000 || attractionPrice < 1000) {
-            return "가격은 1000~500000범위 내에서 입력이 가능합니다.";
+            return AttractionMessage.getTypeById(-8);
         }
 
         List<Long> attractionTypeDtoIdList = attractionDto.getAttractionTypeDtoIdList();
         if(attractionTypeDtoIdList.isEmpty()) {
-            return "관광지 구분은 최소 1개 이상 선택하셔야 합니다.";
+            return AttractionMessage.getTypeById(-9);
         }else if(attractionTypeDtoIdList.size() > 3) {
-            return "관광지 구분은 최대 3개까지 선택이 가능합니다.";
+            return AttractionMessage.getTypeById(-10);
         }
 
         return null;

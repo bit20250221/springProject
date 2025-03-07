@@ -1,6 +1,7 @@
 package org.spring.attraction.dto;
 
 import lombok.*;
+import org.spring.attraction.ENUM.AreaMessage;
 import org.spring.attraction.entity.Area;
 
 @Getter
@@ -21,18 +22,18 @@ public class AreaDto {
         return areaDto;
     }
 
-    public static String validate(AreaDto areaDto) {
+    public static AreaMessage validate(AreaDto areaDto) {
         String areaCountry = areaDto.getCountry().trim();
         if(areaCountry.isEmpty()) {
-            return "국가가 입력되지 않았습니다.";
+            return AreaMessage.getTypeById(-3);
         }else if(areaCountry.length() > 10) {
-            return "국가는 1~10자로 입력이 가능합니다.";
+            return AreaMessage.getTypeById(-4);
         }
         String areaCity = areaDto.getCity().trim();
         if(areaCity.isEmpty()) {
-            return "도시가 입력되지 않았습니다.";
+            return AreaMessage.getTypeById(-5);
         }else if(areaCity.length() > 10) {
-            return "도시는 1~10자로 입력이 가능합니다.";
+            return AreaMessage.getTypeById(-6);
         }
 
         return null;

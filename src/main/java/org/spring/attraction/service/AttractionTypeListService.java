@@ -1,7 +1,7 @@
 package org.spring.attraction.service;
 
 import lombok.RequiredArgsConstructor;
-import org.spring.attraction.ENUM.AttractionTypeListMessage;
+import org.spring.attraction.ENUM.AttractionMessage;
 import org.spring.attraction.dto.AttractionTypeListDto;
 import org.spring.attraction.entity.Attraction;
 import org.spring.attraction.entity.AttractionType;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,24 +21,24 @@ public class AttractionTypeListService {
     private final AttractionTypeRepository attractionTypeRepository;
     private final AttractionTypeListRepository attractionTypeListRepository;
 
-    public String save(AttractionTypeListDto attractionTypeListDto) {
+    public AttractionMessage save(AttractionTypeListDto attractionTypeListDto) {
         AttractionTypeList attractionTypeList = new AttractionTypeList();
         Attraction attraction = attractionRepository.findById(attractionTypeListDto.getAttractionId()).orElse(null);
         if(attraction != null) {
             attractionTypeList.setAttraction(attraction);
         }else{
-            return AttractionTypeListMessage.getMessageById(-1);
+            return AttractionMessage.getTypeById(-3);
         }
 
         AttractionType attractionType = attractionTypeRepository.findById(attractionTypeListDto.getAttractionTypeId()).orElse(null);
         if(attractionType != null){
             attractionTypeList.setAttractionType(attractionType);
         }else{
-            return AttractionTypeListMessage.getMessageById(-2);
+            return AttractionMessage.getTypeById(-2);
         }
 
         attractionTypeListRepository.save(attractionTypeList);
-        return AttractionTypeListMessage.getMessageById(1);
+        return AttractionMessage.getTypeById(1);
     }
 
     public List<AttractionTypeListDto> findByAttractionId(Long id) {

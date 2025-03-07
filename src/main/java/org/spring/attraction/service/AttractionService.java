@@ -26,8 +26,8 @@ public class AttractionService {
     private final ReservationRepository reservationRepository;
 
     @Transactional
-    public String save(AttractionDto attractionDto) {
-        String result = AttractionDto.validate(attractionDto);
+    public AttractionMessage save(AttractionDto attractionDto) {
+        AttractionMessage result = AttractionDto.validate(attractionDto);
         if (result != null) {
             return result;
         }
@@ -39,17 +39,17 @@ public class AttractionService {
             for(Long attractionTypeDtoId : attractionDto.getAttractionTypeDtoIdList()) {
                 AttractionType attractionType = attractionTypeRepository.findById(attractionTypeDtoId).orElse(null);
                 if (attractionType != null) {
-                    String result2 = attractionTypeListService.save(new AttractionTypeListDto(null, ResultAttraction.getId(), attractionTypeDtoId));
+                    AttractionMessage result2 = attractionTypeListService.save(new AttractionTypeListDto(null, ResultAttraction.getId(), attractionTypeDtoId));
                     if (result2 != null) {
                         return result2;
                     }
                 }else{
-                    return AttractionMessage.getMessageById(-2);
+                    return AttractionMessage.getTypeById(-2);
                 }
             }
-            return AttractionMessage.getMessageById(1);
+            return AttractionMessage.getTypeById(1);
         }
-        return AttractionMessage.getMessageById(-1);
+        return AttractionMessage.getTypeById(-1);
     }
 
     public List<AttractionDto> findAll() {
@@ -100,8 +100,8 @@ public class AttractionService {
     }
 
     @Transactional
-    public String update(AttractionDto attractionDto) {
-        String result = AttractionDto.validate(attractionDto);
+    public AttractionMessage update(AttractionDto attractionDto) {
+        AttractionMessage result = AttractionDto.validate(attractionDto);
         if (result != null) {
             return result;
         }
@@ -116,7 +116,7 @@ public class AttractionService {
             attraction.setArea(areaRepository.findById(attractionDto.getAreaId()).orElse(null));
 
         }else{
-            return AttractionMessage.getMessageById(-3);
+            return AttractionMessage.getTypeById(-3);
         }
 
         attraction.getAttractionsTypeLists().clear();
@@ -133,14 +133,14 @@ public class AttractionService {
                     attractionType.getAttractionTypeListSet().add(newAttractionTypeList);
                 }
             }else {
-                return AttractionMessage.getMessageById(-2);
+                return AttractionMessage.getTypeById(-2);
             }
         }
-        return AttractionMessage.getMessageById(2);
+        return AttractionMessage.getTypeById(2);
     }
 
     @Transactional
-    public String delete(Long id) {
+    public AttractionMessage delete(Long id) {
         List<Reservation> reservationList = reservationRepository.findByAttractionId(id);
         if(reservationList.isEmpty()) {
             Attraction attraction = attractionRepository.findById(id).orElse(null);
@@ -149,9 +149,9 @@ public class AttractionService {
                 attractionRepository.delete(attraction);
                 return null;
             }
-            return AttractionMessage.getMessageById(-3);
+            return AttractionMessage.getTypeById(-3);
         }
-        return AttractionMessage.getMessageById(-4);
+        return AttractionMessage.getTypeById(-4);
 
     }
 }

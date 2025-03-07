@@ -20,17 +20,17 @@ public class AreaService {
     private final AreaRepository areaRepository;
     private final AttractionRepository attractionRepository;
 
-    public String save(AreaDto areaDto) {
-        String result = AreaDto.validate(areaDto);
+    public AreaMessage save(AreaDto areaDto) {
+        AreaMessage result = AreaDto.validate(areaDto);
         if(result != null) {
             return result;
         }
         List<Area> areaList = areaRepository.findByCountryAndCity(areaDto.getCountry(), areaDto.getCity());
         if(areaList.isEmpty()) {
             areaRepository.save(Area.toAreaEntity(areaDto));
-            return AreaMessage.getMessageById(1);
+            return AreaMessage.getTypeById(1);
         }
-        return AreaMessage.getMessageById(-1);
+        return AreaMessage.getTypeById(-1);
     }
 
     public List<AreaDto> findAll() {
@@ -48,9 +48,9 @@ public class AreaService {
 
     public AreaDto findById(Long id) {
         try{
-            Optional<Area> optionalArea = areaRepository.findById(id);
-            if(optionalArea.isPresent()) {
-                return AreaDto.toDto(optionalArea.get());
+            Area optionalArea = areaRepository.findById(id).orElse(null);
+            if(optionalArea != null) {
+                return AreaDto.toDto(optionalArea);
             }
             return null;
         }catch (Exception e) {
@@ -58,13 +58,13 @@ public class AreaService {
         }
     }
 
-    public String delete(Long id) {
+    public AreaMessage delete(Long id) {
         List<Attraction> attraction = attractionRepository.findByAreaId(id);
         if(!attraction.isEmpty()) {
-            return AreaMessage.getMessageById(-2);
+            return AreaMessage.getTypeById(-2);
         }
         areaRepository.deleteById(id);
-        return AreaMessage.getMessageById(2);
+        return AreaMessage.getTypeById(2);
     }
 
 

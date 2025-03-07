@@ -1,6 +1,7 @@
 package org.spring.attraction.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.spring.attraction.ENUM.AreaMessage;
 import org.spring.attraction.dto.AreaDto;
 import org.spring.attraction.service.AreaService;
 import org.springframework.stereotype.Controller;
@@ -28,9 +29,9 @@ public class AreaController {
 
     @PostMapping("/save")
     public String save(@ModelAttribute AreaDto areaDto, RedirectAttributes redirectAttributes) {
-        String result = areaService.save(areaDto);
-        if(result != null) {
-            redirectAttributes.addFlashAttribute("message", result);
+        AreaMessage result = areaService.save(areaDto);
+        redirectAttributes.addFlashAttribute("message", result.getMessage());
+        if(result.getId() < 0) {
             redirectAttributes.addFlashAttribute("areaDto", areaDto);
             return "redirect:/area/save";
         }
@@ -61,9 +62,9 @@ public class AreaController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute AreaDto areaDto, RedirectAttributes redirectAttributes) {
-        String result = areaService.save(areaDto);
-        if(result != null) {
-            redirectAttributes.addFlashAttribute("message", result);
+        AreaMessage result = areaService.save(areaDto);
+        redirectAttributes.addFlashAttribute("message", result.getMessage());
+        if(result.getId() < 0) {
             return "redirect:/area/update/" + areaDto.getId();
         }
         return "redirect:/area/list";
@@ -87,11 +88,9 @@ public class AreaController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-            String result = areaService.delete(id);
-            if(result != null) {
-                redirectAttributes.addFlashAttribute("message", result);
-            }
-            return "redirect:/area/list";
+        AreaMessage result = areaService.delete(id);
+        redirectAttributes.addFlashAttribute("message", result.getMessage());
+        return "redirect:/area/list";
     }
 
 }

@@ -33,30 +33,30 @@ public class ReservationService {
     }
 
     @Transactional
-    public String save(AttractionDto attractionDto) {
+    public ReservationMessage save(AttractionDto attractionDto) {
         ReservationUpdateDto reservationUpdateDto = new ReservationUpdateDto();
         reservationUpdateDto.setPeplenum(attractionDto.getPeplenum());
         reservationUpdateDto.setReservedate(attractionDto.getReservedate());
         reservationUpdateDto.setPaymentTypeId(attractionDto.getPaymentTypeId());
 
-        String result = ReservationUpdateDto.validate(reservationUpdateDto);
+        ReservationMessage result = ReservationUpdateDto.validate(reservationUpdateDto);
         if (result != null) {
             return result;
         }
 
         User user = userRepository.findById(4L).orElse(null);
         if(user == null) {
-            return ReservationMessage.getMessageById(-1);
+            return ReservationMessage.getTypeById(-1);
         }
 
         Attraction attraction = attractionRepository.findById(attractionDto.getId()).orElse(null);
         if(attraction == null) {
-            return ReservationMessage.getMessageById(-2);
+            return ReservationMessage.getTypeById(-2);
         }
 
         PaymentType paymentType = paymentTypeRepository.findById(attractionDto.getPaymentTypeId()).orElse(null);
         if(paymentType == null) {
-            return ReservationMessage.getMessageById(-3);
+            return ReservationMessage.getTypeById(-3);
         }
 
         Reservation reservation = new Reservation();
@@ -78,7 +78,7 @@ public class ReservationService {
         Payment payment = Payment.toEntity(paymentDto);
         reservation.getPayments().add(paymentRepository.save(payment));
 
-        return ReservationMessage.getMessageById(1);
+        return ReservationMessage.getTypeById(1);
 
     }
 
@@ -95,8 +95,8 @@ public class ReservationService {
     }
 
     @Transactional
-    public String update(ReservationUpdateDto reservationUpdateDto) {
-        String result = ReservationUpdateDto.validate(reservationUpdateDto);
+    public ReservationMessage update(ReservationUpdateDto reservationUpdateDto) {
+        ReservationMessage result = ReservationUpdateDto.validate(reservationUpdateDto);
         if (result != null) {
             return result;
         }
@@ -110,22 +110,22 @@ public class ReservationService {
             Payment payment = paymentService.update(reservationUpdateDto);
             if(payment != null) {
                 reservation.getPayments().add(payment);
-                return ReservationMessage.getMessageById(2);
+                return ReservationMessage.getTypeById(2);
             }
 
-            return ReservationMessage.getMessageById(-3);
+            return ReservationMessage.getTypeById(-3);
         }
-        return ReservationMessage.getMessageById(-4);
+        return ReservationMessage.getTypeById(-4);
     }
 
     @Transactional
-    public String delete(Long id) {
+    public ReservationMessage delete(Long id) {
         Reservation reservation = reservationRepository.findById(id).orElse(null);
         if(reservation != null) {
             reservation.getPayments().clear();
             reservationRepository.delete(reservation);
-            return ReservationMessage.getMessageById(3);
+            return ReservationMessage.getTypeById(3);
         }
-        return ReservationMessage.getMessageById(-4);
+        return ReservationMessage.getTypeById(-4);
     }
 }
