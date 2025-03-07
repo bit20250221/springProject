@@ -1,9 +1,13 @@
 package org.spring.attraction.service;
 
 import lombok.RequiredArgsConstructor;
+import org.spring.attraction.ENUM.AttractionTypeMessage;
 import org.spring.attraction.dto.AttractionTypeDto;
+import org.spring.attraction.entity.Attraction;
 import org.spring.attraction.entity.AttractionType;
+import org.spring.attraction.entity.AttractionTypeList;
 import org.spring.attraction.repository.AttractionRepository;
+import org.spring.attraction.repository.AttractionTypeListRepository;
 import org.spring.attraction.repository.AttractionTypeRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AttractionTypeService {
     private final AttractionTypeRepository attractionTypeRepository;
+    private final AttractionTypeListRepository attractionTypeListRepository;
 
     public String save(AttractionTypeDto attractionTypeDto) {
         String result =  AttractionTypeDto.validate(attractionTypeDto);
@@ -24,9 +29,9 @@ public class AttractionTypeService {
         AttractionType attractionType = attractionTypeRepository.findByType(attractionTypeDto.getType());
         if(attractionType == null) {
             attractionTypeRepository.save(AttractionType.toEntity(attractionTypeDto));
-            return null;
+            return AttractionTypeMessage.getMessageById(1);
         }
-        return "구분은 중복해서 입력할 수 없습니다.";
+        return AttractionTypeMessage.getMessageById(-1);
     }
 
     public List<AttractionTypeDto> findAll() {
@@ -42,7 +47,13 @@ public class AttractionTypeService {
         return null;
     }
 
-    public void delete(Long id) {
+    public String delete(Long id) {
+        List<AttractionTypeList> attractionTypeListList = attractionTypeListRepository.findByAttractionTypeId(id);
+        if(!attractionTypeListList.isEmpty()) {
+            return AttractionTypeMessage.getMessageById(-2);
+        }
         attractionTypeRepository.deleteById(id);
+
+        return AttractionTypeMessage.getMessageById(2);
     }
 }

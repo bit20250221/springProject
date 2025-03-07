@@ -11,4 +11,6 @@ public interface AttractionTypeListRepository extends JpaRepository<AttractionTy
     List<AttractionTypeList> findByAttractionId(Long id);
 
     AttractionTypeList findByAttractionIdAndAttractionTypeId(Long id, Long id1);
+
+    List<AttractionTypeList> findByAttractionTypeId(Long id);
 }

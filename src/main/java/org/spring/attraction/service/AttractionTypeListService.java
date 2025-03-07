@@ -1,6 +1,7 @@
 package org.spring.attraction.service;
 
 import lombok.RequiredArgsConstructor;
+import org.spring.attraction.ENUM.AttractionTypeListMessage;
 import org.spring.attraction.dto.AttractionTypeListDto;
 import org.spring.attraction.entity.Attraction;
 import org.spring.attraction.entity.AttractionType;
@@ -21,18 +22,24 @@ public class AttractionTypeListService {
     private final AttractionTypeRepository attractionTypeRepository;
     private final AttractionTypeListRepository attractionTypeListRepository;
 
-    public boolean save(AttractionTypeListDto attractionTypeListDto) {
+    public String save(AttractionTypeListDto attractionTypeListDto) {
         AttractionTypeList attractionTypeList = new AttractionTypeList();
-        Optional<Attraction> attraction = attractionRepository.findById(attractionTypeListDto.getAttractionId());
-        Optional<AttractionType> attractionType = attractionTypeRepository.findById(attractionTypeListDto.getAttractionTypeId());
-        if(attraction.isPresent() && attractionType.isPresent()) {
-            attractionTypeList.setAttraction(attraction.get());
-            attractionTypeList.setAttractionType(attractionType.get());
-            attractionTypeListRepository.save(attractionTypeList);
-            return true;
+        Attraction attraction = attractionRepository.findById(attractionTypeListDto.getAttractionId()).orElse(null);
+        if(attraction != null) {
+            attractionTypeList.setAttraction(attraction);
         }else{
-            return false;
+            return AttractionTypeListMessage.getMessageById(-1);
         }
+
+        AttractionType attractionType = attractionTypeRepository.findById(attractionTypeListDto.getAttractionTypeId()).orElse(null);
+        if(attractionType != null){
+            attractionTypeList.setAttractionType(attractionType);
+        }else{
+            return AttractionTypeListMessage.getMessageById(-2);
+        }
+
+        attractionTypeListRepository.save(attractionTypeList);
+        return AttractionTypeListMessage.getMessageById(1);
     }
 
     public List<AttractionTypeListDto> findByAttractionId(Long id) {

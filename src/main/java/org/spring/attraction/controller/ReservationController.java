@@ -43,7 +43,7 @@ public class ReservationController {
             redirectAttributes.addFlashAttribute("message", result);
             return "redirect:/reservation/save/" + attractionDto.getId();
         }
-        return "redirect:/reservation/list/";
+        return "redirect:/reservation/list";
     }
 
     @GetMapping("/detail/{id}")
@@ -67,7 +67,7 @@ public class ReservationController {
             redirectAttributes.addFlashAttribute("message", result);
             return "redirect:/reservation/detail/" + reservationUpdateDto.getId();
         }
-        return "redirect:/reservation/list/";
+        return "redirect:/reservation/list";
     }
 
     @GetMapping("/list")
@@ -79,7 +79,10 @@ public class ReservationController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("message", reservationService.delete(id));
+        String result = reservationService.delete(id);
+        if(result != null){
+            redirectAttributes.addFlashAttribute("message", result);
+        }
         return "redirect:/reservation/list";
 
     }

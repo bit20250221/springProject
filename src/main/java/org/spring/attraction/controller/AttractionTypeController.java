@@ -42,10 +42,12 @@ public class AttractionTypeController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
-        attractionTypeService.delete(id);
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        String result = attractionTypeService.delete(id);
+        if(result != null) {
+            redirectAttributes.addFlashAttribute("message", result);
+        }
         return "redirect:/attractionType/list";
-
     }
 
 

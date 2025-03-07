@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>관광지 예약 화면</title>
   <script src="/js/attractionLink.js"></script>
-  <script src="/js/reservationFormValidate.js"></script>
+  <script src="/js/reservationFormValidate.js" defer></script>
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
@@ -18,6 +18,7 @@
     <label for="peplenum">인원수</label><input type="number" id="peplenum" name="peplenum" required><br/>
     <p id="error-message-peplenum"></p>
     <label for="reservedate">예약일자</label><input type="datetime-local" id="reservedate" name="reservedate"><br/>
+    <p id="error-message-reservedate"></p>
     <label for="paymentTypeId">결제방법</label>
     <select id="paymentTypeId" name="paymentTypeId">
       <option th:each="paymentTypeDto : ${paymentTypeDtoList}"

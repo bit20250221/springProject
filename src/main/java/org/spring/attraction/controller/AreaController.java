@@ -87,13 +87,11 @@ public class AreaController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        try{
-            areaService.delete(id);
+            String result = areaService.delete(id);
+            if(result != null) {
+                redirectAttributes.addFlashAttribute("message", result);
+            }
             return "redirect:/area/list";
-        }catch (Exception e){
-            redirectAttributes.addFlashAttribute("message", e.getMessage());
-            return "redirect:/area/list";
-        }
     }
 
 }

@@ -2,15 +2,12 @@ package org.spring.attraction.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.spring.attraction.ENUM.ReservationMessage;
 import org.spring.attraction.dto.*;
 import org.spring.attraction.entity.*;
 import org.spring.attraction.repository.*;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,17 +46,17 @@ public class ReservationService {
 
         User user = userRepository.findById(4L).orElse(null);
         if(user == null) {
-            return "유저 정보를 불러오지 못 했습니다.";
+            return ReservationMessage.getMessageById(-1);
         }
 
         Attraction attraction = attractionRepository.findById(attractionDto.getId()).orElse(null);
         if(attraction == null) {
-            return "관광지 정보를 불러오지 못 했습니다.";
+            return ReservationMessage.getMessageById(-2);
         }
 
         PaymentType paymentType = paymentTypeRepository.findById(attractionDto.getPaymentTypeId()).orElse(null);
         if(paymentType == null) {
-            return "결제방법 정보를 불러오지 못 했습니다.";
+            return ReservationMessage.getMessageById(-3);
         }
 
         Reservation reservation = new Reservation();
@@ -81,13 +78,8 @@ public class ReservationService {
         Payment payment = Payment.toEntity(paymentDto);
         reservation.getPayments().add(paymentRepository.save(payment));
 
-        return null;
+        return ReservationMessage.getMessageById(1);
 
-    }
-    public static LocalDateTime stringToLocalDateTime(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-        LocalTime localTime = LocalTime.parse(date, formatter);
-        return LocalDateTime.of(LocalDate.now(), localTime);
     }
 
     public ReservationDto findById(Long id) {
@@ -118,12 +110,12 @@ public class ReservationService {
             Payment payment = paymentService.update(reservationUpdateDto);
             if(payment != null) {
                 reservation.getPayments().add(payment);
-                return null;
+                return ReservationMessage.getMessageById(2);
             }
 
-            return "결제방법을 불러오지 못 했습니다.";
+            return ReservationMessage.getMessageById(-3);
         }
-        return "예약정보를 불러오지 못 했습니다.";
+        return ReservationMessage.getMessageById(-4);
     }
 
     @Transactional
@@ -132,8 +124,8 @@ public class ReservationService {
         if(reservation != null) {
             reservation.getPayments().clear();
             reservationRepository.delete(reservation);
-            return "성공적으로 삭제가 되었습니다.";
+            return ReservationMessage.getMessageById(3);
         }
-        return null;
+        return ReservationMessage.getMessageById(-4);
     }
 }

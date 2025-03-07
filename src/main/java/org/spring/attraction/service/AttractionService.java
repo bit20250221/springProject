@@ -2,6 +2,7 @@ package org.spring.attraction.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.spring.attraction.ENUM.AttractionMessage;
 import org.spring.attraction.dto.AreaDto;
 import org.spring.attraction.dto.AttractionDto;
 import org.spring.attraction.dto.AttractionTypeDto;
@@ -10,10 +11,6 @@ import org.spring.attraction.entity.*;
 import org.spring.attraction.repository.*;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,23 +39,17 @@ public class AttractionService {
             for(Long attractionTypeDtoId : attractionDto.getAttractionTypeDtoIdList()) {
                 AttractionType attractionType = attractionTypeRepository.findById(attractionTypeDtoId).orElse(null);
                 if (attractionType != null) {
-                    attractionTypeListService.save(new AttractionTypeListDto(
-                            null, ResultAttraction.getId(), attractionTypeDtoId
-                    ));
+                    String result2 = attractionTypeListService.save(new AttractionTypeListDto(null, ResultAttraction.getId(), attractionTypeDtoId));
+                    if (result2 != null) {
+                        return result2;
+                    }
                 }else{
-                    return "관광지 구분 정보를 불러오지 못 했습니다.";
+                    return AttractionMessage.getMessageById(-2);
                 }
             }
-            return null;
+            return AttractionMessage.getMessageById(1);
         }
-        return "지역 정보를 불러오지 못 했습니다.";
-    }
-
-
-    public static LocalDateTime stringToLocalDateTime(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalTime localTime = LocalTime.parse(date, formatter);
-        return LocalDateTime.of(LocalDate.now(), localTime);
+        return AttractionMessage.getMessageById(-1);
     }
 
     public List<AttractionDto> findAll() {
@@ -125,7 +116,7 @@ public class AttractionService {
             attraction.setArea(areaRepository.findById(attractionDto.getAreaId()).orElse(null));
 
         }else{
-            return "관광지 정보를 불러오지 못 했습니다.";
+            return AttractionMessage.getMessageById(-3);
         }
 
         attraction.getAttractionsTypeLists().clear();
@@ -142,10 +133,10 @@ public class AttractionService {
                     attractionType.getAttractionTypeListSet().add(newAttractionTypeList);
                 }
             }else {
-                return "관광지 구분 정보를 불러오지 못 했습니다.";
+                return AttractionMessage.getMessageById(-2);
             }
         }
-        return null;
+        return AttractionMessage.getMessageById(2);
     }
 
     @Transactional
@@ -158,9 +149,9 @@ public class AttractionService {
                 attractionRepository.delete(attraction);
                 return null;
             }
-            return "관광지 정보가 존재하지 않습니다.";
+            return AttractionMessage.getMessageById(-3);
         }
-        return "예약된 정보가 있어 삭제할 수 없습니다.";
+        return AttractionMessage.getMessageById(-4);
 
     }
 }

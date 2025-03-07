@@ -4,7 +4,7 @@ document.getElementById("saveForm").addEventListener("submit", function(event){
     const peplenum = document.getElementById("peplenum").value = document.getElementById("peplenum").value.trim();
     const price = document.getElementById("price").value = document.getElementById("price").value.trim();
     const reservedate = document.getElementById("reservedate").value = document.getElementById("reservedate").value.trim();
-    const errorMessagePeplenum = document.getElementById("error-message-type");
+    const errorMessagePeplenum = document.getElementById("error-message-peplenum");
     const errorMessageReservedate = document.getElementById("error-message-reservedate");
 
     errorMessagePeplenum.innerText = "";
@@ -12,8 +12,10 @@ document.getElementById("saveForm").addEventListener("submit", function(event){
 
     if(peplenum === ""){
         errorMessagePeplenum.innerText = "인원수를 입력하세요.";
-    }else if(peplenum > 10){
-        errorMessagePeplenum.innerText = "인원수는 1~10명까지 입력이 가능합니다.";
+    }else if(peplenum < 0){
+        errorMessagePeplenum.innerText = "인원수는 음수로 입력하실 수 없습니다.";
+    }else if(peplenum > 10 || peplenum < 1){
+        errorMessagePeplenum.innerText = "인원수는 1~9명까지 입력이 가능합니다.";
     }
 
     if(reservedate === ""){

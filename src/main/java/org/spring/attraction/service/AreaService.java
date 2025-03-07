@@ -1,9 +1,12 @@
 package org.spring.attraction.service;
 
 import lombok.RequiredArgsConstructor;
+import org.spring.attraction.ENUM.AreaMessage;
 import org.spring.attraction.dto.AreaDto;
 import org.spring.attraction.entity.Area;
+import org.spring.attraction.entity.Attraction;
 import org.spring.attraction.repository.AreaRepository;
+import org.spring.attraction.repository.AttractionRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AreaService {
     private final AreaRepository areaRepository;
+    private final AttractionRepository attractionRepository;
 
     public String save(AreaDto areaDto) {
         String result = AreaDto.validate(areaDto);
@@ -24,9 +28,9 @@ public class AreaService {
         List<Area> areaList = areaRepository.findByCountryAndCity(areaDto.getCountry(), areaDto.getCity());
         if(areaList.isEmpty()) {
             areaRepository.save(Area.toAreaEntity(areaDto));
-            return null;
+            return AreaMessage.getMessageById(1);
         }
-        return "이미 등록된 지역입니다.";
+        return AreaMessage.getMessageById(-1);
     }
 
     public List<AreaDto> findAll() {
@@ -54,12 +58,13 @@ public class AreaService {
         }
     }
 
-    public void delete(Long id) {
-        try{
-            areaRepository.deleteById(id);
-        }catch (DataIntegrityViolationException e) {
-            throw new IllegalStateException("삭제할 수 없습니다. 다른 데이터에서 참조 중입니다.");
+    public String delete(Long id) {
+        List<Attraction> attraction = attractionRepository.findByAreaId(id);
+        if(!attraction.isEmpty()) {
+            return AreaMessage.getMessageById(-2);
         }
+        areaRepository.deleteById(id);
+        return AreaMessage.getMessageById(2);
     }
 
 
