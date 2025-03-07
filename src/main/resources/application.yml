@@ -1,6 +1,9 @@
 # ?? ?? ??
 server:
     port: 8080
+    servlet:
+        session:
+            timeout: 3600
 
 # database ?? ??
 spring:
@@ -18,4 +21,4 @@ spring:
         open-in-view: false
         show-sql: true
         hibernate:
-            ddl-auto: create
+            ddl-auto: none

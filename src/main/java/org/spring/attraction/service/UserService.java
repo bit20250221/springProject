@@ -1,5 +1,6 @@
 package org.spring.attraction.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.spring.attraction.dto.user.UserDTO;
 import org.spring.attraction.entity.User;
 import org.spring.attraction.repository.UserRepository;
@@ -11,6 +12,7 @@ import static org.spring.attraction.ENUM.Grade.bronze;
 import static org.spring.attraction.ENUM.UserType.manager;
 import static org.spring.attraction.ENUM.UserType.nomal;
 
+@Slf4j
 @Service
 public class UserService {
     @Autowired
@@ -27,10 +29,10 @@ public class UserService {
         }
 
         User user = new User();
-        System.out.println(userDTO.getId());
-        System.out.println(userDTO.getUserLoginId());
-        System.out.println(userDTO.getPass());
-        System.out.println(userDTO.getBirthDate());
+        log.info(userDTO.getId().toString());
+        log.info(userDTO.getUserLoginId());
+        log.info(userDTO.getPass());
+        log.info(userDTO.getBirthDate().toString());
 
         user.setId(userDTO.getId());
         user.setUserLoginId(userDTO.getUserLoginId());
@@ -41,27 +43,4 @@ public class UserService {
 
         userRepository.save(user);
     }
-
-//    public User login(UserDTO userDTO){
-//        System.out.println("로그인 시도: " + userDTO.getUserLoginId() + " / " + userDTO.getPass());
-//
-//        User byUserLoginId = userRepository.findByUserLoginId(userDTO.getUserLoginId());
-//
-//        if(byUserLoginId != null){
-//            User user = byUserLoginId;
-//            System.out.println("DB에서 찾은 유저: " + user.getUserLoginId() + " / " + user.getPass());
-//
-//            if(bCryptPasswordEncoder.matches(userDTO.getPass(), user.getPass())){
-//                System.out.println("비밀번호 일치");
-//                return user;
-//            } else {
-//                System.out.println("비밀번호 불일치");
-//                return null;
-//            }
-//        } else {
-//            System.out.println("해당 아이디가 존재하지 않음");
-//            return null;
-//        }
-//    }
-
 }

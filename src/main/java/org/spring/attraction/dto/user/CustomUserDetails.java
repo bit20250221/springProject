@@ -1,6 +1,6 @@
 package org.spring.attraction.dto.user;
 
-import org.spring.attraction.entity.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,53 +9,51 @@ import java.util.Collection;
 
 public class CustomUserDetails implements UserDetails {
 
-    private User user;
+    // ViewUserDTO를 반환하는 메서드
+    @Getter
+    private final ViewUserDTO viewUserDTO;
+    private String password;
 
-    public CustomUserDetails(User user) {
-        this.user = user;
+    // ViewUserDTO를 생성자에서 주입받습니다.
+    public CustomUserDetails(ViewUserDTO viewUserDTO, String password) {
+        this.viewUserDTO = viewUserDTO;
+        this.password = password;
     }
 
     @Override // 사용자의 권한 반환
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
         Collection<GrantedAuthority> collection = new ArrayList<>();
-
-        collection.add(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return user.getUserType().name();
-            }
-        });
+        collection.add(() -> viewUserDTO.getUserType().name()); // 유저 타입을 권한으로 반환
         return collection;
     }
 
     @Override
     public String getPassword() {
-        return user.getPass();
+        return password; // 비밀번호는 반환하지 않음 (보안상 필요 없음)
     }
 
     @Override
     public String getUsername() {
-        return user.getUserLoginId();
+        return viewUserDTO.getUserLoginId(); // 유저 로그인 ID 반환
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true; // 계정 만료 여부 (true = 만료되지 않음)
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return true; // 계정 잠금 여부 (true = 잠기지 않음)
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true; // 인증 정보 만료 여부 (true = 만료되지 않음)
     }
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return true; // 계정 활성화 여부 (true = 활성화됨)
     }
 }

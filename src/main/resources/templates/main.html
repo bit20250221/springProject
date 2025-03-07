@@ -6,9 +6,8 @@
 </head>
 <body>
   <h2>메인 화면</h2>
-  userLoginId 세션 값 : <p th:text="${session.userLoginId}"></p>
-  <!-- Enum 타입 안가져와짐 -->
-  userType 세션 값 : <p th:text="${session.userType?.name()}"></p>
-  <a href="/logout">로그 아웃</a>
+  <a href="/logout">로그 아웃</a><br>
+  <a href="/admin">어드민 페이지</a><br>
+  <a href="/myPage">마이 페이지</a><br>
 </body>
 </html>
