@@ -23,6 +23,7 @@ public class ReservationService {
     private final PaymentService paymentService;
     private final PaymentRepository paymentRepository;
     private final ViewReservationRepository viewReservationRepository;
+    private final PaymentTypeRepository paymentTypeRepository;
 
     public List<ViewReservationDto> findAllByView() {
         List<ViewReservation> viewReservationList = viewReservationRepository.findAll();
@@ -56,6 +57,11 @@ public class ReservationService {
             return "관광지 정보를 불러오지 못 했습니다.";
         }
 
+        PaymentType paymentType = paymentTypeRepository.findById(attractionDto.getPaymentTypeId()).orElse(null);
+        if(paymentType == null) {
+            return "결제방법 정보를 불러오지 못 했습니다.";
+        }
+
         Reservation reservation = new Reservation();
         reservation.setCreatedate(LocalDateTime.now());
         reservation.setPeplenum(attractionDto.getPeplenum());
@@ -68,11 +74,12 @@ public class ReservationService {
         reservationRepository.save(reservation);
 
         PaymentDto paymentDto = new PaymentDto();
-        paymentDto.setReservationId(reservation.getId());
-        paymentDto.setPaymentTypeId(attractionDto.getPaymentTypeId());
+        paymentDto.setReservation(reservation);
+        paymentDto.setPaymentType(paymentType);
         paymentDto.setCreatedate(LocalDateTime.now());
-        Payment payment = paymentService.save(paymentDto);
-        reservation.getPayments().add(payment);
+
+        Payment payment = Payment.toEntity(paymentDto);
+        reservation.getPayments().add(paymentRepository.save(payment));
 
         return null;
 

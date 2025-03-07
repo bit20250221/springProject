@@ -22,21 +22,6 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final ReservationRepository reservationRepository;
 
-    public Payment save(PaymentDto paymentDto) {
-        Payment payment = new Payment();
-        PaymentType paymentType = paymentTypeRepository.findById(paymentDto.getPaymentTypeId()).orElse(null);
-        Reservation reservation = reservationRepository.findById(paymentDto.getReservationId()).orElse(null);
-
-        if (paymentType != null && reservation != null) {
-            payment.setPaymentType(paymentType);
-            payment.setCreatedate(paymentDto.getCreatedate());
-            payment.setReservation(reservation);
-
-            return paymentRepository.save(payment);
-        }
-        return null;
-    }
-
 
     public PaymentDto findById(Long paymentId) {
         Payment payment = paymentRepository.findById(paymentId).orElse(null);

@@ -24,7 +24,7 @@
             <option th:each="paymentTypeDto : ${paymentTypeDtoList}"
                     th:value="${paymentTypeDto.getId()}"
                     th:text="${paymentTypeDto.getType()}"
-                    th:selected="${paymentTypeDto.getId() == paymentDto.getPaymentTypeId()}">
+                    th:selected="${paymentTypeDto.getId() == paymentDto.getPaymentType().getId()}">
             </option>
         </select><br/>
         <button type="submit">수정하기</button>
