@@ -35,37 +35,46 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationDto save(AttractionDto attractionDto) {
-        try{
-            Reservation reservation = new Reservation();
-            User user = userRepository.findById(4L).orElse(null);
-            Attraction attraction = attractionRepository.findById(attractionDto.getId()).orElse(null);
-            if(user == null || attraction == null) {
-                return null;
-            }
+    public String save(AttractionDto attractionDto) {
+        ReservationUpdateDto reservationUpdateDto = new ReservationUpdateDto();
+        reservationUpdateDto.setPeplenum(attractionDto.getPeplenum());
+        reservationUpdateDto.setReservedate(attractionDto.getReservedate());
+        reservationUpdateDto.setPaymentTypeId(attractionDto.getPaymentTypeId());
 
-            reservation.setCreatedate(LocalDateTime.now());
-            reservation.setPeplenum(attractionDto.getPeplenum());
-            reservation.setReservedate(stringToLocalDateTime(attractionDto.getReservedate()));
-            reservation.setUser(user);
-            reservation.setAttraction(attraction);
-            user.getReservations().add(reservation);
-            attraction.getReservations().add(reservation);
-
-            reservationRepository.save(reservation);
-
-            PaymentDto paymentDto = new PaymentDto();
-            paymentDto.setReservationId(reservation.getId());
-            paymentDto.setPaymentTypeId(attractionDto.getPaymentTypeId());
-            paymentDto.setCreatedate(LocalDateTime.now());
-            Payment payment = paymentService.save(paymentDto);
-            reservation.getPayments().add(payment);
-
-            return ReservationDto.toDto(reservation);
-        }catch (Exception e){
-            e.printStackTrace();
-            return null;
+        String result = ReservationUpdateDto.validate(reservationUpdateDto);
+        if (result != null) {
+            return result;
         }
+
+        User user = userRepository.findById(4L).orElse(null);
+        if(user == null) {
+            return "유저 정보를 불러오지 못 했습니다.";
+        }
+
+        Attraction attraction = attractionRepository.findById(attractionDto.getId()).orElse(null);
+        if(attraction == null) {
+            return "관광지 정보를 불러오지 못 했습니다.";
+        }
+
+        Reservation reservation = new Reservation();
+        reservation.setCreatedate(LocalDateTime.now());
+        reservation.setPeplenum(attractionDto.getPeplenum());
+        reservation.setReservedate(attractionDto.getReservedate());
+        reservation.setUser(user);
+        reservation.setAttraction(attraction);
+        user.getReservations().add(reservation);
+        attraction.getReservations().add(reservation);
+
+        reservationRepository.save(reservation);
+
+        PaymentDto paymentDto = new PaymentDto();
+        paymentDto.setReservationId(reservation.getId());
+        paymentDto.setPaymentTypeId(attractionDto.getPaymentTypeId());
+        paymentDto.setCreatedate(LocalDateTime.now());
+        Payment payment = paymentService.save(paymentDto);
+        reservation.getPayments().add(payment);
+
+        return null;
 
     }
     public static LocalDateTime stringToLocalDateTime(String date) {
@@ -87,7 +96,12 @@ public class ReservationService {
     }
 
     @Transactional
-    public boolean update(ReservationUpdateDto reservationUpdateDto) {
+    public String update(ReservationUpdateDto reservationUpdateDto) {
+        String result = ReservationUpdateDto.validate(reservationUpdateDto);
+        if (result != null) {
+            return result;
+        }
+
         Reservation reservation = reservationRepository.findById(reservationUpdateDto.getId()).orElse(null);
         if(reservation != null) {
             reservation.setPeplenum(reservationUpdateDto.getPeplenum());
@@ -97,10 +111,14 @@ public class ReservationService {
             Payment payment = paymentService.update(reservationUpdateDto);
             if(payment != null) {
                 reservation.getPayments().add(payment);
+                return null;
             }
+
+            return "결제방법을 불러오지 못 했습니다.";
         }
-        return false;
+        return "예약정보를 불러오지 못 했습니다.";
     }
+
     @Transactional
     public String delete(Long id) {
         Reservation reservation = reservationRepository.findById(id).orElse(null);

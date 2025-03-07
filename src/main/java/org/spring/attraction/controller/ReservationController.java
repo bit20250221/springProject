@@ -37,9 +37,13 @@ public class ReservationController {
     }
 
     @PostMapping("/save")
-    public String save(AttractionDto attractionDto, Model model) {
-        ReservationDto reservationDto = reservationService.save(attractionDto);
-        return "redirect:/reservation/detail/" + reservationDto.getId();
+    public String save(AttractionDto attractionDto, RedirectAttributes redirectAttributes) {
+        String result = reservationService.save(attractionDto);
+        if(result != null){
+            redirectAttributes.addFlashAttribute("message", result);
+            return "redirect:/reservation/save/" + attractionDto.getId();
+        }
+        return "redirect:/reservation/list/";
     }
 
     @GetMapping("/detail/{id}")
@@ -57,10 +61,13 @@ public class ReservationController {
     }
 
     @PostMapping("/update")
-    public String update(ReservationUpdateDto reservationUpdateDto, Model model) {
-        reservationService.update(reservationUpdateDto);
-        return "redirect:/reservation/detail/" + reservationUpdateDto.getId();
-
+    public String update(ReservationUpdateDto reservationUpdateDto, RedirectAttributes redirectAttributes) {
+        String result = reservationService.update(reservationUpdateDto);
+        if(result != null){
+            redirectAttributes.addFlashAttribute("message", result);
+            return "redirect:/reservation/detail/" + reservationUpdateDto.getId();
+        }
+        return "redirect:/reservation/list/";
     }
 
     @GetMapping("/list")

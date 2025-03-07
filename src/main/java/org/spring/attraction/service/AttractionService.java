@@ -29,22 +29,29 @@ public class AttractionService {
     private final ReservationRepository reservationRepository;
 
     @Transactional
-    public boolean save(AttractionDto attractionDto) {
-        Optional<Area> area = areaRepository.findById(attractionDto.getAreaId());
-        if (area.isPresent()) {
+    public String save(AttractionDto attractionDto) {
+        String result = AttractionDto.validate(attractionDto);
+        if (result != null) {
+            return result;
+        }
+        Area area = areaRepository.findById(attractionDto.getAreaId()).orElse(null);
+        if (area != null) {
             Attraction attraction = Attraction.toAttractionEntity(attractionDto);
-            attraction.setOpentime(stringToLocalDateTime(attractionDto.getOpenTime()));
-            attraction.setClosetime(stringToLocalDateTime(attractionDto.getCloseTime()));
-            attraction.setArea(area.get());
+            attraction.setArea(area);
             Attraction ResultAttraction = attractionRepository.save(attraction);
             for(Long attractionTypeDtoId : attractionDto.getAttractionTypeDtoIdList()) {
-                attractionTypeListService.save(new AttractionTypeListDto(
-                        null, ResultAttraction.getId(), attractionTypeDtoId
-                ));
+                AttractionType attractionType = attractionTypeRepository.findById(attractionTypeDtoId).orElse(null);
+                if (attractionType != null) {
+                    attractionTypeListService.save(new AttractionTypeListDto(
+                            null, ResultAttraction.getId(), attractionTypeDtoId
+                    ));
+                }else{
+                    return "관광지 구분 정보를 불러오지 못 했습니다.";
+                }
             }
-            return true;
+            return null;
         }
-        return false;
+        return "지역 정보를 불러오지 못 했습니다.";
     }
 
 
@@ -60,8 +67,8 @@ public class AttractionService {
 
         for (Attraction attraction : attractionList) {
             AttractionDto attractionDto = AttractionDto.toDto(attraction);
-            attractionDto.setOpenTime(attractionDto.getOpenTime().substring(Math.max(0, attractionDto.getOpenTime().length() - 5)));
-            attractionDto.setCloseTime(attractionDto.getCloseTime().substring(Math.max(0, attractionDto.getCloseTime().length() - 5)));
+            attractionDto.setOpenTime(attractionDto.getOpenTime());
+            attractionDto.setCloseTime(attractionDto.getCloseTime());
 
             List<AttractionTypeList> attractionTypeLists = attractionTypeListRepository.findByAttractionId(attractionDto.getId());
             List<String> attractionTypeStringList = new ArrayList<>();
@@ -94,69 +101,66 @@ public class AttractionService {
         Optional<Attraction> attraction = attractionRepository.findById(id);
         if(attraction.isPresent()) {
             AttractionDto attractionDto = AttractionDto.toDto(attraction.get());
-            attractionDto.setOpenTime(attractionDto.getOpenTime().substring(Math.max(0, attractionDto.getOpenTime().length() - 5)));
-            attractionDto.setCloseTime(attractionDto.getCloseTime().substring(Math.max(0, attractionDto.getCloseTime().length() - 5)));
+            attractionDto.setOpenTime(attractionDto.getOpenTime());
+            attractionDto.setCloseTime(attractionDto.getCloseTime());
             return attractionDto;
         }
         return null;
     }
 
     @Transactional
-    public boolean update(AttractionDto attractionDto) {
-        try{
-            Attraction attraction = attractionRepository.findById(attractionDto.getId()).orElse(null);
-            if(attraction != null) {
-                attraction.setName(attractionDto.getName());
-                attraction.setPrice(attractionDto.getPrice());
-                attraction.setOpentime(stringToLocalDateTime(attractionDto.getOpenTime()));
-                attraction.setClosetime(stringToLocalDateTime(attractionDto.getCloseTime()));
-                attraction.setExplanation(attractionDto.getExplanation());
-                attraction.setArea(areaRepository.findById(attractionDto.getAreaId()).orElse(null));
-
-            }else{
-                return false;
-            }
-            attraction.getAttractionsTypeLists().clear();
-
-            if(attractionDto.getAttractionTypeDtoIdList() == null){
-                return false;
-            }
-            for(Long id : attractionDto.getAttractionTypeDtoIdList()) {
-                AttractionType attractionType = attractionTypeRepository.findById(id).orElse(null);
-                if(attractionType != null) {
-                    AttractionTypeList attractionTypeList = attractionTypeListRepository.findByAttractionIdAndAttractionTypeId(attraction.getId(), attractionType.getId());
-                    if(attractionTypeList == null) {
-                        AttractionTypeList newAttractionTypeList = new AttractionTypeList();
-                        newAttractionTypeList.setAttraction(attraction);
-                        newAttractionTypeList.setAttractionType(attractionType);
-                        attraction.getAttractionsTypeLists().add(newAttractionTypeList);
-                        attractionType.getAttractionTypeListSet().add(newAttractionTypeList);
-                    }
-                }else {
-                    return false;
-                }
-            }
-            return true;
-        }catch (Exception e) {
-            e.printStackTrace();
-            return false;
+    public String update(AttractionDto attractionDto) {
+        String result = AttractionDto.validate(attractionDto);
+        if (result != null) {
+            return result;
         }
 
+        Attraction attraction = attractionRepository.findById(attractionDto.getId()).orElse(null);
+        if(attraction != null) {
+            attraction.setName(attractionDto.getName());
+            attraction.setPrice(attractionDto.getPrice());
+            attraction.setOpentime(attractionDto.getOpenTime());
+            attraction.setClosetime(attractionDto.getCloseTime());
+            attraction.setExplanation(attractionDto.getExplanation());
+            attraction.setArea(areaRepository.findById(attractionDto.getAreaId()).orElse(null));
 
+        }else{
+            return "관광지 정보를 불러오지 못 했습니다.";
+        }
+
+        attraction.getAttractionsTypeLists().clear();
+
+        for(Long id : attractionDto.getAttractionTypeDtoIdList()) {
+            AttractionType attractionType = attractionTypeRepository.findById(id).orElse(null);
+            if(attractionType != null) {
+                AttractionTypeList attractionTypeList = attractionTypeListRepository.findByAttractionIdAndAttractionTypeId(attraction.getId(), attractionType.getId());
+                if(attractionTypeList == null) {
+                    AttractionTypeList newAttractionTypeList = new AttractionTypeList();
+                    newAttractionTypeList.setAttraction(attraction);
+                    newAttractionTypeList.setAttractionType(attractionType);
+                    attraction.getAttractionsTypeLists().add(newAttractionTypeList);
+                    attractionType.getAttractionTypeListSet().add(newAttractionTypeList);
+                }
+            }else {
+                return "관광지 구분 정보를 불러오지 못 했습니다.";
+            }
+        }
+        return null;
     }
 
     @Transactional
     public String delete(Long id) {
         List<Reservation> reservationList = reservationRepository.findByAttractionId(id);
         if(reservationList.isEmpty()) {
-            return "예약된 정보가 있어 삭제할 수 없습니다.";
+            Attraction attraction = attractionRepository.findById(id).orElse(null);
+            if(attraction != null) {
+                attraction.getAttractionsTypeLists().clear();
+                attractionRepository.delete(attraction);
+                return null;
+            }
+            return "관광지 정보가 존재하지 않습니다.";
         }
-        Attraction attraction = attractionRepository.findById(id).orElse(null);
-        if(attraction != null) {
-            attraction.getAttractionsTypeLists().clear();
-            attractionRepository.delete(attraction);
-            return "삭제가 완료되었습니다.";
-        }
-        return null;
+        return "예약된 정보가 있어 삭제할 수 없습니다.";
+
     }
 }

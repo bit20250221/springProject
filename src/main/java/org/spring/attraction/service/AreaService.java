@@ -16,13 +16,17 @@ import java.util.Optional;
 public class AreaService {
     private final AreaRepository areaRepository;
 
-    public boolean save(AreaDto areaDto) {
+    public String save(AreaDto areaDto) {
+        String result = AreaDto.validate(areaDto);
+        if(result != null) {
+            return result;
+        }
         List<Area> areaList = areaRepository.findByCountryAndCity(areaDto.getCountry(), areaDto.getCity());
         if(areaList.isEmpty()) {
             areaRepository.save(Area.toAreaEntity(areaDto));
-            return true;
+            return null;
         }
-        return false;
+        return "이미 등록된 지역입니다.";
     }
 
     public List<AreaDto> findAll() {

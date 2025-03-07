@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <title>관광지 구분 등록</title>
     <script src="/js/alert.js"></script>
-    <script src="/js/attractionType.js"></script>
+    <script src="/js/attractionTypeLink.js" defer></script>
+    <script src="/js/attractionTypeFormValidate.js" defer></script>
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
 <h2>관광지 구분 등록 페이지</h2>
-<form action="/attractionType/save" method="post">
-    <label for="type">구분</label><input type="text" id="type" name="type"><br/>
+<form action="/attractionType/save" method="post" id="saveForm">
+    <label for="type">구분</label><input type="text" id="type" name="type" maxlength="10" required><br/>
+    <p id="error-message-type"></p>
     <button type="submit">등록</button>
 </form>
 <button onclick="attractionTypeListLink()">관광지 구분 리스트 확인</button>

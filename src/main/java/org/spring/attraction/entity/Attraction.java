@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.spring.attraction.dto.AttractionDto;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,10 +32,10 @@ public class Attraction{
     private int price;
 
     @Column(nullable = false)
-    private LocalDateTime opentime;
+    private LocalTime opentime;
 
     @Column(nullable = false)
-    private LocalDateTime closetime;
+    private LocalTime closetime;
 
     @ColumnDefault("''")
     @Column(length = 500)
@@ -61,10 +62,11 @@ public class Attraction{
         Attraction attraction = new Attraction();
         attraction.setId(attractionDto.getId());
         attraction.setName(attractionDto.getName());
-        attraction.setAvgrate(attractionDto.getAvgrate());
         attraction.setPrice(attractionDto.getPrice());
+        attraction.setOpentime(attractionDto.getOpenTime());
+        attraction.setClosetime(attractionDto.getCloseTime());
+        attraction.setAvgrate(attractionDto.getAvgrate());
         attraction.setExplanation(attractionDto.getExplanation());
-
         return attraction;
     }
 

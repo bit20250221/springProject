@@ -16,3 +16,4 @@ const areaDetailLink = (id) => {
 const areaMainLink = () => {
     location.href = "/area";
 }
+

@@ -46,12 +46,13 @@ public class AttractionController {
 
     @PostMapping("/save")
     public String save(AttractionDto attractionDto, RedirectAttributes redirectAttributes) {
-        if(attractionService.save(attractionDto)){
-            return "redirect:/attraction/list";
+        String result = attractionService.save(attractionDto);
+        if(result != null){
+            redirectAttributes.addFlashAttribute("message", result);
+            redirectAttributes.addFlashAttribute("areaDto", attractionDto);
+            return "redirect:/attraction/save";
         }
-        redirectAttributes.addFlashAttribute("areaDto", attractionDto);
-        redirectAttributes.addFlashAttribute("message", "저장에 실패하였습니다.");
-        return "redirect:/attraction/save";
+        return "redirect:/attraction/list";
     }
 
     @GetMapping("/list")
@@ -100,13 +101,13 @@ public class AttractionController {
 
     @PostMapping("/update")
     public String update(AttractionDto attractionDto, RedirectAttributes redirectAttributes) {
-        System.out.println(attractionDto.getAttractionTypeDtoIdList());
-        if(attractionService.update(attractionDto)){
-            return "redirect:/attraction/list";
+        String result = attractionService.update(attractionDto);
+        if(result != null){
+            redirectAttributes.addFlashAttribute("message", result);
+            redirectAttributes.addFlashAttribute("areaDto", attractionDto);
+            return "redirect:/attraction/update/" + attractionDto.getId();
         }
-        redirectAttributes.addFlashAttribute("areaDto", attractionDto);
-        redirectAttributes.addFlashAttribute("message", "저장에 실패하였습니다.");
-        return "redirect:/attraction/update/" + attractionDto.getId();
+        return "redirect:/attraction/list";
     }
 
 

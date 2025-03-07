@@ -21,4 +21,20 @@ public class AreaDto {
         return areaDto;
     }
 
+    public static String validate(AreaDto areaDto) {
+        String areaCountry = areaDto.getCountry().trim();
+        if(areaCountry.isEmpty()) {
+            return "국가가 입력되지 않았습니다.";
+        }else if(areaCountry.length() > 10) {
+            return "국가는 1~10자로 입력이 가능합니다.";
+        }
+        String areaCity = areaDto.getCity().trim();
+        if(areaCity.isEmpty()) {
+            return "도시가 입력되지 않았습니다.";
+        }else if(areaCity.length() > 10) {
+            return "도시는 1~10자로 입력이 가능합니다.";
+        }
+
+        return null;
+    }
 }

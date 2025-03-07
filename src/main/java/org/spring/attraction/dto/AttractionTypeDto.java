@@ -18,4 +18,14 @@ public class AttractionTypeDto {
         attractionTypeDto.setType(attractionType.getType());
         return attractionTypeDto;
     }
+
+    public static String validate(AttractionTypeDto attractionTypeDto) {
+        String attractionTypeType = attractionTypeDto.getType().trim();
+        if(attractionTypeType.isEmpty()) {
+            return "구분이 입력되지 않았습니다.";
+        }else if(attractionTypeType.length() > 10) {
+            return "구분은 1~10자로 입력이 가능합니다.";
+        }
+        return null;
+    }
 }

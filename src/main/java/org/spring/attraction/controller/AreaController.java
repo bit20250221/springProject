@@ -28,12 +28,13 @@ public class AreaController {
 
     @PostMapping("/save")
     public String save(@ModelAttribute AreaDto areaDto, RedirectAttributes redirectAttributes) {
-        if(areaService.save(areaDto)){
-            return "redirect:/area/list";
+        String result = areaService.save(areaDto);
+        if(result != null) {
+            redirectAttributes.addFlashAttribute("message", result);
+            redirectAttributes.addFlashAttribute("areaDto", areaDto);
+            return "redirect:/area/save";
         }
-        redirectAttributes.addFlashAttribute("areaDto", areaDto);
-        redirectAttributes.addFlashAttribute("message", "이미 등록된 데이터입니다.");
-        return "redirect:/area/save";
+        return "redirect:/area/list";
     }
 
     @GetMapping("/list")
@@ -60,11 +61,12 @@ public class AreaController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute AreaDto areaDto, RedirectAttributes redirectAttributes) {
-        if(areaService.save(areaDto)) {
-            return "redirect:/area/list";
+        String result = areaService.save(areaDto);
+        if(result != null) {
+            redirectAttributes.addFlashAttribute("message", result);
+            return "redirect:/area/update/" + areaDto.getId();
         }
-        redirectAttributes.addFlashAttribute("message", "이미 등록된 데이터입니다.");
-        return "redirect:/area/update/" + areaDto.getId();
+        return "redirect:/area/list";
     }
 
     @GetMapping("/detail/{id}")

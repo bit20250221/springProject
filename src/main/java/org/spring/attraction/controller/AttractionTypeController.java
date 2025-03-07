@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -24,11 +25,13 @@ public class AttractionTypeController {
     }
 
     @PostMapping("/save")
-    public String save(AttractionTypeDto attractionTypeDto) {
-        if(attractionTypeService.save(attractionTypeDto)){
-            return "redirect:/attractionType/list";
+    public String save(AttractionTypeDto attractionTypeDto, RedirectAttributes redirectAttributes) {
+        String result = attractionTypeService.save(attractionTypeDto);
+        if(result != null) {
+            redirectAttributes.addFlashAttribute("message", result);
+            return "redirect:/attractionType/save";
         }
-        return "redirect:/attractionType/save";
+        return "redirect:/attractionType/list";
     }
 
     @GetMapping(value = {"/list", ""})

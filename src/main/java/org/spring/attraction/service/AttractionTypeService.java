@@ -16,10 +16,17 @@ import java.util.Optional;
 public class AttractionTypeService {
     private final AttractionTypeRepository attractionTypeRepository;
 
-    public boolean save(AttractionTypeDto attractionTypeDto) {
-        AttractionType attractionType = AttractionType.toEntity(attractionTypeDto);
-        attractionTypeRepository.save(attractionType);
-        return true;
+    public String save(AttractionTypeDto attractionTypeDto) {
+        String result =  AttractionTypeDto.validate(attractionTypeDto);
+        if(result != null) {
+            return result;
+        }
+        AttractionType attractionType = attractionTypeRepository.findByType(attractionTypeDto.getType());
+        if(attractionType == null) {
+            attractionTypeRepository.save(AttractionType.toEntity(attractionTypeDto));
+            return null;
+        }
+        return "구분은 중복해서 입력할 수 없습니다.";
     }
 
     public List<AttractionTypeDto> findAll() {

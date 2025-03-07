@@ -19,3 +19,4 @@ const attractionMainLink = () => {
 const attractionReservationLink = (id) => {
     location.href = "/reservation/save/" + id;
 }
+
