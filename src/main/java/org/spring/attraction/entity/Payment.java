@@ -1,3 +1,4 @@
+
 package org.spring.attraction.entity;
 
 import jakarta.persistence.*;
@@ -17,7 +18,7 @@ public class Payment {
     private Long id;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createDate;
+    private LocalDateTime createdate;
 
     @ManyToOne
     @JoinColumn(name="paymentTypeId", nullable = false)

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -19,13 +20,13 @@ public class Reservation {
     private Long id;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createDate;
+    private LocalDateTime createdate;
 
     @Column(nullable = false)
-    private int pepleNum;
+    private int peplenum;
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime reserveDate;
+    @Column(nullable = false)
+    private LocalDateTime reservedate;
 
     @ManyToOne
     @JoinColumn(name="userId", nullable = false)
@@ -35,6 +36,8 @@ public class Reservation {
     @JoinColumn(name="attractionId", nullable = false)
     private Attraction attraction;
 
-    @OneToMany(mappedBy = "reservation")
-    private Set<Payment> payments;
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Payment> payments = new HashSet<>();
+
+
 }

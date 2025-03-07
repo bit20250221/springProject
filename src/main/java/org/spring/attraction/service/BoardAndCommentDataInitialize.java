@@ -4,7 +4,7 @@ import org.spring.attraction.ENUM.Grade;
 import org.spring.attraction.ENUM.UserType;
 import org.spring.attraction.dto.Board_dto;
 import org.spring.attraction.entity.User;
-import org.spring.attraction.repository.User_repository;
+import org.spring.attraction.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ public class BoardAndCommentDataInitialize implements CommandLineRunner {
     private Board_service boardService;
 
     @Autowired
-    private User_repository userRepository;
+    private UserRepository userRepository;
 
     @Override
     public void run(String... args) throws Exception {

@@ -4,8 +4,10 @@ package org.spring.attraction.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.spring.attraction.dto.AttractionTypeDto;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -21,6 +23,13 @@ public class AttractionType {
     @Column(length = 45 ,nullable = false)
     private String type;
 
-    @OneToMany(mappedBy = "attractionType")
-    private Set<AttractionTypeList> attractionTypeListSet;
+    @OneToMany(mappedBy = "attractionType", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AttractionTypeList> attractionTypeListSet = new HashSet<>();
+
+    public static AttractionType toEntity(AttractionTypeDto attractionTypeDto) {
+        AttractionType attractionType = new AttractionType();
+        attractionType.setId(attractionTypeDto.getId());
+        attractionType.setType(attractionTypeDto.getType());
+        return attractionType;
+    }
 }

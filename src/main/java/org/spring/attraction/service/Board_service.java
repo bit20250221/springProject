@@ -10,7 +10,7 @@ import org.spring.attraction.entity.Board;
 import org.spring.attraction.entity.Comment;
 import org.spring.attraction.entity.User;
 import org.spring.attraction.repository.Board_repository;
-import org.spring.attraction.repository.User_repository;
+import org.spring.attraction.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +34,7 @@ public class Board_service {
     public BoardImage_service boardImageService;
 
     @Autowired
-    public User_repository userRepository;
+    public UserRepository userRepository;
 
     //게시글 한개 읽기, 댓글은 따로 처리
     @Transactional

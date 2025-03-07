@@ -3,18 +3,15 @@ package org.spring.attraction.BoardAndCommentTest;
 
 import org.junit.jupiter.api.Test;
 import org.spring.attraction.ENUM.Grade;
-import org.spring.attraction.ENUM.Tab;
 import org.spring.attraction.ENUM.UserType;
 import org.spring.attraction.dto.Board_dto;
-import org.spring.attraction.entity.Board;
 import org.spring.attraction.entity.User;
 import org.spring.attraction.repository.Board_repository;
-import org.spring.attraction.repository.User_repository;
+import org.spring.attraction.repository.UserRepository;
 import org.spring.attraction.service.Board_service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.Calendar;
@@ -29,7 +26,7 @@ public class BoardTest {
     @Autowired
     private Board_repository boardRepository;
     @Autowired
-    private User_repository userRepository;
+    private UserRepository userRepository;
 
 
     @Test

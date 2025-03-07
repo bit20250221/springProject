@@ -3,6 +3,7 @@ package org.spring.attraction.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.spring.attraction.dto.AreaDto;
 
 import java.util.Set;
 
@@ -26,4 +27,11 @@ public class Area {
     @OneToMany(mappedBy = "area")
     private Set<Attraction> attractions;
 
+    public static Area toAreaEntity(AreaDto areaDto){
+        Area area = new Area();
+        area.setId(areaDto.getId());
+        area.setCountry(areaDto.getCountry());
+        area.setCity(areaDto.getCity());
+        return area;
+    }
 }
