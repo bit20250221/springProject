@@ -19,12 +19,12 @@ public interface Board_repository extends JpaRepository<Board,Long> {
     @Query(value = "select b from Board b Where b.tab = :tab and b.content like concat('%', :keyword, '%')")
     List<Board> boardContentSearch(@Param("tab") Tab tab, @Param("keyword") String keyword);
 
-    @Query(value = "select b from Board b Where b.tab = :tab and b.user.userLoginId like concat('%', :keyword, '%')")
+    @Query(value = "select b from Board b Where b.tab = :tab and b.user.user_login_Id like concat('%', :keyword, '%')")
     List<Board> boardWriterSearch(@Param("tab") Tab tab, @Param("keyword") String keyword);
 
     //페이징 처리가 포함된 전체 검색
     @Query(value = "select b from Board b where b.title like concat('%', :keyword, '%') or " +
-            "b.content like concat('%', :keyword, '%') or b.user.userLoginId like concat('%', :keyword, '%')")
+            "b.content like concat('%', :keyword, '%') or b.user.user_login_Id like concat('%', :keyword, '%')")
     Page<Board> findByAllKeyword(@Param("keyword") String keyword, Pageable pageable);
 
     //페이징 처리가 포함된 탭을 이용한 검색
@@ -35,7 +35,7 @@ public interface Board_repository extends JpaRepository<Board,Long> {
     @Query("select b from Board b where (b.tab = :tab) and " +
             "(b.title like concat('%', :keyword, '%') or " +
             "b.content like concat('%', :keyword, '%') or " +
-            "b.user.userLoginId like concat('%', :keyword, '%'))")
+            "b.user.user_login_Id like concat('%', :keyword, '%'))")
     Page<Board> findByTabSearch(@Param("tab") Tab tab,@Param("keyword") String keyword, Pageable pageable);
 
     //페이징 처리가 포함된 특정 탭 그리고 작성자 아이디, 제목, 내용에 따른 검색 쿼리
@@ -45,7 +45,7 @@ public interface Board_repository extends JpaRepository<Board,Long> {
     @Query(value = "select b from Board b Where b.tab = :tab and b.content like concat('%', :keyword, '%')")
     Page<Board> boardContentSearch(@Param("tab") Tab tab, @Param("keyword") String keyword, Pageable pageable);
 
-    @Query(value = "select b from Board b Where b.tab = :tab and b.user.userLoginId like concat('%', :keyword, '%')")
+    @Query(value = "select b from Board b Where b.tab = :tab and b.user.user_login_Id like concat('%', :keyword, '%')")
     Page<Board> boardWriterSearch(@Param("tab") Tab tab, @Param("keyword") String keyword, Pageable pageable);
 
 
@@ -54,7 +54,7 @@ public interface Board_repository extends JpaRepository<Board,Long> {
 
     Page<Board> findByContentContaining(String keyword, Pageable pageable);
 
-    @Query(value = "select b from Board b Where b.user.userLoginId like concat('%', :keyword, '%')")
+    @Query(value = "select b from Board b Where b.user.user_login_Id like concat('%', :keyword, '%')")
     Page<Board> findByWriterIdContaining(@Param("keyword") String keyword, Pageable pageable);
 
 }

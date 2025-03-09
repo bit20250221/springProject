@@ -3,20 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${board.title}"></title>
-<style>
-    .boardimgElement{
-        max-width: 300px;
-        max-height: 300px;
-    }
-</style>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/getBoard.css}">
 </head>
 <body>
     <div class="top_button_list">
         <button onclick="back()">목록</button>
         <button onclick="deleteboard()">삭제하기</button>
+        <button onclick="updateboard()">수정하기</button>
     </div>
     <p class="boardID" th:text="${board.board_id}"></p>
-    <div th:if="${board.tab=='일반'}">
+    <div class="normal_board" th:if="${board.tab=='일반'}">
         <h1 id="nomal_title" th:text="${board.title}"></h1>
 
         <div class="boardElement">
@@ -33,7 +29,7 @@
 
     </div>
 
-    <div th:if="${board.tab=='리뷰'}">
+    <div class="review_board" th:if="${board.tab=='리뷰'}">
         <h1 id="review_title" th:text="${board.title}"></h1>
 
         <div class="boardElement">
@@ -53,6 +49,7 @@
         </div>
 
         <div class="boardElement">
+            <p>리뷰 평점</p>
             <p th:text="${board.rate}"></p>
         </div>
 
@@ -67,7 +64,7 @@
         </div>
     </div>
 
-    <div th:if="${board.tab=='문의'}">
+    <div class="inquiry_board" th:if="${board.tab=='문의'}">
 
         <h1 id="inquiry_title" th:text="${board.title}"></h1>
 
@@ -99,7 +96,7 @@
 
     </div>
 
-    <div th:if="${board.tab=='신고'}">
+    <div class="report_board" th:if="${board.tab=='신고'}">
 
         <h1 id="report_title" th:text="${board.title}"></h1>
 
@@ -133,7 +130,7 @@
 
     <div th:if="${board.tab=='공지'}">
 
-        <label for="announce_title">일반</label>
+        <label for="announce_title">공지</label>
         <h1 id="announce_title" th:text="${board.title}"></h1>
 
         <div class="boardElement">
@@ -163,31 +160,7 @@
         </div>
 
     </div>
-<script>
-    function back() {
-        window.history.back();
-    }
-    function deleteboard(){
-        var result = confirm("삭제하시겠습니까?");
-        if (result) {
 
-            var board_id = document.querySelector(".boardID").textContent;
-            var form = document.createElement("form");
-            console.log(board_id);
-            form.id = "deleteForm";
-            form.method = "post";
-            form.action = "/board/deleteBoard/" + board_id;
-
-            var input = document.createElement("input");
-            input.type = "hidden";
-            input.name = "board_id";
-            input.value = board_id;
-            form.appendChild(input);
-
-            document.body.appendChild(form);
-            form.submit();
-        }
-    }
-</script>
+    <script type="text/javascript" th:src="@{/js/getBoard.js}"></script>
 </body>
 </html>

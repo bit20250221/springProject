@@ -3,12 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 입력</title>
-    <style>
-        .board_image_result img {
-            max-width: 300px;
-            max-height: 300px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/insertBoardForm.css}">
 </head>
 <body>
 <div class="normal_form" th:if="${tab =='일반'}">
@@ -78,9 +73,60 @@
         <br>
 
         <div class="board_element">
-            <label for="review_attraction">관광지</label>
-            <input type="text" id="review_attraction" name="attraction" >
+            <label>관광지(아래 목록중 선택!!)</label>
+            <!--관광지 선택 라디오 버튼-->
+            <div class="toggle_element">
+                <button type="button" class="toggle_button" onclick="toggleAction()">펼치기</button>
+            </div>
 
+            <div class="attractionList_element">
+
+            <div class="attractionList_select" th:if="${attractionList != null and !attractionList.isEmpty()}">
+                <div th:each="attraction, iterStat : ${attractionList}">
+                    <input type="radio" th:id="'review_attraction' + ${iterStat.index}"
+                           name="attraction_id" th:value="${attraction.id}"
+                           th:data-name="${attraction.name}"/>
+                    <label th:for="'review_attraction' + ${iterStat.index}"
+                           th:text="${attraction.name}"></label>
+                </div>
+            </div>
+
+            <input type="radio" id="review_attraction_other" name="attractionName" value="other" />
+            <label for="review_attraction_other">기타(관리자가 검토)</label>
+            <input type="text" id="review_attraction_input" name="attraction_Name" placeholder="직접 입력" />
+
+            <!--관광지 평점, 설명, 개장시간, 폐장시간, 지역(리뷰 참고용)-->
+            <table class="attraction_table">
+                <thead>
+                    <tr>
+                        <th>관광지</th>
+                        <th>평점</th>
+                        <th>설명</th>
+                        <th>개장시간</th>
+                        <th>폐장시간</th>
+                        <th>지역</th>
+                    </tr>
+                </thead>
+                <div th:if="${attractionList != null and !attractionList.isEmpty()}">
+                    <tr class="attraction_row" th:each="attraction : ${attractionList}">
+                        <td th:text="${attraction.name}"></td>
+                        <td th:text="${attraction.avgrate}"></td>
+                        <td th:text="${attraction.explanation}"></td>
+                        <td th:text="${attraction.openTime}"></td>
+                        <td th:text="${attraction.closeTime}"></td>
+                        <td th:text="${attraction.area}"></td>
+                    </tr>
+                </div>
+                <div th:if="${attractionList == null or attractionList.isEmpty()}">
+                    <h3>관광지 정보가 없습니다.</h3>
+                </div>
+            </table>
+            </div>
+        </div>
+
+        <div class="board_element">
+            <label for="review_rate">별점</label>
+            <input type="range" id="review_rate" name="rate" min="1" max="5" step="1">
         </div>
 
         <div class="board_element">
@@ -98,7 +144,7 @@
 
 </div>
 
-<div th:if="${tab =='문의'}">
+<div class="inquiry_form" th:if="${tab =='문의'}">
     <form th:object="${boardDto}" action="/board/insertBoard" method="post">
         <input type="hidden" name="user_id" th:value="${user_id}">
         <div class="board_element">
@@ -110,7 +156,7 @@
 
         <div class="board_element">
             <label for="inquiry_tab">게시글 탭</label>
-            <input type="hidden" name="tab" th:value="${tab}" disabled>
+            <input type="hidden" name="tab" th:value="${tab}">
             <p id="inquiry_tab" th:text="${tab}"></p>
         </div>
         <br>
@@ -124,10 +170,63 @@
 
         <div class="board_element">
             <label for="inquiry_writer">작성자 아이디</label>
-            <input type="hidden" name="user_login_Id" th:value="${writer}" disabled>
+            <input type="hidden" name="user_login_Id" th:value="${writer}">
             <p id="inquiry_writer" th:text="${writer}"></p>
         </div>
         <br>
+
+        <div class="board_element">
+            <label>관광지(아래 목록중 선택!!)</label>
+            <!--관광지 선택 라디오 버튼-->
+            <div class="toggle_element">
+                <button type="button" class="toggle_button" onclick="toggleAction()">펼치기</button>
+            </div>
+
+            <div class="attractionList_element">
+
+                <div class="attractionList_select" th:if="${attractionList != null and !attractionList.isEmpty()}">
+                    <div th:each="attraction, iterStat : ${attractionList}">
+                        <input type="radio" th:id="'inquiry_attraction' + ${iterStat.index}"
+                               name="attraction_id" th:value="${attraction.id}"
+                               th:data-name="${attraction.name}"/>
+                        <label th:for="'inquiry_attraction' + ${iterStat.index}"
+                               th:text="${attraction.name}"></label>
+                    </div>
+                </div>
+
+                <input type="radio" id="inquiry_attraction_other" name="attractionName" value="other" />
+                <label for="inquiry_attraction_other">기타(관리자가 검토)</label>
+                <input type="text" id="inquiry_attraction_input" name="attraction_Name" placeholder="직접 입력" />
+
+                <!--관광지 평점, 설명, 개장시간, 폐장시간, 지역(리뷰 참고용)-->
+                <table class="attraction_table">
+                    <thead>
+                    <tr>
+                        <th>관광지</th>
+                        <th>평점</th>
+                        <th>설명</th>
+                        <th>개장시간</th>
+                        <th>폐장시간</th>
+                        <th>지역</th>
+                    </tr>
+                    </thead>
+                    <div th:if="${attractionList != null and !attractionList.isEmpty()}">
+                        <tr class="attraction_row" th:each="attraction : ${attractionList}">
+                            <td th:text="${attraction.name}"></td>
+                            <td th:text="${attraction.avgrate}"></td>
+                            <td th:text="${attraction.explanation}"></td>
+                            <td th:text="${attraction.openTime}"></td>
+                            <td th:text="${attraction.closeTime}"></td>
+                            <td th:text="${attraction.area}"></td>
+                        </tr>
+                    </div>
+                    <div th:if="${attractionList == null or attractionList.isEmpty()}">
+                        <h3>관광지 정보가 없습니다.</h3>
+                    </div>
+                </table>
+            </div>
+        </div>
+
 
         <div class="board_element">
             <label for="inquiry_image">문의 이미지 업로드</label>
@@ -142,7 +241,7 @@
 
 </div>
 
-<div th:if="${tab =='신고'}">
+<div class="report_form" th:if="${tab =='신고'}">
     <form th:object="${boardDto}" action="/board/insertBoard" method="post">
         <input type="hidden" name="user_id" th:value="${user_id}">
         <div class="board_element">
@@ -154,7 +253,7 @@
 
         <div class="board_element">
             <label for="report_tab">게시글 탭</label>
-            <input type="hidden" name="tab" th:value="${tab}" disabled>
+            <input type="hidden" name="tab" th:value="${tab}">
             <p id="report_tab" th:text="${tab}"></p>
         </div>
         <br>
@@ -168,10 +267,62 @@
 
         <div class="board_element">
             <label for="report_writer">작성자 아이디</label>
-            <input type="hidden" name="user_login_Id" th:value="${writer}" disabled>
+            <input type="hidden" name="user_login_Id" th:value="${writer}">
             <p id="report_writer" th:text="${writer}"></p>
         </div>
         <br>
+
+        <div class="board_element">
+            <label>관광지(아래 목록중 선택!!)</label>
+            <!--관광지 선택 라디오 버튼-->
+            <div class="toggle_element">
+                <button type="button" class="toggle_button" onclick="toggleAction()">펼치기</button>
+            </div>
+
+            <div class="attractionList_element">
+
+                <div class="attractionList_select" th:if="${attractionList != null and !attractionList.isEmpty()}">
+                    <div th:each="attraction, iterStat : ${attractionList}">
+                        <input type="radio" th:id="'report_attraction' + ${iterStat.index}"
+                               name="attraction_id" th:value="${attraction.id}"
+                               th:data-name="${attraction.name}"/>
+                        <label th:for="'report_attraction' + ${iterStat.index}"
+                               th:text="${attraction.name}"></label>
+                    </div>
+                </div>
+
+                <input type="radio" id="report_attraction_other" name="attractionName" value="other" />
+                <label for="report_attraction_other">기타(관리자가 검토)</label>
+                <input type="text" id="report_attraction_input" name="attraction_Name" placeholder="직접 입력" />
+
+                <!--관광지 평점, 설명, 개장시간, 폐장시간, 지역(리뷰 참고용)-->
+                <table class="attraction_table">
+                    <thead>
+                    <tr>
+                        <th>관광지</th>
+                        <th>평점</th>
+                        <th>설명</th>
+                        <th>개장시간</th>
+                        <th>폐장시간</th>
+                        <th>지역</th>
+                    </tr>
+                    </thead>
+                    <div th:if="${attractionList != null and !attractionList.isEmpty()}">
+                        <tr class="attraction_row" th:each="attraction : ${attractionList}">
+                            <td th:text="${attraction.name}"></td>
+                            <td th:text="${attraction.avgrate}"></td>
+                            <td th:text="${attraction.explanation}"></td>
+                            <td th:text="${attraction.openTime}"></td>
+                            <td th:text="${attraction.closeTime}"></td>
+                            <td th:text="${attraction.area}"></td>
+                        </tr>
+                    </div>
+                    <div th:if="${attractionList == null or attractionList.isEmpty()}">
+                        <h3>관광지 정보가 없습니다.</h3>
+                    </div>
+                </table>
+            </div>
+        </div>
 
         <div class="board_element">
             <label for="report_image">신고 이미지 업로드</label>
@@ -185,7 +336,7 @@
 
 </div>
 
-<div th:if="${tab =='공지'}">
+<div class="announce_form" th:if="${tab =='공지'}">
     <form th:object="${boardDto}" action="/board/insertBoard" method="post">
         <input type="hidden" name="user_id" th:value="${user_id}">
         <div class="board_element">
@@ -197,7 +348,7 @@
 
         <div class="board_element">
             <label for="announce_tab">게시글 탭</label>
-            <input type="hidden" name="tab" th:value="${tab}" disabled>
+            <input type="hidden" name="tab" th:value="${tab}">
             <p id="announce_tab" th:text="${tab}"></p>
         </div>
         <br>
@@ -211,7 +362,7 @@
 
         <div class="board_element">
             <label for="announce_writer">작성자 아이디</label>
-            <input type="hidden" name="user_login_Id" th:value="${writer}" disabled>
+            <input type="hidden" name="user_login_Id" th:value="${writer}">
             <p id="announce_writer" th:text="${writer}"></p>
         </div>
         <br>
@@ -235,59 +386,6 @@
     <button class="boardFormTempSubmit">임시저장</button>
     <button class="boardFormSubmit">작성</button>
     <a href="/board/list">목록으로</a>
-<script>
-    var fileInput=document.querySelector('.board_image');
-    var ImageFileDataList=document.querySelector('.boardImageList');
-    var fileTempUploadButton = document.querySelector('.uploadBtn');
-    var ImageTempResult = document.querySelector('.board_image_result')
-    var imageIndex = 0;
-
-    fileTempUploadButton.addEventListener('click', function(e) {
-        e.preventDefault();
-
-        var formData = new FormData();
-        var imgFile=fileInput.files[0];
-
-        if(imgFile==null){
-            alert('업로드할 파일을 선택하세요.');
-            return;
-        }
-
-        formData.append('tempImage',imgFile);
-
-        fetch('/image/TempSave',{
-         method: 'POST',
-         body: formData,
-        credentials: "include"
-        })
-        .then(response => response.json())
-        .then(data => {
-            // UUIDName 받아서 boardImageList 에 추가하고 정상적으로 추가되면 이미지를 사용자에게 보여준다.
-            var ImageDTO=data.ImageDTO;
-            console.log(ImageDTO);
-            ImageFileDataList.innerHTML  += '<div class="imageDTOValue">' +
-            '<input type="hidden" name="boardImageDtoList[' + imageIndex + '].imageSize" value="' + ImageDTO['imageSize'] + '">' +
-            '<input type="hidden" name="boardImageDtoList[' + imageIndex + '].isTemporary" value="' + ImageDTO['isTemporary'] + '">' +
-            '<input type="hidden" name="boardImageDtoList[' + imageIndex + '].name" value="' + ImageDTO['name'] + '">' +
-            '<input type="hidden" name="boardImageDtoList[' + imageIndex + '].uuid" value="' + ImageDTO['uuid'] + '">' +
-            '<input type="hidden" name="boardImageDtoList[' + imageIndex + '].uuidname" value="' + ImageDTO['uuidname'] + '">' +
-            '</div>';
-            imageIndex++;
-            //document.querySelector('.board_image_result').innerHTML += '<img src="/resources/upload/' + ImageDTO['uuidname'] + '" alt="board_image">';
-
-        });
-
-    })
-
-    var submitButton = document.querySelector('.boardFormSubmit');
-    submitButton.addEventListener('click', function(e) {
-        e.preventDefault();
-
-        var form = document.querySelector('form');
-        form.submit();
-    });
-
-
-</script>
+<script rel="text/javascript" th:src="@{/js/InsertBoardForm.js}"></script>
 </body>
 </html>
