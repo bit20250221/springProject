@@ -6,12 +6,17 @@
   <script src="/js/alert.js"></script>
   <script src="/js/attractionLink.js" defer></script>
   <script src="/js/attractionFormValidate.js" defer></script>
+  <script src="/js/attractionFunction.js" defer></script>
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
 <h2>관광지 상세 페이지</h2>
-<form action="/attraction/update" method="post" id="saveForm">
+<form action="/attraction/update" method="post" id="saveForm" enctype="multipart/form-data">
   <label for="id">id</label><input type="text" id="id" name="id" th:value="${attractionDto.getId()}" readonly><br/>
+  <div th:if="${attractionImgUrl}">
+    <h3>관광지 사진</h3>
+    <img th:src="${attractionImgUrl}" alt="업로드된 이미지" width="300" id="previewImage">
+  </div>
   <label for="name">이름</label><input type="text" id="name" name="name" th:value="${attractionDto.getName()}" maxlength="10" required><br/>
   <p id="error-message-name"></p>
   <label for="price">가격</label><input type="number" id="price" name="price" th:value="${attractionDto.getPrice()}" maxlength="10" required><br/>
@@ -32,6 +37,7 @@
     </div>
   </fieldset>
   <p id="error-message-type"></p>
+  <label for="img">사진</label><input type="file" id="img" name="img"><br/>
   <button type="submit">수정</button>
 </form>
 <button onclick="attractionListLink()">관광지 리스트 확인</button>
