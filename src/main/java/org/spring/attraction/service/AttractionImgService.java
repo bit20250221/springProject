@@ -81,4 +81,24 @@ public class AttractionImgService {
 
         return null;
     }
+
+    public AttractionMessage delete(Long attractionId) {
+        try{
+            AttractionImg attractionImg = attractionImgRepository.findByAttractionId(attractionId);
+            if(attractionImg == null) {
+                return AttractionMessage.getTypeById(-14);
+            }
+            Path deleteFilePath = Paths.get(AttractionImgDto.IMG_DIR_URL).resolve(attractionImg.getUUID() + "_" + attractionImg.getName()).normalize();
+            if (!Files.exists(deleteFilePath)) {
+                return AttractionMessage.getTypeById(-12);
+            }
+            Files.delete(deleteFilePath);
+            attractionImgRepository.delete(attractionImg);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return AttractionMessage.getTypeById(-13);
+        }
+        return null;
+    }
 }

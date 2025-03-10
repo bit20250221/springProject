@@ -184,16 +184,30 @@ public class AttractionService {
     @Transactional
     public AttractionMessage delete(Long id) {
         List<Reservation> reservationList = reservationRepository.findByAttractionId(id);
-        if(reservationList.isEmpty()) {
-            Attraction attraction = attractionRepository.findById(id).orElse(null);
-            if(attraction != null) {
-                attraction.getAttractionsTypeLists().clear();
-                attractionRepository.delete(attraction);
-                return AttractionMessage.getTypeById(3);
-            }
+        if(!reservationList.isEmpty()) {
+            return AttractionMessage.getTypeById(-4);
+        }
+
+        Attraction attraction = attractionRepository.findById(id).orElse(null);
+        if(attraction == null) {
             return AttractionMessage.getTypeById(-3);
         }
-        return AttractionMessage.getTypeById(-4);
+
+        AttractionImg attractionImg = attractionImgRepository.findByAttractionId(attraction.getId());
+        if(attractionImg != null) {
+            AttractionMessage result = attractionImgService.delete(attraction.getId());
+            if(result != null) {
+                return result;
+            }
+        }
+
+        attraction.getAttractionsTypeLists().clear();
+        attractionRepository.delete(attraction);
+
+
+        return AttractionMessage.getTypeById(3);
+
+
 
     }
 }
