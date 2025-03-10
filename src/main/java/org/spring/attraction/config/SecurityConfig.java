@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.spring.attraction.ENUM.UserType.attraction;
 import static org.spring.attraction.ENUM.UserType.manager;
 
 @Configuration
@@ -18,7 +19,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/","/index","/user/login","/user/register", "/user/loginProc","/user/registerProc").permitAll()
-                        //.requestMatchers("/경로 추가 필요").hasAnyRole("attraction","manager")
+                        .requestMatchers("/attraction").hasAnyRole(attraction.name(),manager.name())
                         .requestMatchers("/admin").hasAuthority(manager.name())
                         .anyRequest().authenticated()
                 );

@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>관리자 페이지</title>
+    <script>
+        const userList = () => {
+            location.href = "/admin/user/"
+        }
+    </script>
 </head>
 <body>
     관리자 페이지 테스트
-    <a href="/admin/userList">전체 유저 조회</a>
+    <button onclick="userList()">전체 유저 조회</button>
 </body>
 </html>

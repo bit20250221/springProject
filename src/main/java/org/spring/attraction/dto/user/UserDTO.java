@@ -18,9 +18,6 @@ public class UserDTO {
     private Grade grade;
     private Long attraction;
 
-    public UserDTO(String testUser, String number) {
-    }
-
     public static UserDTO fromUser(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
