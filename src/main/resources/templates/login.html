@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <script>
+        window.onload = function () {
+            if(window.location.search === "?error"){
+                alert("로그인 실패!");
+            };
+        }
+    </script>
+</head>
+<body>
+<h2>로그인</h2>
+<form method="post" action="/user/loginProc">
+    <input type="text" name="userLoginId" placeholder="아이디"><br>
+    <input type="password" name="pass" placeholder="비밀번호"><br>
+    <input type="submit">
+</form>
+</body>
+</html>
