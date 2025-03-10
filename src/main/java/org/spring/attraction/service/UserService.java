@@ -72,4 +72,10 @@ public class UserService {
 
         return userDTO;
     }
+
+    public UserDTO getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("유저가 없습니다"));
+        return UserDTO.fromUser(user);
+    }
 }
