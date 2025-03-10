@@ -9,6 +9,7 @@ import org.spring.attraction.entity.Attraction;
 import org.spring.attraction.entity.Board;
 import org.spring.attraction.entity.Comment;
 import org.spring.attraction.entity.User;
+import org.spring.attraction.repository.AttractionRepository;
 import org.spring.attraction.repository.Board_repository;
 import org.spring.attraction.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class Board_service {
 
     @Autowired
     public UserRepository userRepository;
+
+    @Autowired
+    public AttractionRepository attractionRepository;
 
     //게시글 한개 읽기, 댓글은 따로 처리
     @Transactional
@@ -178,8 +182,12 @@ public class Board_service {
         write.setCreartedate(LocalDateTime.now());
         if(write.getAttraction_id()!=null) {
             //나중에 따로 수정
-            Attraction attraction=new Attraction();
+            Attraction attraction=attractionRepository.findById(write.getAttraction_id()).orElse(null);
             entity = toEntity(write,user,attraction,null);
+        }
+        else if(write.getAttraction_Name()!=null) {
+            //연관 관계없이 게시판 상으로만 출력(DB에 없는 관광지)
+            entity = toEntity(write,user,null,null);
         }
         else{
             entity = toEntity(write,user,null,null);
@@ -200,6 +208,13 @@ public class Board_service {
         Optional<Board> isExist=repository.findById(id);
         try {
             if (isExist.isPresent()) {
+                List<BoardImage_dto> imageList=boardImageService.getImagesByBoardId(id);
+                if(imageList!=null) {
+                    for(BoardImage_dto image:imageList){
+                        boardImageService.deleteImageFile(image.getUUID(), image.getUUIDName(), id);
+                    }
+                }
+
                 repository.deleteById(id);
                 return true;
             } else {
@@ -214,26 +229,33 @@ public class Board_service {
 
     }
 
-    //게시글 수정(관광지 수정은 불가능하도록)
-    public boolean updateBoard(Board_dto update){
+    //게시글 수정(관광지 수정은 불가능하도록),(이미지 파일 수정은 별개로 처리)
+    public Board_dto updateBoard(Board_dto update){
         Optional<Board> isExist=repository.findById(update.getBoard_id());
         try{
             if(isExist.isPresent()){
-                Board entity= isExist.get();
-                entity.setTitle(update.getTitle());
-                entity.setContent(update.getContent());
-                entity.setRate(update.getRate());
-                entity.setTab(Tab.valueOf(update.getTab()));
-                entity.setUpdateDate(LocalDateTime.now());
-                repository.save(entity);
-                return true;
+                Attraction attraction;
+                if(update.getAttraction_id()!=null){
+                    attraction=attractionRepository.findById(update.getAttraction_id()).get();
+                }else if(isExist.get().getAttraction()!=null){
+                    attraction=attractionRepository.findById(isExist.get().getAttraction().getId()).get();
+                }else{
+                    attraction=null;
+                }
+
+                Board entity= Board_service.toEntity(update,userRepository.getReferenceById(update.getUser_id()),
+                        attraction, null);
+                Board newupdate=repository.save(entity);
+                return Board_dto.to_dto_2(newupdate,newupdate.getUser().getId(), newupdate.getAttraction()!=null? newupdate.getAttraction().getId() : null);
             }else{
                 System.out.println("게시글이 존재하지 않습니다.");
-                return false;
+                return null;
             }
         }catch(Exception e){
+            System.out.println("This is Error");
+            e.printStackTrace();
             System.out.println("게시글 수정 처리중 오류가 발생하였습니다.");
-            return false;
+            return null;
         }
     }
 

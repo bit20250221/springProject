@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
@@ -90,7 +89,7 @@ public class BoardImage_service {
 
     //임시 이미지 파일 읽기
     public BoardImage_dto getTempImages(String uuid, String uuidName){
-        BoardImage boardImage = boardImageRepository.findBoardImageByUUIDAndUUIDNameAndBoard_Id(uuid, uuidName, null);
+        BoardImage boardImage = boardImageRepository.findBoardImageByUUIDAndUUIDNameAndBoardId(uuid, uuidName, null);
         return BoardImage_dto.boardImageDto(boardImage);
     }
 
@@ -125,7 +124,8 @@ public class BoardImage_service {
     //이미지 파일 삭제(이미 게시글 내 등록된 이미지 하나 삭제)
     @Transactional
     public void deleteImageFile(String uuid, String uuidName, Long boardId) {
-        BoardImage boardImage = boardImageRepository.findBoardImageByUUIDAndUUIDNameAndBoard_Id(uuid, uuidName, boardId);
+        log.info("{}, {}, {}", uuid, uuidName, boardId);
+        BoardImage boardImage = boardImageRepository.findBoardImageByUUIDAndUUIDNameAndBoardId(uuid, uuidName, boardId);
 
         String FilePath=boardImage.getImagePath();
 

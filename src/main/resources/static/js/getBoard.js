@@ -1,7 +1,7 @@
 
 
     function back() {
-        window.history.back();
+        location.href="/board/list";
     }
     function deleteboard(){
         var result = confirm("삭제하시겠습니까?");

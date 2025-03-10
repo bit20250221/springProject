@@ -45,20 +45,10 @@
                 imageContainer.style.textAlign='center';
 
                 const imageDeleteButton=document.createElement('button');
+                imageDeleteButton.className='tempImageDeleteBtn';
+                imageDeleteButton.setAttribute('onclick', 'tempimageDelete(this)');
                 imageDeleteButton.textContent='X';
-                imageDeleteButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    //나중에 fetch로 db와 서버내 파일 삭제 구현
 
-                    var imageContainer=this.parentNode;
-                    imageContainer.parentNode.removeChild(imageContainer);
-                    imageIndex--;
-                    if(imageIndex===0){
-                        ImageTempResult.innerHTML='';
-                    }
-
-                        return;
-                });
 
                 const imageName=document.createElement('p');
                 imageName.textContent=ImageDTO['name'];
@@ -69,6 +59,7 @@
                 image.style.width='300px';
                 image.style.height='300px';
 
+                imageContainer.appendChild(imageDeleteButton);
                 imageContainer.appendChild(imageName);
                 imageContainer.appendChild(image);
 
@@ -83,6 +74,16 @@
 
     })
 
+    function tempimageDelete(btn) {
+        //나중에 fetch로 db와 서버내 파일 삭제 구현
+        var imageContainer=btn.parentNode;
+        imageContainer.parentNode.removeChild(imageContainer);
+        imageIndex--;
+        if(imageIndex===0){
+            ImageTempResult.innerHTML='';
+        }
+        return;
+    }
     var submitButton = document.querySelector('.boardFormSubmit');
     submitButton.addEventListener('click', function(e) {
         e.preventDefault();
