@@ -237,10 +237,9 @@ public class Board_controller {
                 boardDTO.getRate(), boardDTO.getCreartedate(), boardDTO.getUpdatedate());
 
         Board_dto UpdateBoard=boardService.updateBoard(boardDTO);
-        if(UpdateBoard!=null) {
+        if(UpdateBoard!=null&&UpdateBoard.getTab().compareTo("일반")!=0) {
 
             List<BoardImage_dto> images = (List<BoardImage_dto>) session.getAttribute("UpdateImages");
-            log.info(images.size());
             if (!images.isEmpty()) {
                 log.info("세션 내 파일 정보 감지: {}개", images.size());
                 for (BoardImage_dto UpdateImage : images) {
