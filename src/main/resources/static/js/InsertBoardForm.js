@@ -44,21 +44,11 @@
                 imageContainer.style.margin='10px';
                 imageContainer.style.textAlign='center';
 
-                var input1=document.createElement('input');
-                input1.type='hidden';
-                input1.name='ImageName';
-                input1.value=ImageDTO['name'];
-
-                var input2=document.createElement('input');
-                input2.type='hidden';
-                input2.name='ImageUUIDName';
-                input2.value=ImageDTO['uuidname'];
-
                 const imageDeleteButton=document.createElement('button');
                 imageDeleteButton.className='tempImageDeleteBtn';
-                imageDeleteButton.type='button';
                 imageDeleteButton.setAttribute('onclick', 'tempimageDelete(this)');
                 imageDeleteButton.textContent='X';
+
 
                 const imageName=document.createElement('p');
                 imageName.textContent=ImageDTO['name'];
@@ -69,8 +59,6 @@
                 image.style.width='300px';
                 image.style.height='300px';
 
-                imageContainer.appendChild(input1);
-                imageContainer.appendChild(input2);
                 imageContainer.appendChild(imageDeleteButton);
                 imageContainer.appendChild(imageName);
                 imageContainer.appendChild(image);
@@ -88,34 +76,12 @@
 
     function tempimageDelete(btn) {
         //나중에 fetch로 db와 서버내 파일 삭제 구현
-        var formData= new FormData();
         var imageContainer=btn.parentNode;
-        var inputs = imageContainer.querySelectorAll('input');
-        var input1 = inputs[0].value;
-        var input2 = inputs[1].value;
-
-        formData.append('ImageName', input1);
-        formData.append('ImageUUIDName', input2);
-
-        fetch('/image/deleteOne',{
-            method: 'POST',
-            body: formData,
-            credentials: "include"
-        }).then(response => response.json())
-        .then(data => {
-            console.log(data);
-            alert('삭제 성공!!');
-            imageContainer.parentNode.removeChild(imageContainer);
-                imageIndex--;
-                if(imageIndex===0){
-                    ImageTempResult.innerHTML='';
-                }
-        }).catch(error => {
-            console.error('Error:', error);
-            alert('삭제 실패!!');
-        });
-
-
+        imageContainer.parentNode.removeChild(imageContainer);
+        imageIndex--;
+        if(imageIndex===0){
+            ImageTempResult.innerHTML='';
+        }
         return;
     }
     var submitButton = document.querySelector('.boardFormSubmit');
