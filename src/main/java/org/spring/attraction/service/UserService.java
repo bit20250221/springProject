@@ -5,12 +5,13 @@ import org.spring.attraction.dto.user.UserDTO;
 import org.spring.attraction.entity.User;
 import org.spring.attraction.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static org.spring.attraction.ENUM.Grade.bronze;
-import static org.spring.attraction.ENUM.UserType.manager;
 import static org.spring.attraction.ENUM.UserType.nomal;
 
 @Slf4j
@@ -63,7 +64,8 @@ public class UserService {
 
         userRepository.delete(user);
     }
-
+    
+    // 로그인 아이디로 유저 찾기
     public UserDTO getUserByLoginId(String userLoginId) {
         User user = userRepository.findByUserLoginId(userLoginId)
                 .orElseThrow(() -> new RuntimeException("유저가 없습니다"));
@@ -73,9 +75,20 @@ public class UserService {
         return userDTO;
     }
 
+    // 유저의 기본 Id 값으로 유저 찾기
     public UserDTO getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("유저가 없습니다"));
         return UserDTO.fromUser(user);
+    }
+
+    public String getCurrentUserAuthority() {
+        // 현재 로그인된 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            // 로그인한 사용자 권한 가져오기
+            return authentication.getAuthorities().iterator().next().getAuthority();
+        }
+        return null; // 인증되지 않은 사용자
     }
 }

@@ -10,6 +10,9 @@
         const myPage = () =>{
             location.href = "/user/myPage"
         }
+        const attractionList = () => {
+            location.href = "매핑 추가"
+        }
         const admin = () =>{
             location.href = "/admin"
         }
@@ -19,6 +22,7 @@
   <h2>메인 화면</h2>
   <button onclick="logout()">로그 아웃</button>
   <button onclick="myPage()">마이 페이지</button>
-  <button onclick="admin()">어드민 페이지</button>
+  <button onclick="attractionList()">관광지 목록 조회</button>
+  <button onclick="admin()" th:if="${auth eq 'manager'}">어드민 페이지</button>
 </body>
 </html>
