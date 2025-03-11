@@ -6,6 +6,7 @@ import org.spring.attraction.ENUM.ReservationMessage;
 import org.spring.attraction.dto.*;
 import org.spring.attraction.entity.*;
 import org.spring.attraction.repository.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -46,13 +47,15 @@ public class ReservationService {
             return result;
         }
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (principal instanceof UserDetails) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
             return ReservationMessage.getTypeById(-12);
+
         }
-        UserDetails userDetails = (UserDetails) principal;
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = userRepository.findByUserLoginId(userDetails.getUsername()).orElse(null);
+
         if(user == null) {
             return ReservationMessage.getTypeById(-1);
         }
