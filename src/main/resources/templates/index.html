@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>인덱스</title>
-    <script src="/js/indexLink.js"></script>
+    <script src="/js/userLink.js" defer></script>
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
 <h2>인덱스 페이지</h2>
+<button onclick="userLoginLink()">로그인</button>
+<button onclick="userSaveLink()">회원가입</button>
+<p th:text="${userLoginId}"></p>
 </body>
 </html>
