@@ -8,6 +8,7 @@ import org.spring.attraction.entity.Reservation;
 import org.spring.attraction.entity.User;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Set;
 @Getter
 @Setter
@@ -34,4 +35,6 @@ public class ReservationDto {
         reservationDto.setAttraction(reservation.getAttraction());
         return reservationDto;
     }
+
+
 }

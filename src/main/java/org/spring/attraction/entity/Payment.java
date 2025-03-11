@@ -31,7 +31,7 @@ public class Payment {
     public static Payment toEntity(PaymentDto paymentDto) {
         Payment payment = new Payment();
         payment.setId(paymentDto.getId());
-        payment.setCreatedate(paymentDto.getCreatedate());
+        payment.setCreateDate(paymentDto.getCreatedate());
         payment.setPaymentType(paymentDto.getPaymentType());
         payment.setReservation(paymentDto.getReservation());
         return payment;

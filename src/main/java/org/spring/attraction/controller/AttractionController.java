@@ -2,14 +2,9 @@ package org.spring.attraction.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.spring.attraction.ENUM.AttractionMessage;
-import org.spring.attraction.dto.AreaDto;
-import org.spring.attraction.dto.AttractionDto;
-import org.spring.attraction.dto.AttractionTypeDto;
-import org.spring.attraction.dto.AttractionTypeListDto;
-import org.spring.attraction.service.AreaService;
-import org.spring.attraction.service.AttractionService;
-import org.spring.attraction.service.AttractionTypeListService;
-import org.spring.attraction.service.AttractionTypeService;
+import org.spring.attraction.dto.*;
+import org.spring.attraction.repository.AttractionImgRepository;
+import org.spring.attraction.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +24,7 @@ public class AttractionController {
     private final AttractionService attractionService;
     private final AttractionTypeService attractionTypeService;
     private final AttractionTypeListService attractionTypeListService;
+    private final AttractionImgService attractionImgService;
 
     @GetMapping(value = {"", "/", "/index", "/main"})
     public String attraction() {
@@ -73,6 +69,13 @@ public class AttractionController {
         List<AreaDto> areaDtoList = areaService.findAll();
         List<AttractionTypeDto> attractionTypeDtoList = attractionTypeService.findAll();
 
+        AttractionImgDto attractionImgDto = attractionImgService.findByAttractionId(id);
+        if(attractionImgDto != null){
+            String attractionImgUrl = "/files/" + attractionImgDto.getUUID() + "_" + attractionImgDto.getName();
+
+            model.addAttribute("attractionImgUrl", attractionImgUrl);
+        }
+
         model.addAttribute("attractionDto", attractionDto);
         model.addAttribute("selectedAttractionTypeIdList", selectedAttractionTypeIdList);
         model.addAttribute("areaDtoList", areaDtoList);
@@ -90,6 +93,12 @@ public class AttractionController {
         }
         List<AreaDto> areaDtoList = areaService.findAll();
         List<AttractionTypeDto> attractionTypeDtoList = attractionTypeService.findAll();
+        AttractionImgDto attractionImgDto = attractionImgService.findByAttractionId(id);
+        if(attractionImgDto != null){
+            String attractionImgUrl = "/files/" + attractionImgDto.getUUID() + "_" + attractionImgDto.getName();
+
+            model.addAttribute("attractionImgUrl", attractionImgUrl);
+        }
 
         model.addAttribute("attractionDto", attractionDto);
         model.addAttribute("selectedAttractionTypeIdList", selectedAttractionTypeIdList);
@@ -103,7 +112,6 @@ public class AttractionController {
         AttractionMessage result = attractionService.update(attractionDto);
         redirectAttributes.addFlashAttribute("message", result.getMessage());
         if(result.getId() < 0){
-            redirectAttributes.addFlashAttribute("areaDto", attractionDto);
             return "redirect:/attraction/update/" + attractionDto.getId();
         }
         return "redirect:/attraction/list";

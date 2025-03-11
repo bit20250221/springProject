@@ -56,6 +56,8 @@ public class Attraction{
     @OneToMany(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Reservation> reservations = new HashSet<>();
 
+    @OneToOne(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
+    private AttractionImg attractionImg;
 
     public static Attraction toAttractionEntity(AttractionDto attractionDto) {
         Attraction attraction = new Attraction();

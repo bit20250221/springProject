@@ -44,7 +44,7 @@ public class ReservationService {
             return result;
         }
 
-        User user = userRepository.findById(4L).orElse(null);
+        User user = userRepository.findById(1L).orElse(null);
         if(user == null) {
             return ReservationMessage.getTypeById(-1);
         }

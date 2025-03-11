@@ -47,7 +47,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Comment> comments;
 
-    @OneToMany(mappedBy =  "user")
+    @OneToMany(mappedBy =  "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Reservation> reservations;
 
     @OneToOne

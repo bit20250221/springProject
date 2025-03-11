@@ -1,4 +1,3 @@
-
 package org.spring.attraction.entity;
 
 import jakarta.persistence.Column;
