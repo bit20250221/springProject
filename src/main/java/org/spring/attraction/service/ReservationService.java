@@ -49,11 +49,12 @@ public class ReservationService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) principal;
-            User user = userRepository.findByUserLoginId(userDetails.getUsername()).orElse(null);
-            if(user == null) {
-                return ReservationMessage.getTypeById(-1);
-            }
+            return ReservationMessage.getTypeById(-12);
+        }
+        UserDetails userDetails = (UserDetails) principal;
+        User user = userRepository.findByUserLoginId(userDetails.getUsername()).orElse(null);
+        if(user == null) {
+            return ReservationMessage.getTypeById(-1);
         }
 
         Attraction attraction = attractionRepository.findById(attractionDto.getId()).orElse(null);
