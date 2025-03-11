@@ -134,3 +134,22 @@
             action.style.display = 'none';
         }
     }
+
+    //게시글 입력 창에서 벗어나면 임시 업로드된 이미지를 모두 삭제시켜야한다.
+    window.addEventListener("beforeunload",function(e){
+        var url = "/image/delete";
+
+        /*
+        fetch('/image/delete',{
+            method: 'POST',
+            credentials: "include"
+        }).then(response => response.json())
+        .then(data => {
+            console.log(data);
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+        */
+        navigator.sendBeacon(url);
+
+    });

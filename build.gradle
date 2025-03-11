@@ -37,6 +37,7 @@ dependencies {
 
     // Security 관련 의존성 추가
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
     testImplementation 'org.springframework.security:spring-security-test'
 }
 

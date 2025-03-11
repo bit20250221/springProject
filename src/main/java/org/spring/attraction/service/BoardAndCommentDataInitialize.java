@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -32,12 +34,15 @@ public class BoardAndCommentDataInitialize implements CommandLineRunner {
     public void initSetting(){
         Calendar birthCalender=Calendar.getInstance();
         birthCalender.set(1995,Calendar.JUNE,1);
-        Date birthDate=birthCalender.getTime();
+        Date birthDateOld = birthCalender.getTime();
+        LocalDate birthDate = birthDateOld.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
 
         User user=new User();
-        user.setUser_login_Id("testuser");
+        user.setUserLoginId("testuser");
         user.setPass("1111");
-        user.setBirthdate(birthDate);
+        user.setBirthDate(birthDate);
         user.setGrade(Grade.bronze);
         user.setUserType(UserType.nomal);
 

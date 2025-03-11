@@ -16,10 +16,12 @@ import org.spring.attraction.service.Board_service;
 import org.spring.attraction.service.Comment_service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RequestMapping("/board")
@@ -85,7 +87,7 @@ public class Board_controller {
 
     @GetMapping("/getBoard/{id}")
     public String getBoard(Model model,
-                           @PathVariable("id") Long id){
+                           @PathVariable("id") Long id, Principal principal){
 
         Board_dto OneBoard=boardService.getBoard(id);
         //만약 탭이 문의, 신고인데, 작성자가 아니면 해당 화면을 보면 안된다.
@@ -110,8 +112,9 @@ public class Board_controller {
     탭에 따라 글 작성 폼 UI 변화
     관광지 관리자로 접속하면 리뷰 상에서 별점 부여, 관광지 선택 제한 필요
     */
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/insertBoard")
-    public String InsertBoardView(Model model, Board_dto boardDto, String tab, HttpSession session){
+    public String InsertBoardView(Model model, Board_dto boardDto, String tab, HttpSession session, Principal principal){
 
         //탭과 사용자에 따라 다르게 적용(사용자의 권한 여부를 확인하는 로직 필요)
         //유저 관련은 일단 일시적인 값을 넣고 세션 활용
@@ -143,9 +146,9 @@ public class Board_controller {
     }
 
     //따로 유저 DTO, 관광지 DTO 받아오는 로직 필요, 검증 코드 필요(회원의 아이디, 탭, 파일)
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/insertBoard")
-    public String InsertBoardAction(Board_dto dto, HttpSession session){
-
+    public String InsertBoardAction(Board_dto dto, HttpSession session, Principal principal){
         //만약 로그인된 사용자와 작성자 아이디 다르면 취소(사용자 아이디 조작 방지)(스프링 시큐리티 활용)(일단 세션 활용)
         if(dto.getUser_login_Id().compareTo(session.getAttribute("userLoginId").toString())!=0){
             return "redirect:/board/error";
@@ -196,10 +199,12 @@ public class Board_controller {
     }
 
     //오직 글 작성자만 수정 가능하도록 한다.(일단 파일 수정은 제외)
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/updateBoard/{id}")
     public String updateBoardView(Model model,
-                                  @PathVariable("id") Long id, Board_dto boardDTO, HttpSession session){
+                                  @PathVariable("id") Long id, Board_dto boardDTO, HttpSession session, Principal principal){
         Board_dto UpdateBoard=boardService.getBoard(id);
+
         if(UpdateBoard.getTab().compareTo("문의")==0||UpdateBoard.getTab().compareTo("리뷰")==0
         ||UpdateBoard.getTab().compareTo("신고")==0||UpdateBoard.getTab().compareTo("공지")==0){
 
@@ -229,13 +234,18 @@ public class Board_controller {
         탭을 임의로 수정 못하도록 막는 로직 필요
         그리고 현재 로그인 정보를 가져올 필요가 있음(일단은 form으로 가져오고 나중에 principal 객체를 이용해 처리)
     */
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/updateBoard/{id}")
-    public String updateBoardAction(@PathVariable("id") Long id, Board_dto boardDTO, HttpSession session){
+    public String updateBoardAction(@PathVariable("id") Long id, Board_dto boardDTO, HttpSession session, Principal principal){
         log.info(id+" board info: {},{},{},{},{},{},{},{},{}",
                 boardDTO.getBoard_id(), boardDTO.getTab(), boardDTO.getTitle(),
                 boardDTO.getContent(), boardDTO.getAttraction_id(), boardDTO.getUser_id(),
                 boardDTO.getRate(), boardDTO.getCreartedate(), boardDTO.getUpdatedate());
 
+        if(boardDTO.getUser_login_Id().compareTo(principal.getName())!=0){
+            log.info("해당 글 작성자가 아닙니다.");
+            return "redirect:/board/error";
+        }
         Board_dto UpdateBoard=boardService.updateBoard(boardDTO);
         if(UpdateBoard!=null&&UpdateBoard.getTab().compareTo("일반")!=0) {
 
@@ -263,8 +273,9 @@ public class Board_controller {
     }
 
     //글 작성자만 삭제하도록 필요
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/deleteBoard/{id}")
-    public String deleteBoard(@PathVariable("id") Long id){
+    public String deleteBoard(@PathVariable("id") Long id,Principal principal){
         boardService.deleteBoard(id);
 
         log.info("아이디 "+id+" 글 삭제 완료");

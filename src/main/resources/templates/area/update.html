@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>지역 수정</title>
+    <script src="/js/alert.js"></script>
+    <script src="/js/areaLink.js" defer></script>
+    <script src="/js/areaFormValidate.js" defer></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<h2>지역 수정 페이지</h2>
+<form action="/area/update" method="post" id="saveForm">
+    <label for="id">아이디</label><input th:value="${areaDto.getId()}" type="text" id="id" name="id" readonly><br/>
+    <label for="country">국가</label><input th:value="${areaDto.getCountry()}" type="text" id="country" name="country" maxlength="10" required><br/>
+    <p id="error-message-country"></p>
+    <label for="city">도시</label><input th:value="${areaDto.getCity()}" type="text" id="city" name="city" maxlength="10" required><br/>
+    <p id="error-message-city"></p>
+    <button type="submit">수정</button>
+</form>
+<button onclick="areaListLink()">지역 리스트 확인</button>
+
+<script th:inline="javascript">
+    alertMessage([[${message}]])
+</script>
+</body>
+</html>

@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -149,7 +151,10 @@ public class BoardTest {
     public void initSetting(){
         Calendar birthCalender=Calendar.getInstance();
         birthCalender.set(1995,Calendar.JUNE,1);
-        Date birthDate=birthCalender.getTime();
+        Date birthDateOld = birthCalender.getTime();
+        LocalDate birthDate = birthDateOld.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
 
         User user=new User();
         user.setUserLoginId("testuser");
