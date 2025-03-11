@@ -6,12 +6,18 @@ import org.spring.attraction.ENUM.AttractionMessage;
 import org.spring.attraction.dto.*;
 import org.spring.attraction.entity.*;
 import org.spring.attraction.repository.*;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +34,7 @@ public class AttractionService {
     private final ReservationRepository reservationRepository;
     private final AttractionImgRepository attractionImgRepository;
     private final AttractionImgService attractionImgService;
+    private final ViewAttractionRepository viewAttractionRepository;
 
     @Transactional
     public AttractionMessage save(AttractionDto attractionDto) {
@@ -204,10 +211,24 @@ public class AttractionService {
         attraction.getAttractionsTypeLists().clear();
         attractionRepository.delete(attraction);
 
-
         return AttractionMessage.getTypeById(3);
 
+    }
 
+    public Page<ViewAttractionDto> findViewAll(Pageable pageable) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = 10;
+
+        Page<ViewAttraction> viewAttractionPage = viewAttractionRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+
+        Page<ViewAttractionDto> viewAttractionDtoPage = viewAttractionPage.
+                map(viewAttraction ->
+                        new ViewAttractionDto(
+                                viewAttraction.getId(), viewAttraction.getName(), viewAttraction.getAvgrate(),
+                                viewAttraction.getPrice(), viewAttraction.getOpenTime(), viewAttraction.getCloseTime(),
+                                viewAttraction.getType(), viewAttraction.getArea()));
+
+        return viewAttractionDtoPage;
 
     }
 }

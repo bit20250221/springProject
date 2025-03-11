@@ -5,6 +5,10 @@ import org.spring.attraction.ENUM.AttractionMessage;
 import org.spring.attraction.dto.*;
 import org.spring.attraction.repository.AttractionImgRepository;
 import org.spring.attraction.service.*;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,10 +55,24 @@ public class AttractionController {
         return "redirect:/attraction/list";
     }
 
+//    @GetMapping("/list")
+//    public String list(Model model) {
+//        List<AttractionDto> attractionDtoList = attractionService.findAll();
+//        model.addAttribute("attractionDtoList", attractionDtoList);
+//        return "/attraction/list";
+//    }
+
     @GetMapping("/list")
-    public String list(Model model) {
-        List<AttractionDto> attractionDtoList = attractionService.findAll();
-        model.addAttribute("attractionDtoList", attractionDtoList);
+    public String list(@PageableDefault(page = 1) Pageable pageable, Model model) {
+        Page<ViewAttractionDto> viewAttractionDtoPage = attractionService.findViewAll(pageable);
+
+        int blockLimit = 10;
+        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
+        int endPage = ((startPage + blockLimit - 1) < viewAttractionDtoPage.getTotalPages()) ? startPage + blockLimit - 1 : viewAttractionDtoPage.getTotalPages();
+
+        model.addAttribute("viewAttractionDtoPage", viewAttractionDtoPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
         return "/attraction/list";
     }
 

@@ -23,20 +23,40 @@
         <th>수정</th>
         <th>삭제</th>
     </tr>
-    <tr th:each="attractionDto, index: ${attractionDtoList}">
-        <td th:text="${attractionDto.getId()}"></td>
-        <td th:text="${attractionDto.getName()}"></td>
-        <td th:text="${attractionDto.getAvgrate()}"></td>
-        <td th:text="${attractionDto.getPrice()}"></td>
-        <td th:text="${attractionDto.getOpenTime()}"></td>
-        <td th:text="${attractionDto.getCloseTime()}"></td>
-        <td th:text="${attractionDto.getAttractionTypeDtoList()}"></td>
-        <td th:text="${attractionDto.getArea()}"></td>
-        <td><button th:onclick="|attractionDetailLink(${attractionDto.getId()})|">상세</button></td>
-        <td><button th:onclick="|attractionUpdateLink(${attractionDto.getId()})|">수정</button></td>
-        <td><button th:onclick="|attractionDeleteLink(${attractionDto.getId()})|">삭제</button></td>
+    <tr th:each="viewAttractionDto, index: ${viewAttractionDtoPage}">
+        <td th:text="${viewAttractionDto.getId()}"></td>
+        <td th:text="${viewAttractionDto.getName()}"></td>
+        <td th:text="${viewAttractionDto.getAvgrate()}"></td>
+        <td th:text="${viewAttractionDto.getPrice()}"></td>
+        <td th:text="${viewAttractionDto.getOpenTime()}"></td>
+        <td th:text="${viewAttractionDto.getCloseTime()}"></td>
+        <td th:text="${viewAttractionDto.getType()}"></td>
+        <td th:text="${viewAttractionDto.getArea()}"></td>
+        <td><button th:onclick="|attractionDetailLink(${viewAttractionDto.getId()})|">상세</button></td>
+        <td><button th:onclick="|attractionUpdateLink(${viewAttractionDto.getId()})|">수정</button></td>
+        <td><button th:onclick="|attractionDeleteLink(${viewAttractionDto.getId()})|">삭제</button></td>
     </tr>
 </table>
+<a href="#" onclick="attractionPagingLink(1)">처음</a>
+<!--<a href="/attraction/list?page=1">First</a>-->
+<!-- 이전 링크 활성화 비활성화 -->
+<!-- boardList.getNumber() 사용자:2페이지 getNumber()=1 -->
+
+<a href="#" th:onclick="|attractionPagingLink(${viewAttractionDtoPage.number})|">이전</a>
+
+<!-- 페이지 번호 링크(현재 페이지는 숫자만)
+        for(int page=startPage; page<=endPage; page++)-->
+<span th:each="page: ${#numbers.sequence(startPage, endPage)}">
+    <!-- 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 -->
+    <a href="#" th:onclick="|attractionPagingLink(${page})|" th:text="${page}"></a>
+</span>
+
+<!-- 다음 링크 활성화 비활성화
+    사용자: 2페이지, getNumber: 1, 3페이지-->
+<a href="#" th:onclick="|attractionPagingLink(${viewAttractionDtoPage.number + 2})|">다음</a>
+<!-- 마지막 페이지로 이동 -->
+<!--<a th:href="@{/attraction/list(page=${viewAttractionDtoPage.totalPages})}">Last</a>-->
+<a href="#" th:onclick="|attractionPagingLink(${viewAttractionDtoPage.totalPages})|">마지막</a>
 <button onclick="attractionSaveLink()">관광지 등록</button>
 
 <script th:inline="javascript">

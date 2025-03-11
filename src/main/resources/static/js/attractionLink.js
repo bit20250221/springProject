@@ -19,4 +19,9 @@ const attractionMainLink = () => {
 const attractionReservationLink = (id) => {
     location.href = "/reservation/save/" + id;
 }
-
+const attractionPagingLink = (id) => {
+    if(id <= 0){
+        id = 1;
+    }
+    location.href = "/attraction/list?page=" + id;
+}
