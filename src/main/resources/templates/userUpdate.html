@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>유저 수정</title>
+  <script>
+    const userTypeSelect = document.querySelector('select[name="userType"]');
+    const attractionField = document.querySelector('input[name="attraction"]');
+
+    userTypeSelect.addEventListener('change', () => {
+      if (userTypeSelect.value === 'attraction') {
+        attractionField.parentElement.style.display = 'block';
+      } else {
+        attractionField.parentElement.style.display = 'none';
+        attractionField.value = '';
+      }
+    });
+  </script>
+</head>
+<body>
+<h2>유저 수정</h2>
+<form action="/admin/user/update" method="post">
+  <input type="hidden" name="id" th:value="${user.id}">
+  유저 아이디: <input type="text" name="userLoginId" th:value="${user.userLoginId}" readonly> <br>
+  <input type="hidden" name="pass" th:value="null"> <br>
+  <select name="userType">
+    <option th:value="nomal" th:text="일반" th:selected="${user.userType == 'nomal'}"></option>
+    <option th:value="attraction" th:text="어트랙션" th:selected="${user.userType == 'attraction'}"></option>
+    <option th:value="manager" th:text="관리자" th:selected="${user.userType == 'manager'}"></option>
+  </select> <br>
+  생년월일: <input type="date" name="birthDate" th:value="${user.birthDate}"> <br>
+  등급:
+  <select name="grade">
+    <option th:value="bronze" th:text="브론즈" th:selected="${user.grade == 'bronze'}"></option>
+    <option th:value="silver" th:text="실버" th:selected="${user.grade == 'silver'}"></option>
+    <option th:value="gold" th:text="골드" th:selected="${user.grade == 'gold'}"></option>
+  </select> <br>
+  어트랙션 ID: <input type="text" name="attraction" th:value="${user.attraction}"> <br>
+  <button type="submit">수정하기</button>
+</form>
+</body>
+</html>

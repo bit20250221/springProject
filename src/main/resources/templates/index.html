@@ -3,10 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <script>
+        const loginBtn = () =>{
+            location.href = "/user/login"
+        }
+        const registerBtn = () => {
+            location.href = "/user/register"
+        }
+    </script>
 </head>
 <body>
     <h2>홈 페이지</h2>
-    <a href="/user/login">로그인</a>
-    <a href="/user/register">회원가입</a>
+    <button onclick="loginBtn()">로그인</button>
+    <button onclick="registerBtn()">회원가입</button>
 </body>
 </html>
