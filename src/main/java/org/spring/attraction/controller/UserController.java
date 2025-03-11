@@ -45,7 +45,7 @@ public class UserController {
     public String register(@ModelAttribute UserDto userDTO) {
 
         userService.registerProcess(userDTO);
-        return "redirect:/login";
+        return "redirect:/user/login";
     }
 
     @PostMapping("/update")
