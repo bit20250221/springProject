@@ -141,7 +141,7 @@ public class AttractionService {
         for(Long id : attractionDto.getAttractionTypeDtoIdList()) {
             AttractionType attractionType = attractionTypeRepository.findById(id).orElse(null);
             if(attractionType != null) {
-                AttractionTypeList attractionTypeList = attractionTypeListRepository.findByAttractionIdAndAttractionTypeId(attraction.getId(), attractionType.getId());
+                AttractionTypeList attractionTypeList = attractionTypeListRepository.findByAttractionIdAndAttractionTypeId(attraction.getId(), attractionType.getId()).orElse(null);
                 if(attractionTypeList == null) {
                     AttractionTypeList newAttractionTypeList = new AttractionTypeList();
                     newAttractionTypeList.setAttraction(attraction);
@@ -156,7 +156,7 @@ public class AttractionService {
 
         if(attractionDto.getImg() != null) {
 
-            AttractionImg findAttractionImg = attractionImgRepository.findByAttractionId(attractionDto.getId());
+            AttractionImg findAttractionImg = attractionImgRepository.findByAttractionId(attractionDto.getId()).orElse(null);
             if(findAttractionImg != null) {
                 AttractionImgDto attractionImgDto = new AttractionImgDto();
                 attractionImgDto.setAttractionId(attractionDto.getId());
@@ -193,7 +193,7 @@ public class AttractionService {
             return AttractionMessage.getTypeById(-3);
         }
 
-        AttractionImg attractionImg = attractionImgRepository.findByAttractionId(attraction.getId());
+        AttractionImg attractionImg = attractionImgRepository.findByAttractionId(attraction.getId()).orElse(null);
         if(attractionImg != null) {
             AttractionMessage result = attractionImgService.delete(attraction.getId());
             if(result != null) {

@@ -6,9 +6,9 @@ import lombok.Setter;
 import org.spring.attraction.ENUM.Grade;
 import org.spring.attraction.ENUM.UserType;
 import org.hibernate.annotations.ColumnDefault;
+import org.spring.attraction.dto.UserDto;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
@@ -22,14 +22,14 @@ public class User {
     @Column(name = "userId")
     private Long id;
 
-    @Column(name = "user_login_Id", length = 45, nullable = false, unique = true, insertable = false, updatable = false)
-    private String user_login_Id;
+    @Column(name = "user_login_id", length = 45, nullable = false, unique = true, updatable = false)
+    private String userLoginId;
 
-    @Column(length = 45, nullable = false)
+    @Column(nullable = false)
     private String pass;
 
     @Column(nullable = false)
-    private Date birthdate;
+    private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -53,4 +53,14 @@ public class User {
     @JoinColumn(name = "attractionId", nullable = true)
     private Attraction attraction;
 
+    public static User toEntity(UserDto userDto) {
+        User user = new User();
+        user.setId(userDto.getId());
+        user.setUserLoginId(userDto.getUserLoginId());
+        user.setPass(userDto.getPass());
+        user.setBirthDate(userDto.getBirthDate());
+        user.setUserType(UserType.nomal);
+        user.setGrade(Grade.bronze);
+        return user;
+    }
 }

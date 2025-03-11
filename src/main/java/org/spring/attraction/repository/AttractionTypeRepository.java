@@ -9,5 +9,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AttractionTypeRepository extends JpaRepository<AttractionType, Long> {
-    AttractionType findByType(String type);
+    Optional<AttractionType> findByType(String type);
 }

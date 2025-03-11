@@ -87,7 +87,7 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findById(id).orElse(null);
         if(reservation != null) {
             ReservationDto reservationDto = ReservationDto.toDto(reservation);
-            Payment payment = paymentRepository.findByReservationId(reservation.getId());
+            Payment payment = paymentRepository.findByReservationId(reservation.getId()).orElse(null);
             reservationDto.setPaymentId(payment.getId());
             return reservationDto;
         }
