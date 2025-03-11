@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.spring.attraction.ENUM.Grade;
 import org.spring.attraction.ENUM.UserType;
 import org.hibernate.annotations.ColumnDefault;
+import org.spring.attraction.dto.user.UserDTO;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -54,4 +55,13 @@ public class User {
     @JoinColumn(name = "attractionId", nullable = true)
     private Attraction attraction;
 
+    public static User toUser(UserDTO userDTO, String existingPass) {
+        User user = new User();
+        user.setUserLoginId(userDTO.getUserLoginId());
+        user.setPass(userDTO.getPass() != null ? userDTO.getPass() : existingPass);        user.setBirthDate(userDTO.getBirthDate());
+        user.setUserType(userDTO.getUserType());
+        user.setGrade(userDTO.getGrade());
+        user.setAttraction(userDTO.getAttraction() != null ? user.getAttraction() : null);
+        return user;
+    }
 }
