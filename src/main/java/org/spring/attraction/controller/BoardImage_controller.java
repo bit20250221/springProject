@@ -148,7 +148,9 @@ public class BoardImage_controller {
         //게시글 수정 화면에서 동작(실제로는 게시글 수정화면에서 이미지 삭제, 등록이 즉각적으로 반영되서 사용안 될듯)
         if( sessionImages2!=null && sessionImages==null){
             for(BoardImage_dto dto : sessionImages2) {
-                boardImageService.deleteImageFile(dto.getUUID(), dto.getUUIDName(), dto.getBoardId());
+                //게시글 수정화면에서 임시 등록된 이미지는 temp 폴더에 저장되어있다
+                //boardImageService.deleteImageFile(dto.getUUID(), dto.getUUIDName(), dto.getBoardId());
+                boardImageService.deleteTempImageFile(dto.getUUID(), dto.getUUIDName());
             }
             if(sessionImages2.isEmpty()){
                 session.removeAttribute("UpdateImages");

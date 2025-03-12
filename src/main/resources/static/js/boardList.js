@@ -4,6 +4,7 @@
     }
 
     var searchbtn=document.querySelector('.search_button');
+    if(searchbtn){
     searchbtn.addEventListener('click', function(){
         var tabValue = document.querySelector('.search_type_1').value;
         var typeValue = document.querySelector('.search_type_2').value;
@@ -17,3 +18,69 @@
         window.location.href="/board/list?page=0&pageAmount=10&type="+typeValue+"&tab="+tabValue+"&Keyword="+keywordValue;
 
     });
+    }
+
+    var subsearchbtn1=document.querySelector('.subsearch_button_1');
+    if(subsearchbtn1){
+    subsearchbtn1.addEventListener('click', function(){
+        var typeValue = document.querySelector('.search_type_2').value;
+        var keywordValue = document.querySelector('.search_keyword').value;
+        if(typeValue === '전체'){
+            typeValue = '';
+        }
+        window.location.href="/board/announce?page=0&pageAmount=10&type="+typeValue+"&Keyword="+keywordValue;
+
+    });
+    }
+
+    var subsearchbtn2=document.querySelector('.subsearch_button_2');
+    if(subsearchbtn2){
+    subsearchbtn2.addEventListener('click', function(){
+        var typeValue = document.querySelector('.search_type_2').value;
+        var keywordValue = document.querySelector('.search_keyword').value;
+
+        if(typeValue === '전체'){
+            typeValue = '';
+        }
+        window.location.href="/board/review?page=0&pageAmount=10&type="+typeValue+"&Keyword="+keywordValue;
+    });
+    }
+
+    var subsearchbtn3=document.querySelector('.subsearch_button_3');
+    if(subsearchbtn3){
+    subsearchbtn3.addEventListener('click', function(){
+        var typeValue = document.querySelector('.search_type_2').value;
+        var keywordValue = document.querySelector('.search_keyword').value;
+
+        if(typeValue === '전체'){
+            typeValue = '';
+        }
+        window.location.href="/board/normal?page=0&pageAmount=10&type="+typeValue+"&Keyword="+keywordValue;
+    });
+    }
+
+    var subsearchbtn4=document.querySelector('.subsearch_button_4');
+    if(subsearchbtn4){
+    subsearchbtn4.addEventListener('click', function(){
+        var typeValue = document.querySelector('.search_type_2').value;
+        var keywordValue = document.querySelector('.search_keyword').value;
+
+        if(typeValue === '전체'){
+            typeValue = '';
+        }
+        window.location.href="/board/inquiry?page=0&pageAmount=10&type="+typeValue+"&Keyword="+keywordValue;
+    });
+    }
+
+    var subsearchbtn5=document.querySelector('.subsearch_button_5');
+    if(subsearchbtn5){
+    subsearchbtn5.addEventListener('click', function(){
+        var typeValue = document.querySelector('.search_type_2').value;
+        var keywordValue = document.querySelector('.search_keyword').value;
+
+        if(typeValue === '전체'){
+            typeValue = '';
+        }
+        window.location.href="/board/report?page=0&pageAmount=10&type="+typeValue+"&Keyword="+keywordValue;
+    });
+    }

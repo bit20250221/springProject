@@ -162,6 +162,35 @@ public class Board_controller {
 
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/report")
+    public String report(Model model,
+                         @RequestParam(name = "pageAmount",defaultValue = "10") int pageAmount,
+                         @RequestParam(name = "page", defaultValue = "0") int page,
+                         @RequestParam(name = "type", defaultValue = "") String type,
+                         @RequestParam(name = "Keyword",defaultValue = "") String Keyword)
+    {
+
+        String tab="신고";
+        Page<Board_dto> boardPageList=boardService.getSearchPageBoard(tab,type,Keyword,page,pageAmount);
+        Integer boardSize=boardPageList.getSize();
+
+        if(!boardPageList.isEmpty()) {
+            model.addAttribute("method","Report");
+            model.addAttribute("result","NORMAL");
+            model.addAttribute("pageNum",page);
+            model.addAttribute("pageAmount",pageAmount);
+            model.addAttribute("boardList", boardPageList);
+            model.addAttribute("boardContent",boardPageList.getContent());
+            model.addAttribute("boardSize", boardSize);
+        }else{
+            model.addAttribute("result","NONE");
+        }
+        model.addAttribute("tab",tab);
+        return "board/boardList";
+
+    }
+
     //검색, 페이징 기능 포함, 탭에 따라 ui 변경
     //(일반 사용자 기준, 해당 사용자가 하지 않은 신고와 문의는 안 보여준다)
     @PermitAll

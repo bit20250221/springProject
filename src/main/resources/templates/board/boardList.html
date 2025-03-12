@@ -11,34 +11,434 @@
 
 <!--홈페이지 위쪽에는 관광지 페이지와 예약할 수 있는 메뉴를 표시-->
 <div class="top">
+    <a></a>
+    <a></a>
+    <a></a>
 
 </div>
 
 <div th:if="${method eq 'Announce'}" class="board_announce">
 
-    <div class="bottom">
+    <table class="board_center">
+        <thead>
+        <tr class="board_column">
+            <th>게시글 번호</th>
+            <th>게시글 탭</th>
+            <th>게시글 제목</th>
+            <th>회원의 아이디</th>
+            <th>댓글 수</th>
+        </tr>
+        </thead>
+        <tbody>
 
+        <div th:if="${boardList != null and !boardList.isEmpty()}">
+            <tr class="board_element" th:each="board, loop : ${boardList}">
+                <td th:text="${board.board_id}"></td>
+                <td th:text="${board.tab}"></td>
+                <td>
+                    <a th:href="@{/board/getBoard/{id}(id=${board.board_id})}">
+                        [[${board.title}]]
+                    </a>
+                </td>
+                <td th:text="${board.user_login_Id}"></td>
+                <td th:text="${board.comment_Num}"></td>
+            </tr>
+        </div>
+
+        <div th:if="${boardList == null or boardList.isEmpty()}">
+            <tr class="board_nothing">
+                <h2>게시글이 존재하지 않습니다.</h2>
+            </tr>
+        </div>
+
+        </tbody>
+    </table>
+
+    <div class="page_list" th:if="${boardList != null and !boardList.isEmpty()}">
+        <ul class="pagenation">
+            <li th:if="${boardList.hasPrevious()}">
+                <a th:href="@{/board/announce(page=${boardList.number - 1}, pageAmount=${pageAmount}, type=${param.type}, Keyword=${param.Keyword})}">이전</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(0, boardList.totalPages - 1)}"
+                th:if="${ i >= boardList.number - 5 and i <= boardList.number + 5}"
+                th:classappend="${i == boardList.number} ? 'active'">
+                <a th:href="@{/board/announce(page=${i}, pageAmount=${pageAmount}, type=${param.type}, Keyword=${param.Keyword})}"
+                   th:text="${i + 1}">1</a>
+            </li>
+            <li th:if="${boardList.hasNext()}">
+                <a th:href="@{/board/announce(page=${boardList.number + 1}, pageAmount=${pageAmount}, type=${param.type}, Keyword=${param.Keyword})}">다음</a>
+            </li>
+        </ul>
+    </div>
+    <div th:if="${boardList == null or boardList.isEmpty()}">
+
+    </div>
+
+    <div class="bottom">
+        <div class="search_box">
+
+            <label>타입</label>
+            <select class="search_type_2">
+                <option value="전체">전체</option>
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="writer">작성자</option>
+            </select>
+
+            <input class="search_keyword" type="text">
+            <button class="subsearch_button_1">찾기</button>
+        </div>
+
+        <div sec:authorize="isAuthenticated()">
+            <div class="write_div">
+                <select class="write_type">
+                    <div sec:authorize="hasRole('manager')">
+                        <option value="공지">공지</option>
+                    </div>
+                </select>
+                <button class="write_btn" onclick="writeForm()">글쓰기</button>
+            </div>
+        </div>
     </div>
 </div>
 
 <div th:if="${method eq 'Review'}" class="board_review">
 
-    <div class="bottom">
+    <table class="board_center">
+        <thead>
+        <tr class="board_column">
+            <th>게시글 번호</th>
+            <th>게시글 탭</th>
+            <th>게시글 제목</th>
+            <th>관광지의 이름</th>
+            <th>별점</th>
+            <th>회원의 아이디</th>
+            <th>댓글 수</th>
+        </tr>
+        </thead>
+        <tbody>
 
+        <div th:if="${boardList != null and !boardList.isEmpty()}">
+            <tr class="board_element" th:each="board, loop : ${boardList}">
+                <td th:text="${board.board_id}"></td>
+                <td th:text="${board.tab}"></td>
+                <td>
+                    <a th:href="@{/board/getBoard/{id}(id=${board.board_id})}">
+                        [[${board.title}]]
+                    </a>
+                </td>
+                <td th:text="${board.attraction_Name}"></td>
+                <td th:text="${board.rate}"></td>
+                <td th:text="${board.user_login_Id}"></td>
+                <td th:text="${board.comment_Num}"></td>
+            </tr>
+        </div>
+
+        <div th:if="${boardList == null or boardList.isEmpty()}">
+            <tr class="board_nothing">
+                <h2>게시글이 존재하지 않습니다.</h2>
+            </tr>
+        </div>
+
+        </tbody>
+    </table>
+
+    <div class="page_list" th:if="${boardList != null and !boardList.isEmpty()}">
+        <ul class="pagenation">
+            <li th:if="${boardList.hasPrevious()}">
+                <a th:href="@{/board/review(page=${boardList.number - 1}, pageAmount=${pageAmount}, type=${param.type}, Keyword=${param.Keyword})}">이전</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(0, boardList.totalPages - 1)}"
+                th:if="${ i >= boardList.number - 5 and i <= boardList.number + 5}"
+                th:classappend="${i == boardList.number} ? 'active'">
+                <a th:href="@{/board/review(page=${i}, pageAmount=${pageAmount}, type=${param.type}, Keyword=${param.Keyword})}"
+                   th:text="${i + 1}">1</a>
+            </li>
+            <li th:if="${boardList.hasNext()}">
+                <a th:href="@{/board/review(page=${boardList.number + 1}, pageAmount=${pageAmount}, type=${param.type}, Keyword=${param.Keyword})}">다음</a>
+            </li>
+        </ul>
+    </div>
+    <div th:if="${boardList == null or boardList.isEmpty()}">
+
+    </div>
+
+    <div class="bottom">
+        <div class="search_box">
+
+            <label>타입</label>
+            <select class="search_type_2">
+                <option value="전체">전체</option>
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="writer">작성자</option>
+            </select>
+
+            <input class="search_keyword" type="text">
+            <button class="subsearch_button_2">찾기</button>
+        </div>
+
+        <div sec:authorize="isAuthenticated()">
+            <div class="write_div">
+                <select class="write_type">
+                    <option value="리뷰">리뷰</option>
+                </select>
+                <button class="write_btn" onclick="writeForm()">글쓰기</button>
+            </div>
+        </div>
     </div>
 </div>
 
 <div th:if="${method eq 'Normal'}" class="board_nomal">
 
-    <div class="bottom">
+    <table class="board_center">
+        <thead>
+        <tr class="board_column">
+            <th>게시글 번호</th>
+            <th>게시글 탭</th>
+            <th>게시글 제목</th>
+            <th>회원의 아이디</th>
+            <th>댓글 수</th>
+        </tr>
+        </thead>
+        <tbody>
 
+        <div th:if="${boardList != null and !boardList.isEmpty()}">
+            <tr class="board_element" th:each="board, loop : ${boardList}">
+                <td th:text="${board.board_id}"></td>
+                <td th:text="${board.tab}"></td>
+                <td>
+                    <a th:href="@{/board/getBoard/{id}(id=${board.board_id})}">
+                        [[${board.title}]]
+                    </a>
+                </td>
+                <td th:text="${board.user_login_Id}"></td>
+                <td th:text="${board.comment_Num}"></td>
+            </tr>
+        </div>
+
+        <div th:if="${boardList == null or boardList.isEmpty()}">
+            <tr class="board_nothing">
+                <h2>게시글이 존재하지 않습니다.</h2>
+            </tr>
+        </div>
+
+        </tbody>
+    </table>
+
+    <div class="page_list" th:if="${boardList != null and !boardList.isEmpty()}">
+        <ul class="pagenation">
+            <li th:if="${boardList.hasPrevious()}">
+                <a th:href="@{/board/normal(page=${boardList.number - 1}, pageAmount=${pageAmount}, type=${param.type}, Keyword=${param.Keyword})}">이전</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(0, boardList.totalPages - 1)}"
+                th:if="${ i >= boardList.number - 5 and i <= boardList.number + 5}"
+                th:classappend="${i == boardList.number} ? 'active'">
+                <a th:href="@{/board/normal(page=${i}, pageAmount=${pageAmount}, type=${param.type}, Keyword=${param.Keyword})}"
+                   th:text="${i + 1}">1</a>
+            </li>
+            <li th:if="${boardList.hasNext()}">
+                <a th:href="@{/board/normal(page=${boardList.number + 1}, pageAmount=${pageAmount}, type=${param.type}, Keyword=${param.Keyword})}">다음</a>
+            </li>
+        </ul>
+    </div>
+    <div th:if="${boardList == null or boardList.isEmpty()}">
+
+    </div>
+
+    <div class="bottom">
+        <div class="search_box">
+
+            <label>타입</label>
+            <select class="search_type_2">
+                <option value="전체">전체</option>
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="writer">작성자</option>
+            </select>
+
+            <input class="search_keyword" type="text">
+            <button class="subsearch_button_3">찾기</button>
+        </div>
+
+        <div sec:authorize="isAuthenticated()">
+            <div class="write_div">
+                <select class="write_type">
+                    <option value="일반">일반</option>
+                </select>
+                <button class="write_btn" onclick="writeForm()">글쓰기</button>
+            </div>
+        </div>
     </div>
 </div>
 
 <div th:if="${method eq 'Inquiry'}" class="board_inquiry">
 
-    <div class="bottom">
+    <table class="board_center">
+        <thead>
+        <tr class="board_column">
+            <th>게시글 번호</th>
+            <th>게시글 탭</th>
+            <th>게시글 제목</th>
+            <th>관광지의 이름</th>
+            <th>회원의 아이디</th>
+            <th>댓글 수</th>
+        </tr>
+        </thead>
+        <tbody>
 
+        <div th:if="${boardList != null and !boardList.isEmpty()}">
+            <tr class="board_element" th:each="board, loop : ${boardList}">
+                <td th:text="${board.board_id}"></td>
+                <td th:text="${board.tab}"></td>
+                <td>
+                    <a th:href="@{/board/getBoard/{id}(id=${board.board_id})}">
+                        [[${board.title}]]
+                    </a>
+                </td>
+                <td th:text="${board.attraction_Name}"></td>
+                <td th:text="${board.user_login_Id}"></td>
+                <td th:text="${board.comment_Num}"></td>
+            </tr>
+        </div>
+
+        <div th:if="${boardList == null or boardList.isEmpty()}">
+            <tr class="board_nothing">
+                <h2>게시글이 존재하지 않습니다.</h2>
+            </tr>
+        </div>
+
+        </tbody>
+    </table>
+
+    <div class="page_list" th:if="${boardList != null and !boardList.isEmpty()}">
+        <ul class="pagenation">
+            <li th:if="${boardList.hasPrevious()}">
+                <a th:href="@{/board/inquiry(page=${boardList.number - 1}, pageAmount=${pageAmount}, type=${param.type}, Keyword=${param.Keyword})}">이전</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(0, boardList.totalPages - 1)}"
+                th:if="${ i >= boardList.number - 5 and i <= boardList.number + 5}"
+                th:classappend="${i == boardList.number} ? 'active'">
+                <a th:href="@{/board/inquiry(page=${i}, pageAmount=${pageAmount}, type=${param.type}, Keyword=${param.Keyword})}"
+                   th:text="${i + 1}">1</a>
+            </li>
+            <li th:if="${boardList.hasNext()}">
+                <a th:href="@{/board/inquiry(page=${boardList.number + 1}, pageAmount=${pageAmount}, type=${param.type}, Keyword=${param.Keyword})}">다음</a>
+            </li>
+        </ul>
+    </div>
+    <div th:if="${boardList == null or boardList.isEmpty()}">
+
+    </div>
+
+    <div class="bottom">
+        <div class="search_box">
+
+            <label>타입</label>
+            <select class="search_type_2">
+                <option value="전체">전체</option>
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="writer">작성자</option>
+            </select>
+
+            <input class="search_keyword" type="text">
+            <button class="subsearch_button_4">찾기</button>
+        </div>
+
+        <div sec:authorize="isAuthenticated()">
+            <div class="write_div">
+                <select class="write_type">
+                    <option value="문의">문의</option>
+                </select>
+                <button class="write_btn" onclick="writeForm()">글쓰기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:if="${method eq 'Report'}" class="board_report">
+
+    <table class="board_center">
+        <thead>
+        <tr class="board_column">
+            <th>게시글 번호</th>
+            <th>게시글 탭</th>
+            <th>게시글 제목</th>
+            <th>관광지의 이름</th>
+            <th>회원의 아이디</th>
+            <th>댓글 수</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <div th:if="${boardList != null and !boardList.isEmpty()}">
+            <tr class="board_element" th:each="board, loop : ${boardList}">
+                <td th:text="${board.board_id}"></td>
+                <td th:text="${board.tab}"></td>
+                <td>
+                    <a th:href="@{/board/getBoard/{id}(id=${board.board_id})}">
+                        [[${board.title}]]
+                    </a>
+                </td>
+                <td th:text="${board.attraction_Name}"></td>
+                <td th:text="${board.user_login_Id}"></td>
+                <td th:text="${board.comment_Num}"></td>
+            </tr>
+        </div>
+
+        <div th:if="${boardList == null or boardList.isEmpty()}">
+            <tr class="board_nothing">
+                <h2>게시글이 존재하지 않습니다.</h2>
+            </tr>
+        </div>
+
+        </tbody>
+    </table>
+
+    <div class="page_list" th:if="${boardList != null and !boardList.isEmpty()}">
+        <ul class="pagenation">
+            <li th:if="${boardList.hasPrevious()}">
+                <a th:href="@{/board/report(page=${boardList.number - 1}, pageAmount=${pageAmount}, type=${param.type}, Keyword=${param.Keyword})}">이전</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(0, boardList.totalPages - 1)}"
+                th:if="${ i >= boardList.number - 5 and i <= boardList.number + 5}"
+                th:classappend="${i == boardList.number} ? 'active'">
+                <a th:href="@{/board/report(page=${i}, pageAmount=${pageAmount}, type=${param.type}, Keyword=${param.Keyword})}"
+                   th:text="${i + 1}">1</a>
+            </li>
+            <li th:if="${boardList.hasNext()}">
+                <a th:href="@{/board/report(page=${boardList.number + 1}, pageAmount=${pageAmount}, type=${param.type}, Keyword=${param.Keyword})}">다음</a>
+            </li>
+        </ul>
+    </div>
+    <div th:if="${boardList == null or boardList.isEmpty()}">
+
+    </div>
+
+    <div class="bottom">
+        <div class="search_box">
+
+            <label>타입</label>
+            <select class="search_type_2">
+                <option value="전체">전체</option>
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="writer">작성자</option>
+            </select>
+
+            <input class="search_keyword" type="text">
+            <button class="subsearch_button_5">찾기</button>
+        </div>
+
+        <div sec:authorize="isAuthenticated()">
+            <div class="write_div">
+                <select class="write_type">
+                    <option value="신고">신고</option>
+                </select>
+                <button class="write_btn" onclick="writeForm()">글쓰기</button>
+            </div>
+        </div>
     </div>
 </div>
 
