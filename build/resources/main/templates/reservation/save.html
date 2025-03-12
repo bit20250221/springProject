@@ -8,7 +8,7 @@
   <script src="/js/reservationFormValidate.js" defer></script>
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/header :: header(${userRole})"></div>
 <h2>관광지 예약 화면</h2>
 <div>
   <h3>관광지 정보</h3>

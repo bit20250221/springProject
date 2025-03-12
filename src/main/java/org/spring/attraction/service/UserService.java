@@ -6,9 +6,12 @@ import org.spring.attraction.dto.UserDto;
 import org.spring.attraction.entity.User;
 import org.spring.attraction.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 import static org.spring.attraction.ENUM.Grade.bronze;
 import static org.spring.attraction.ENUM.UserType.manager;
@@ -80,5 +83,22 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("유저가 없습니다"));
         return UserDto.fromUser(user);
+    }
+
+    public String getUserRole(UserDetails userDetails) {
+        if (userDetails != null) {  // 로그인한 사용자가 있을 경우
+            String userRole = userDetails.getAuthorities().stream()
+                    .map(grantedAuthority -> grantedAuthority.getAuthority())
+                    .collect(Collectors.joining(", "));
+            return userRole;
+        }
+        return null;
+    }
+
+    public String getUserLoginId(UserDetails userDetails) {
+        if (userDetails != null) {  // 로그인한 사용자가 있을 경우
+            return userDetails.getUsername();
+        }
+        return null;
     }
 }

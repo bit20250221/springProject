@@ -8,7 +8,7 @@
     <script src="/js/reservationLink.js"></script>
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/header :: header(${userRole})"></div>
 <h2>관광지 예약 리스트</h2>
 <table>
     <tr>

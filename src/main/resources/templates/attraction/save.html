@@ -9,7 +9,7 @@
     <script src="/js/attractionFunction.js" defer></script>
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/header :: header(${userRole})"></div>
 <h2>관광지 등록 페이지</h2>
 <form action="/attraction/save" method="post" id="saveForm" enctype="multipart/form-data">
     <div>

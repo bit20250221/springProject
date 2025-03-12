@@ -25,8 +25,8 @@ public class ReservationService {
     private final ViewReservationRepository viewReservationRepository;
     private final PaymentTypeRepository paymentTypeRepository;
 
-    public List<ViewReservationDto> findAllByView() {
-        List<ViewReservation> viewReservationList = viewReservationRepository.findAll();
+    public List<ViewReservationDto> findViewAllByUserLoginId(String userLoginId) {
+        List<ViewReservation> viewReservationList = viewReservationRepository.findByUserLoginId(userLoginId);
         List<ViewReservationDto> viewReservationDtoList = new ArrayList<>();
         for (ViewReservation viewReservation : viewReservationList) {
             ViewReservationDto viewReservationDto = ViewReservationDto.toDto(viewReservation);

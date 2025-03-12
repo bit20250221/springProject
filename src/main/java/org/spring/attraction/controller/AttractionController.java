@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,14 +29,17 @@ public class AttractionController {
     private final AttractionTypeService attractionTypeService;
     private final AttractionTypeListService attractionTypeListService;
     private final AttractionImgService attractionImgService;
+    private final UserService userService;
 
     @GetMapping(value = {"", "/", "/index", "/main"})
-    public String attraction() {
+    public String attraction(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         return "/attraction/main";
     }
 
     @GetMapping("/save")
-    public String save(Model model) {
+    public String save(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         List<AreaDto> areaDtoList = areaService.findAll();
         List<AttractionTypeDto> attractionTypeDtoList = attractionTypeService.findAll();
         model.addAttribute("areaDtoList", areaDtoList);
@@ -43,7 +48,8 @@ public class AttractionController {
     }
 
     @PostMapping("/save")
-    public String save(AttractionDto attractionDto, RedirectAttributes redirectAttributes) {
+    public String save(AttractionDto attractionDto, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         AttractionMessage result = attractionService.save(attractionDto);
         redirectAttributes.addFlashAttribute("message", result.getMessage());
         if(result.getId() < 0){
@@ -62,7 +68,9 @@ public class AttractionController {
 
     @GetMapping("/list")
     public String list(@PageableDefault(page = 1) Pageable pageable, Model model,
-                       @RequestParam(required = false) Integer type, @RequestParam(required = false) String search) {
+                       @RequestParam(required = false) Integer type, @RequestParam(required = false) String search,
+                       @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         Page<ViewAttractionDto> viewAttractionDtoPage = new PageImpl<>(new ArrayList<>());
         if(search != null && type != null){
             if(type == 1){
@@ -89,7 +97,8 @@ public class AttractionController {
     }
 
     @GetMapping("/detail/{id}")
-    public String list(@PathVariable Long id, Model model) {
+    public String list(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         AttractionDto attractionDto = attractionService.findById(id);
         List<AttractionTypeListDto> attractionTypeListDtoList = attractionTypeListService.findByAttractionId(id);
         List<Long> selectedAttractionTypeIdList = new ArrayList<>();
@@ -114,7 +123,8 @@ public class AttractionController {
     }
 
     @GetMapping("/update/{id}")
-    public String update(@PathVariable Long id, Model model) {
+    public String update(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         AttractionDto attractionDto = attractionService.findById(id);
         List<AttractionTypeListDto> attractionTypeListDtoList = attractionTypeListService.findByAttractionId(id);
         List<Long> selectedAttractionTypeIdList = new ArrayList<>();
@@ -138,7 +148,8 @@ public class AttractionController {
     }
 
     @PostMapping("/update")
-    public String update(AttractionDto attractionDto, RedirectAttributes redirectAttributes) {
+    public String update(AttractionDto attractionDto, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         AttractionMessage result = attractionService.update(attractionDto);
         redirectAttributes.addFlashAttribute("message", result.getMessage());
         if(result.getId() < 0){
@@ -149,7 +160,8 @@ public class AttractionController {
 
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         AttractionMessage result = attractionService.delete(id);
         redirectAttributes.addFlashAttribute("message", result.getMessage());
         return "redirect:/attraction/list";

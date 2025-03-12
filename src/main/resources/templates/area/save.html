@@ -8,7 +8,7 @@
     <script src="/js/areaFormValidate.js" defer></script>
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/header :: header(${userRole})"></div>
   <h2>지역 등록 페이지</h2>
   <form action="/area/save" method="post" id="saveForm">
     <label for="country">국가</label><input type="text" id="country" name="country" maxlength="10" required><br/>

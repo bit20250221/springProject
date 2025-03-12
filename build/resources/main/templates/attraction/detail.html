@@ -7,7 +7,7 @@
     <script src="/js/attractionLink.js"></script>
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/header :: header(${userRole})"></div>
 <h2>관광지 상세 페이지</h2>
 <form action="#">
     <label for="id">id</label><input type="text" id="id" name="id" th:value="${attractionDto.getId()}" readonly><br/>

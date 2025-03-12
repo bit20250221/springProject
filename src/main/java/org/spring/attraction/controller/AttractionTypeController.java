@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.spring.attraction.ENUM.AttractionTypeMessage;
 import org.spring.attraction.dto.AttractionTypeDto;
 import org.spring.attraction.service.AttractionTypeService;
+import org.spring.attraction.service.UserService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,14 +22,17 @@ import java.util.List;
 @RequestMapping("/attractionType")
 public class AttractionTypeController {
     private final AttractionTypeService attractionTypeService;
+    private final UserService userService;
 
     @GetMapping("/save")
-    public String save() {
+    public String save(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         return "/attractionType/save";
     }
 
     @PostMapping("/save")
-    public String save(AttractionTypeDto attractionTypeDto, RedirectAttributes redirectAttributes) {
+    public String save(AttractionTypeDto attractionTypeDto, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         AttractionTypeMessage result = attractionTypeService.save(attractionTypeDto);
         redirectAttributes.addFlashAttribute("message", result.getMessage());
         if(result.getId() < 0){
@@ -36,14 +42,16 @@ public class AttractionTypeController {
     }
 
     @GetMapping(value = {"/list", ""})
-    public String list(Model model) {
+    public String list(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         List<AttractionTypeDto> attractionTypeDtoList = attractionTypeService.findAll();
         model.addAttribute("attractionTypeDtoList", attractionTypeDtoList);
         return "/attractionType/list";
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         AttractionTypeMessage result = attractionTypeService.delete(id);
         redirectAttributes.addFlashAttribute("message", result.getMessage());
         return "redirect:/attractionType/list";
