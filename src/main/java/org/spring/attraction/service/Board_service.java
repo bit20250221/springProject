@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.spring.attraction.ENUM.Tab;
 import org.spring.attraction.dto.BoardImage_dto;
 import org.spring.attraction.dto.Board_dto;
+import org.spring.attraction.dto.user.UserDTO;
 import org.spring.attraction.entity.Attraction;
 import org.spring.attraction.entity.Board;
 import org.spring.attraction.entity.Comment;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,9 @@ public class Board_service {
 
     @Autowired
     public UserRepository userRepository;
+
+    @Autowired
+    public Board_SecurityService securityService;
 
     @Autowired
     public AttractionRepository attractionRepository;
@@ -206,8 +211,15 @@ public class Board_service {
     //게시글 삭제
     public boolean deleteBoard(Long id){
         Optional<Board> isExist=repository.findById(id);
+        UserDTO user= securityService.getUser();
+
         try {
             if (isExist.isPresent()) {
+                if((isExist.get().getUser().getUserLoginId().compareTo(user.getUserLoginId())!=0)
+                        || user.getUserType().name().compareTo("manager")==0){
+                    return false;
+                }
+
                 List<BoardImage_dto> imageList=boardImageService.getImagesByBoardId(id);
                 if(imageList!=null) {
                     for(BoardImage_dto image:imageList){

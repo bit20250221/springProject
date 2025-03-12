@@ -1,13 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>게시글 입력</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/insertBoardForm.css}">
 </head>
 <body>
+<!-- 탭에 따라 다양한 폼이 출력되고 그거에 따라 스타일 시트를 적용-->
 <div class="normal_form" th:if="${tab =='일반'}">
     <form th:object="${boardDto}" action="/board/insertBoard" method="post">
+
+        <!-- CSRF 토큰을 자동으로 추가 -->
+        <input type="hidden" sec:csrfInput=""/>
+
         <input type="hidden" name="user_id" th:value="${user_id}">
         <div class="board_element">
             <label for="id_title">게시글 제목</label>
@@ -43,6 +50,10 @@
 
 <div class="review_from" th:if="${tab =='리뷰'}">
     <form th:object="${boardDto}" action="/board/insertBoard" method="post">
+
+        <!-- CSRF 토큰을 자동으로 추가 -->
+        <input type="hidden" sec:csrfInput=""/>
+
         <input type="hidden" name="user_id" th:value="${user_id}">
         <div class="board_element">
             <label for="review_title">게시글 제목</label>
@@ -146,6 +157,10 @@
 
 <div class="inquiry_form" th:if="${tab =='문의'}">
     <form th:object="${boardDto}" action="/board/insertBoard" method="post">
+
+        <!-- CSRF 토큰을 자동으로 추가 -->
+        <input type="hidden" sec:csrfInput=""/>
+
         <input type="hidden" name="user_id" th:value="${user_id}">
         <div class="board_element">
             <label for="inquiry_title">게시글 제목</label>
@@ -243,6 +258,10 @@
 
 <div class="report_form" th:if="${tab =='신고'}">
     <form th:object="${boardDto}" action="/board/insertBoard" method="post">
+
+        <!-- CSRF 토큰을 자동으로 추가 -->
+        <input type="hidden" sec:csrfInput=""/>
+
         <input type="hidden" name="user_id" th:value="${user_id}">
         <div class="board_element">
             <label for="report_title">게시글 제목</label>
@@ -337,6 +356,10 @@
 </div>
 
 <div class="announce_form" th:if="${tab =='공지'}">
+
+    <!-- CSRF 토큰을 자동으로 추가 -->
+    <input type="hidden" sec:csrfInput=""/>
+
     <form th:object="${boardDto}" action="/board/insertBoard" method="post">
         <input type="hidden" name="user_id" th:value="${user_id}">
         <div class="board_element">

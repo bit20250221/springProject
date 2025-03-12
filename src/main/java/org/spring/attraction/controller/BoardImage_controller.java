@@ -1,14 +1,19 @@
 package org.spring.attraction.controller;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.spring.attraction.dto.BoardImage_dto;
 import org.spring.attraction.dto.Board_dto;
+import org.spring.attraction.dto.user.UserDTO;
 import org.spring.attraction.service.BoardImage_service;
+import org.spring.attraction.service.Board_SecurityService;
 import org.spring.attraction.service.Board_service;
+import org.spring.attraction.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,8 +34,12 @@ public class BoardImage_controller {
     @Autowired
     private Board_service boardService;
 
+    private final UserService userService;
+    private final Board_SecurityService boardSecurityService;
+
     //이미지 임시 등록(파일 스토리지에 이미지 저장, DB 상에 이미지 정보 저장, 세션에 이미지 dto를 저장)
     //한 사용자가 하나의 창만 이용해서 기능 수행하면 아무런 문제가 없음
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/TempSave")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> saveTempImage(@RequestParam("tempImage") MultipartFile tempImage, HttpSession session) {
@@ -67,11 +76,12 @@ public class BoardImage_controller {
     }
 
     //이미지 등록 2(기존의 게시글 수정 화면에서 이용)(검증 필요)
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/ImageUpdates")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> saveImage(@RequestParam("boardId") Long boardId, MultipartFile[] images, HttpSession session) {
         log.info("게시글 내 새로운 이미지 임시 등록");
-
+        UserDTO userDto=boardSecurityService.getUser();
         Map<String, Object> response = new HashMap<>();
         Board_dto boardDto=boardService.getBoard(boardId);
 
@@ -79,7 +89,10 @@ public class BoardImage_controller {
             response.put("message", "NOBoard");
             return ResponseEntity.ok(response);
         }
-
+        if(boardDto.getUser_login_Id().compareTo(userDto.getUserLoginId())!=0){
+            response.put("message", "NOPermission");
+            return ResponseEntity.ok(response);
+        }
         //이미지 수정 화면에 있던 기존 이미지가 저장된 세션 정보를 가져옴
         List<BoardImage_dto> sessionImages = (List<BoardImage_dto>) session.getAttribute("UpdateImages");
 
@@ -127,6 +140,7 @@ public class BoardImage_controller {
     @PostMapping("/delete")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deleteImage(HttpSession session) {
+        log.info("임시 폴더내 파일들 삭제");
         Map<String, Object> response = new HashMap<>();
         List<BoardImage_dto> sessionImages = (List<BoardImage_dto>) session.getAttribute("tempImages");
         List<BoardImage_dto> sessionImages2 = (List<BoardImage_dto>) session.getAttribute("UpdateImages");
@@ -142,7 +156,7 @@ public class BoardImage_controller {
             response.put("message", "Success");
         }
         //게시글 등록 화면에서 동작
-        else if(sessionImages2==null){
+        else if(sessionImages2==null && sessionImages!=null){
             for (BoardImage_dto dto : sessionImages) {
                 boardImageService.deleteTempImageFile(dto.getUUID(), dto.getUUIDName());
             }
@@ -213,6 +227,7 @@ public class BoardImage_controller {
         해당 게시물 내의 이미지가 맞는지, 실제 게시글 작성자가 맞는지 확인 필요(변조 방지)
         세션과 시큐리티 활용
     */
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/deleteImage")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deleteImageByBoardId(HttpSession session,
@@ -221,6 +236,11 @@ public class BoardImage_controller {
                                                               @RequestParam("ImageUUIDName") String ImageUUIDName) {
         Map<String, Object> response = new HashMap<>();
         Board_dto boardDto=boardService.getBoard(boardId);
+        UserDTO userDTO=boardSecurityService.getUser();
+        if(boardDto.getUser_login_Id().compareTo(userDTO.getUserLoginId())!=0){
+            response.put("message", "Not Authorized");
+            return ResponseEntity.ok(response);
+        }
         if(boardDto==null){
             response.put("message", "NOBoard");
             return ResponseEntity.ok(response);
@@ -244,6 +264,7 @@ public class BoardImage_controller {
 
 
     //특정 게시물의 이미지 읽어오기
+    @PermitAll
     @GetMapping("/images/{boardId}")
     @ResponseBody
     public ResponseEntity<List<BoardImage_dto>> getImagesByBoardId(@PathVariable Long boardId) {
@@ -252,6 +273,7 @@ public class BoardImage_controller {
     }
 
     //모든 이미지 읽어오기(관리자 용)
+    @PreAuthorize("hasRole('manager')")
     @GetMapping("/all")
     @ResponseBody
     public ResponseEntity<List<BoardImage_dto>> getAllImages() {

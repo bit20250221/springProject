@@ -3,7 +3,7 @@
     var fileTempUploadButton = document.querySelector('.uploadBtn');
     var ImageTempResult = document.querySelector('.board_image_result')
     var imageIndex = 0;
-
+if (fileTempUploadButton) {
     fileTempUploadButton.addEventListener('click', function(e) {
         e.preventDefault();
 
@@ -84,8 +84,8 @@
             alert('업로드 실패!!');
         });
 
-    })
-
+    });
+}
     function tempimageDelete(btn) {
         //나중에 fetch로 db와 서버내 파일 삭제 구현
         var formData= new FormData();
@@ -150,6 +150,6 @@
             console.error('Error:', error);
         });
         */
-        navigator.sendBeacon(url);
+        //navigator.sendBeacon(url);
 
     });

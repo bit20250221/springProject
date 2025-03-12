@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>전체 게시판</title>
@@ -7,11 +9,42 @@
 </head>
 <body>
 
+<!--홈페이지 위쪽에는 관광지 페이지와 예약할 수 있는 메뉴를 표시-->
 <div class="top">
 
 </div>
 
-<table class="board_all">
+<div th:if="${method eq 'Announce'}" class="board_announce">
+
+    <div class="bottom">
+
+    </div>
+</div>
+
+<div th:if="${method eq 'Review'}" class="board_review">
+
+    <div class="bottom">
+
+    </div>
+</div>
+
+<div th:if="${method eq 'Normal'}" class="board_nomal">
+
+    <div class="bottom">
+
+    </div>
+</div>
+
+<div th:if="${method eq 'Inquiry'}" class="board_inquiry">
+
+    <div class="bottom">
+
+    </div>
+</div>
+
+<div th:if="${method eq 'AllList'}" class="board_all">
+
+<table class="board_center">
     <thead>
         <tr class="board_column">
             <th>게시글 번호</th>
@@ -71,10 +104,9 @@
 </div>
 
 <div class="bottom">
-
     <div class="search_box">
-        <label for="search_type_1">탭</label>
-        <select id="search_type_1">
+        <label>탭</label>
+        <select class="search_type_1">
             <option value="전체">전체</option>
             <option value="일반">일반</option>
             <option value="리뷰">리뷰</option>
@@ -83,8 +115,8 @@
             <option value="공지">공지</option>
         </select>
 
-        <label for="search_type_2">타입</label>
-        <select id="search_type_2">
+        <label>타입</label>
+        <select class="search_type_2">
             <option value="전체">전체</option>
             <option value="title">제목</option>
             <option value="content">내용</option>
@@ -92,22 +124,24 @@
         </select>
 
         <input class="search_keyword" type="text">
-        <button id="search_button">찾기</button>
+        <button class="search_button">찾기</button>
     </div>
 
+    <div sec:authorize="isAuthenticated()">
     <div class="write_div">
     <select class="write_type">
         <option value="일반">일반</option>
         <option value="리뷰">리뷰</option>
         <option value="문의">문의</option>
         <option value="신고">신고</option>
-
-        <option value="공지">공지</option>
-
+        <div sec:authorize="hasRole('manager')">
+            <option value="공지">공지</option>
+        </div>
     </select>
-    <button id="write_btn" onclick="writeForm()">글쓰기</button>
+    <button class="write_btn" onclick="writeForm()">글쓰기</button>
     </div>
-
+    </div>
+</div>
 </div>
 
 <script rel="text/javascript" th:src="@{/js/boardList.js}"></script>

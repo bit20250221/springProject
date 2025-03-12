@@ -3,10 +3,10 @@
         window.location.href="/board/insertBoard?tab="+tabvalue;
     }
 
-    var searchbtn=document.getElementById('search_button');
+    var searchbtn=document.querySelector('.search_button');
     searchbtn.addEventListener('click', function(){
-        var tabValue = document.querySelector('#search_type_1').value;
-        var typeValue = document.querySelector('#search_type_2').value;
+        var tabValue = document.querySelector('.search_type_1').value;
+        var typeValue = document.querySelector('.search_type_2').value;
         var keywordValue = document.querySelector('.search_keyword').value;
         if(tabValue === '전체'){
             tabValue = '';

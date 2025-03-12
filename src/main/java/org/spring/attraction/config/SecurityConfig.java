@@ -21,7 +21,7 @@ public class SecurityConfig {
                         .requestMatchers("/","/index","/user/login","/user/register", "/user/loginProc","/user/registerProc").permitAll()
                         .requestMatchers("/attraction").hasAnyRole(attraction.name(),manager.name())
                         .requestMatchers("/admin").hasAuthority(manager.name())
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 );
 
         http

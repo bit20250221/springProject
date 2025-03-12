@@ -23,6 +23,9 @@ public class CustomUserDetails implements UserDetails {
         return collection;
     }
 
+    public User getUser(){
+        return user;
+    }
     @Override
     public String getPassword() {
         return user.getPass(); // 비밀번호는 반환하지 않음 (보안상 필요 없음)

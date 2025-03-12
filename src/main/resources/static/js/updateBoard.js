@@ -13,6 +13,7 @@
     }
 
     //이미지 파일을 업로드 하는 코드
+    if(uploadTempBtn){
     uploadTempBtn.addEventListener('click', function(e){
         e.preventDefault();
 
@@ -119,6 +120,7 @@
         });
 
     });
+    }
 
     var tempdelete=document.querySelector('.tempImageDeleteBtn');
     function deleteTempImage(btn){
