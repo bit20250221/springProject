@@ -21,6 +21,7 @@ import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
@@ -283,6 +284,8 @@ public class Board_controller {
         //유저 관련은 일단 일시적인 값을 넣고 세션 활용
         String Auth=SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority();
         session.setAttribute("orgTab",tab);
+        Board_dto board=new Board_dto();
+        board.setTab(tab);
         if(tab.compareTo("공지")==0 && Auth.compareTo("manager")!=0){
             log.info("{} User is Not Authenticated", principal.getName());
             model.addAttribute("authority","권한이 없습니다");
@@ -290,6 +293,7 @@ public class Board_controller {
             return "redirect:/board/list";
         }else{
             log.info("게시글 작성 화면 출력!!!");
+            model.addAttribute("boardDto",board);
             model.addAttribute("tab",tab);
 
             //서버 내 저장된 관광지 추가
@@ -339,7 +343,6 @@ public class Board_controller {
             System.out.println(attraction_id);
             if(attraction_id!=null) {
                 if (attractionService.findById(attraction_id) == null) {
-                    //임시 이미지 삭제 필요
                     session.removeAttribute("tempImages");
                     session.removeAttribute("orgTab");
                     return "redirect:/board/error";
@@ -353,33 +356,25 @@ public class Board_controller {
         Board writeBoard=boardService.writeBoard(dto);
 
         if(writeBoard!=null){
-            //파일이 등록전에 임의로 삭제됨(원인 불명);;
+
             List<BoardImage_dto> images=(List<BoardImage_dto>)session.getAttribute("tempImages");
-            if(images!=null){
-                for(int i=0;i<images.size();i++){
-                      log.info("세션 내 파일 정보: "+images.get(i).getUUIDName());
-                }
-                for(BoardImage_dto tempImage:images){
-                    if(!boardImageService.saveImageFile(tempImage,writeBoard)){
+            List<MultipartFile> dtoimages=dto.getImglist();
+            if(dtoimages!=null){
+                int i=0;
+                for(BoardImage_dto image:images){
+                    if(!boardImageService.saveImageFile(writeBoard,image,dtoimages.get(i))){
                         log.info("파일 정식 등록 메소드 실행중 오류 발생");
                         session.removeAttribute("tempImages");
-                        //모든 임시 파일 삭제
-                        for(BoardImage_dto delete:images){
-                            if(delete!=null&&delete.getUUIDName()!=null && delete.getUUID()!=null){
-                                boardImageService.deleteTempImageFile(delete.getUUID(), delete.getUUIDName());
-                            }
-                        }
-                        //이미 등록된 파일들도 삭제
 
                         return "redirect:/board/list";
                     }
+                    i++;
                 }
             }
             session.removeAttribute("tempImages");
             session.removeAttribute("orgTab");
             return "redirect:/board/list";
         }else{
-            //임시 이미지 삭제 메소드 필요
             session.removeAttribute("tempImages");
             session.removeAttribute("orgTab");
             return "redirect:/board/insertBoard";
@@ -412,7 +407,7 @@ public class Board_controller {
 
             //기존에 등록되었던 이미지 정보 추가
             List<BoardImage_dto> images = boardImageService.getImagesByBoardId(id);
-            session.setAttribute("UpdateImages",images);
+            session.setAttribute("CurrentImage",images);
         }
 
         //서버 내 저장된 관광지 추가
@@ -452,24 +447,25 @@ public class Board_controller {
         if(UpdateBoard!=null&&UpdateBoard.getTab().compareTo("일반")!=0) {
 
             List<BoardImage_dto> images = (List<BoardImage_dto>) session.getAttribute("UpdateImages");
-            if (!images.isEmpty()) {
+            List<MultipartFile> multipartFiles=boardDTO.getImglist();
+            if (images!=null && !images.isEmpty()) {
                 log.info("세션 내 파일 정보 감지: {}개", images.size());
-                for (BoardImage_dto UpdateImage : images) {
+                for (int i=0;i<multipartFiles.size();i++) {
+                    BoardImage_dto UpdateImage=images.get(i);
                     String url = UpdateImage.getImagePath();
                     log.info("세션 내 이미지 url: {}", url);
                     //임시 폴더에 업로드된 이미지면(신규 이미지)
-                    if (url.contains(TEMP_UPLOAD_PATH)) {
-                        String NewPath=UPLOAD_PATH + UpdateImage.getUUIDName();
-                        boardImageService.saveImageFile(UpdateImage, Board_service.toEntity(UpdateBoard
+                    boardImageService.saveImageFile(Board_service.toEntity(UpdateBoard
                                 ,userRepository.getReferenceById(UpdateBoard.getUser_id())
                                 ,attractionRepository.getReferenceById(UpdateBoard.getAttraction_id())
-                                ,null));
+                                ,null),UpdateImage,multipartFiles.get(i));
 
-                    }
+
                 }
             }
         }
         session.removeAttribute("UpdateImages");
+        session.removeAttribute("CurrentImage");
         log.info("아이디 "+boardDTO.getBoard_id()+" 글 수정 완료");
         return "redirect:/board/getBoard/"+boardDTO.getBoard_id();
     }

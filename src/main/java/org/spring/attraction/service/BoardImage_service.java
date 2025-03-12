@@ -13,8 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,7 +33,6 @@ public class BoardImage_service {
 
     //나중에 구글 드라이브, AWS 등 외부 경로로 변경
     public final String UPLOAD_PATH = "C:/upload/board_images/";
-    public final String TEMP_UPLOAD_PATH = "C:/upload/temp_board_images/";
     //모든 이미지 파일 읽기
     public List<BoardImage_dto> findAllImages() {
         List<BoardImage> images = boardImageRepository.findAll();
@@ -37,64 +40,45 @@ public class BoardImage_service {
     }
 
 
-    //게시글 내 이미지 파일 임시 입력
+    //게시글 내 이미지 파일 임시 입력(따로 저장하는 것 없이 UUID 등 각종 고유 값을 생성해서 세팅하고 전달)
     public BoardImage_dto saveTempImageFile(MultipartFile temp,BoardImage_dto tempFile){
 
         BoardImage boardImage = boardImage(tempFile,null);
         String uuidString = UUID.randomUUID().toString();
         String uuidName=uuidString+"_" + tempFile.getName();
-        String realUploadPath=TEMP_UPLOAD_PATH + uuidName;
-        try {
-            File file = new File(realUploadPath);
-            file.getParentFile().mkdirs();
-            temp.transferTo(file);
-        }catch (Exception e) {
-            e.printStackTrace();
-            log.error("파일 저장 실패: {}", realUploadPath);
-        }
 
         boardImage.setUUID(uuidString);
         boardImage.setUUIDName(uuidName);
-        boardImage.setImagePath(realUploadPath);
 
-        boardImageRepository.save(boardImage);
 
-        return BoardImage_dto.boardImageDto(boardImage);
+        BoardImage_dto UpdateDTO=BoardImage_dto.boardImageDto(boardImage);
+        UpdateDTO.setImg(temp);
+
+        return UpdateDTO;
     }
 
-    //게시글 내 이미지 파일 입력(저장경로 수정, db 내 정보 수정)
-    public boolean saveImageFile(BoardImage_dto boardImageDto, Board board){
+    //게시글 내 이미지 파일 입력(DTO 내 MultipartFile 정보를 활용하여 직접 저장)
+    public boolean saveImageFile(Board board,BoardImage_dto boardImageDto,MultipartFile multipartFile){
 
         String realUploadPath = UPLOAD_PATH + boardImageDto.getUUIDName();
-        String tempOldPath=TEMP_UPLOAD_PATH + boardImageDto.getUUIDName();
-        log.info("temp old path: " + tempOldPath);
+        MultipartFile uploadFile=multipartFile;
         log.info("real upload path: " + realUploadPath);
-        File tempFile = new File(tempOldPath);
         File file = new File(realUploadPath);
 
-        if(!tempFile.exists()){
-            log.error("임시 파일이 존재하지 않습니다: {}", tempOldPath);
-            return false;
-        }
-
         try {
-            file.getParentFile().mkdirs();
-            log.info("파일 이동 진행: {} -> {}",tempFile.toPath(), file.toPath());
-            Files.move(tempFile.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        }catch (Exception e) {
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+            if(!file.exists()) {
+                Files.copy(uploadFile.getInputStream(), Path.of(realUploadPath));
+            }
+        }catch(Exception e) {
             e.printStackTrace();
-            tempFile.delete();
-            log.error("파일 이동 실패: {} -> {}", tempOldPath, realUploadPath);
+            log.error("파일 저장 실패: {}", realUploadPath);
             return false;
         }
 
-        BoardImage boardImage = boardImageRepository.findBoardImageByUUIDAndUUIDName(boardImageDto.getUUID(), boardImageDto.getUUIDName());
-
-        if(boardImage==null){
-            log.error("DB 내 BoardImage 찾기 실패: uuid={}, uuidName={}", boardImageDto.getUUID(), boardImageDto.getUUIDName());
-            return false;
-        }
-
+        BoardImage boardImage=boardImage(boardImageDto, board);
         try {
             boardImage.setBoard(board);
             boardImage.setImagePath(realUploadPath);
@@ -103,7 +87,7 @@ public class BoardImage_service {
 
         }catch (Exception e) {
             e.printStackTrace();
-            deleteTempImageFile(boardImage.getUUID(), boardImage.getUUIDName());
+            deleteImageFile(boardImage.getUUID(), boardImage.getUUIDName(),board.getId());
             file.delete();
             log.error("DB 내 BoardImage 정보 저장실패");
             return false;
@@ -124,27 +108,6 @@ public class BoardImage_service {
         return images.stream().map(BoardImage_dto::boardImageDto).collect(Collectors.toList());
     }
 
-    //임시 이미지 파일 삭제(한 개만 삭제)
-    @Transactional
-    public void deleteTempImageFile(String uuid, String uuidName) {
-        BoardImage boardImage = boardImageRepository.findBoardImageByUUIDAndUUIDName(uuid, uuidName);
-        String FilePath = boardImage.getImagePath();
-
-        log.info("삭제할 임시 BoardImage: 아이디 {}, UUID 이름 {}, 실제 경로 {}",
-                boardImage.getId(),boardImage.getUUIDName(),boardImage.getImagePath());
-
-        try {
-            File deleteFile = new File(FilePath);
-            deleteFile.delete();
-        }catch (Exception e) {
-            e.printStackTrace();
-            log.error("파일 삭제 실패: {}", FilePath);
-        }
-
-        if(boardImage!= null && boardImage.getIsTemporary()){
-            boardImageRepository.deleteByUUIDAndUUIDName(uuid, uuidName);
-        }
-    }
 
     //이미지 파일 삭제(이미 게시글 내 등록된 이미지 하나 삭제)
     @Transactional

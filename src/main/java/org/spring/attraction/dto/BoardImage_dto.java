@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.spring.attraction.entity.BoardImage;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,6 +20,7 @@ public class BoardImage_dto {
     private String ImagePath;
     private Long boardId;
     private Boolean isTemporary;
+    private MultipartFile img;
 
     public static BoardImage_dto boardImageDto(BoardImage boardImage){
         return new BoardImage_dto(
@@ -28,19 +31,16 @@ public class BoardImage_dto {
                 boardImage.getImageSize(),
                 boardImage.getImagePath(),
                 boardImage.getBoard()!=null? boardImage.getBoard().getId() : null,
-                boardImage.getIsTemporary()
+                boardImage.getIsTemporary(),
+                null
         );
     }
-    public static BoardImage_dto boardImageDto2(MultipartFile multipartFile){
-        return new BoardImage_dto(
-                null,
-                multipartFile.getOriginalFilename(),
-                null,
-                null,
-                (int)multipartFile.getSize(),
-                null,
-                null,
-                true
-        );
+    public static BoardImage_dto boardImageDto2(MultipartFile multipartFile)  {
+        BoardImage_dto dto=new BoardImage_dto();
+        dto.setName(multipartFile.getOriginalFilename());
+        dto.setImageSize((int)multipartFile.getSize());
+        dto.setImg(multipartFile);
+
+        return dto;
     }
 }

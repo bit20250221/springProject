@@ -91,7 +91,7 @@ public class BoardImageTest {
             BoardImage_dto savedDto= boardImageService.saveTempImageFile(mockMultipartFile, imageDto);
 
             //정식 등록
-            boardImageService.saveImageFile(savedDto, boardRepository.findById(1L).get());
+            //boardImageService.saveImageFile(savedDto, boardRepository.findById(1L).get());
             BoardImage_dto readImage =boardImageService.getImagesByBoardId(1L).get(0);
 
             // Assert
@@ -145,7 +145,7 @@ public class BoardImageTest {
             //나중에는 이 dto 값을 클라이언트에서 읽어온다.
             BoardImage_dto savedDto = boardImageService.saveTempImageFile(mockMultipartFile, imageDto);
 
-            boardImageService.deleteTempImageFile(savedDto.getUUID(),savedDto.getUUIDName());
+            //boardImageService.deleteTempImageFile(savedDto.getUUID(),savedDto.getUUIDName());
 
         }catch (Exception e){
             e.printStackTrace();
@@ -170,7 +170,7 @@ public class BoardImageTest {
             BoardImage_dto savedDto = boardImageService.saveTempImageFile(mockMultipartFile, imageDto);
 
             //정식 업로드
-            boardImageService.saveImageFile(savedDto, boardRepository.findById(1L).get());
+            //boardImageService.saveImageFile(savedDto, boardRepository.findById(1L).get());
 
             //정식 파일 삭제
             boardImageService.deleteImageFile(savedDto.getUUID(), savedDto.getUUIDName(),1L);

@@ -8,7 +8,8 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/updateBoard.css}">
 </head>
 <body>
-<form class="submitForm" th:action="@{/board/updateBoard/{id}(id=${board.board_id})}" method="post" th:object="${boardDto}">
+<form class="submitForm" th:action="@{/board/updateBoard/{id}(id=${board.board_id})}" method="post" th:object="${boardDto}"
+      enctype="multipart/form-data">
     <input type="hidden" class="board_id" name="board_id" th:value="${board.board_id}">
 
     <!-- CSRF 토큰을 자동으로 추가 -->
@@ -126,7 +127,7 @@
         <!-- -->
         <div class="boardElement">
             <p>새로운 이미지 목록</p>
-            <input type="file" class="imageUpload" name="tempImage" multiple accept="image/jpeg, image/png">
+            <input type="file" class="imageUpload"  name="imglist" multiple accept="image/jpeg, image/png">
             <button class="updateTempUpload">추가 업로드</button>
 
             <div class="updateImageList">
@@ -240,7 +241,7 @@
         <!-- -->
         <div class="boardElement">
             <p>새로운 이미지 목록</p>
-            <input type="file" class="imageUpload" name="tempImage" multiple accept="image/jpeg, image/png">
+            <input type="file" class="imageUpload" th:field="*{imglist}" multiple accept="image/jpeg, image/png">
             <button class="updateTempUpload">추가 업로드</button>
 
 
@@ -351,7 +352,7 @@
         <!-- -->
         <div class="boardElement">
             <p>새로운 이미지 목록</p>
-            <input type="file" class="imageUpload" name="tempImage" multiple accept="image/jpeg, image/png">
+            <input type="file" class="imageUpload"  th:field="*{imglist}" multiple accept="image/jpeg, image/png">
             <button class="updateTempUpload">추가 업로드</button>
 
 
@@ -406,7 +407,7 @@
         <!-- -->
         <div class="boardElement">
             <p>새로운 이미지 목록</p>
-            <input type="file" class="imageUpload" name="tempImage" multiple accept="image/jpeg, image/png">
+            <input type="file" class="imageUpload" th:field="*{imglist}" multiple accept="image/jpeg, image/png">
             <button class="updateTempUpload">추가 업로드</button>
 
 

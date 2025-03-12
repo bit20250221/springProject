@@ -10,7 +10,7 @@
 <body>
 <!-- 탭에 따라 다양한 폼이 출력되고 그거에 따라 스타일 시트를 적용-->
 <div class="normal_form" th:if="${tab =='일반'}">
-    <form th:object="${boardDto}" action="/board/insertBoard" method="post">
+    <form th:object="${boardDto}" action="/board/insertBoard" method="post" enctype="multipart/form-data">
 
         <!-- CSRF 토큰을 자동으로 추가 -->
         <input type="hidden" sec:csrfInput=""/>
@@ -49,7 +49,7 @@
 </div>
 
 <div class="review_from" th:if="${tab =='리뷰'}">
-    <form th:object="${boardDto}" action="/board/insertBoard" method="post">
+    <form th:object="${boardDto}" action="/board/insertBoard" method="post" enctype="multipart/form-data">
 
         <!-- CSRF 토큰을 자동으로 추가 -->
         <input type="hidden" sec:csrfInput=""/>
@@ -142,7 +142,7 @@
 
         <div class="board_element">
             <label for="review_image">리뷰 이미지 업로드</label>
-            <input class="board_image" type="file" id="review_image" name="tempImage" />
+            <input class="board_image" type="file" id="review_image"  th:field="*{imglist}" multiple />
             <button class="uploadBtn" type="button">업로드</button>
 
         </div>
@@ -156,7 +156,7 @@
 </div>
 
 <div class="inquiry_form" th:if="${tab =='문의'}">
-    <form th:object="${boardDto}" action="/board/insertBoard" method="post">
+    <form th:object="${boardDto}" action="/board/insertBoard" method="post" enctype="multipart/form-data">
 
         <!-- CSRF 토큰을 자동으로 추가 -->
         <input type="hidden" sec:csrfInput=""/>
@@ -245,7 +245,7 @@
 
         <div class="board_element">
             <label for="inquiry_image">문의 이미지 업로드</label>
-            <input class="board_image" type="file" id="inquiry_image" name="tempImage" />
+            <input class="board_image" type="file" id="inquiry_image"  th:field="*{imglist}" multiple />
             <button class="uploadBtn" type="button">업로드</button>
         </div>
         <div class="board_image_result">
@@ -257,7 +257,7 @@
 </div>
 
 <div class="report_form" th:if="${tab =='신고'}">
-    <form th:object="${boardDto}" action="/board/insertBoard" method="post">
+    <form th:object="${boardDto}" action="/board/insertBoard" method="post" enctype="multipart/form-data">
 
         <!-- CSRF 토큰을 자동으로 추가 -->
         <input type="hidden" sec:csrfInput=""/>
@@ -345,7 +345,7 @@
 
         <div class="board_element">
             <label for="report_image">신고 이미지 업로드</label>
-            <input class="board_image" type="file" id="report_image" name="tempImage" />
+            <input class="board_image" type="file" id="report_image"  th:field="*{imglist}" multiple />
             <button class="uploadBtn" type="button">업로드</button>
         </div>
         <div class="board_image_result">
@@ -392,7 +392,7 @@
 
         <div class="board_element">
             <label for="announce_image">공지 이미지 업로드</label>
-            <input class="board_image" type="file" id="announce_image" name="tempImage" />
+            <input class="board_image" type="file" id="announce_image"  th:field="*{imglist}" multiple />
             <button class="uploadBtn" type="button">업로드</button>
 
         </div>

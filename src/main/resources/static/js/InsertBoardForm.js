@@ -6,16 +6,16 @@
 if (fileTempUploadButton) {
     fileTempUploadButton.addEventListener('click', function(e) {
         e.preventDefault();
+        var files= fileInput.files;
 
-        var formData = new FormData();
-        var imgFile=fileInput.files[0];
-
-        if(imgFile==null){
-            alert('업로드할 파일을 선택하세요.');
-            return;
+        if (!files || files.length === 0) {
+                    alert('업로드할 파일을 선택하세요.');
+                    return;
         }
-
-        formData.append('tempImage',imgFile);
+    for (let i = 0; i < files.length; i++) {
+        let imgFile = files[i];
+        let formData = new FormData();
+        formData.append('tempImage', imgFile);
 
         fetch('/image/TempSave',{
             method: 'POST',
@@ -24,17 +24,8 @@ if (fileTempUploadButton) {
         })
         .then(response => response.json())
         .then(data => {
-            // UUIDName 받아서 boardImageList 에 추가하고 정상적으로 추가되면 이미지를 사용자에게 보여준다.
-            var ImageDTO=data.ImageDTO;
-            console.log(ImageDTO);
-            ImageFileDataList.innerHTML  += '<div class="imageDTOValue">' +
-            '<input type="hidden" name="boardImageDtoList[' + imageIndex + '].imageSize" value="' + ImageDTO['imageSize'] + '">' +
-            '<input type="hidden" name="boardImageDtoList[' + imageIndex + '].isTemporary" value="' + ImageDTO['isTemporary'] + '">' +
-            '<input type="hidden" name="boardImageDtoList[' + imageIndex + '].name" value="' + ImageDTO['name'] + '">' +
-            '<input type="hidden" name="boardImageDtoList[' + imageIndex + '].uuid" value="' + ImageDTO['uuid'] + '">' +
-            '<input type="hidden" name="boardImageDtoList[' + imageIndex + '].uuidname" value="' + ImageDTO['uuidname'] + '">' +
-            '</div>';
-            imageIndex++;
+            var imageBase64 = data.ImageBase64;           // Base64 인코딩된 이미지 문자열
+            var imageContentType = data.imageContentType;
 
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -47,12 +38,12 @@ if (fileTempUploadButton) {
                 var input1=document.createElement('input');
                 input1.type='hidden';
                 input1.name='ImageName';
-                input1.value=ImageDTO['name'];
+                input1.value=data['ImageName'];
 
                 var input2=document.createElement('input');
                 input2.type='hidden';
                 input2.name='ImageUUIDName';
-                input2.value=ImageDTO['uuidname'];
+                input2.value=data['ImageUUIDName'];
 
                 const imageDeleteButton=document.createElement('button');
                 imageDeleteButton.className='tempImageDeleteBtn';
@@ -61,11 +52,11 @@ if (fileTempUploadButton) {
                 imageDeleteButton.textContent='X';
 
                 const imageName=document.createElement('p');
-                imageName.textContent=ImageDTO['name'];
+                imageName.textContent=data['name'];
                 imageName.style.marginBottom='5px';
 
                 const image=document.createElement('img');
-                image.src= e.target.result;
+                image.src= "data:" + imageContentType + ";base64," + imageBase64;
                 image.style.width='300px';
                 image.style.height='300px';
 
@@ -76,6 +67,7 @@ if (fileTempUploadButton) {
                 imageContainer.appendChild(image);
 
                 ImageTempResult.appendChild(imageContainer);
+                imageIndex++;
             }
             reader.readAsDataURL(imgFile);
 
@@ -83,6 +75,7 @@ if (fileTempUploadButton) {
             console.error('Error:', error);
             alert('업로드 실패!!');
         });
+       }
 
     });
 }
@@ -93,6 +86,9 @@ if (fileTempUploadButton) {
         var inputs = imageContainer.querySelectorAll('input');
         var input1 = inputs[0].value;
         var input2 = inputs[1].value;
+
+        console.log('imageName:', input1);
+        console.log('imageUUIDName:', input2);
 
         formData.append('ImageName', input1);
         formData.append('ImageUUIDName', input2);

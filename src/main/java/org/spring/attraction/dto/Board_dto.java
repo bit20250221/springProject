@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.spring.attraction.entity.Board;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,6 +27,7 @@ public class Board_dto {
     private String user_login_Id;
     private String attraction_Name;
     private int comment_Num;
+    private List<MultipartFile> imglist;
     private List<BoardImage_dto> boardImages;
 
     public static Board_dto to_dto(Board entity, Long user_id, Long attraction_id){
