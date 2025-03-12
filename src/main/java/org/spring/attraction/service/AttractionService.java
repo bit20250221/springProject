@@ -231,4 +231,52 @@ public class AttractionService {
         return viewAttractionDtoPage;
 
     }
+
+    public Page<ViewAttractionDto> findViewByName(Pageable pageable, String search) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = 10;
+
+        Page<ViewAttraction> viewAttractionPage = viewAttractionRepository.findByNameContaining(search, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+
+        Page<ViewAttractionDto> viewAttractionDtoPage = viewAttractionPage.
+                map(viewAttraction ->
+                        new ViewAttractionDto(
+                                viewAttraction.getId(), viewAttraction.getName(), viewAttraction.getAvgrate(),
+                                viewAttraction.getPrice(), viewAttraction.getOpenTime(), viewAttraction.getCloseTime(),
+                                viewAttraction.getType(), viewAttraction.getArea()));
+
+        return viewAttractionDtoPage;
+    }
+
+    public Page<ViewAttractionDto> findViewByType(Pageable pageable, String search) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = 10;
+
+        Page<ViewAttraction> viewAttractionPage = viewAttractionRepository.findByTypeContaining(search, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+
+        Page<ViewAttractionDto> viewAttractionDtoPage = viewAttractionPage.
+                map(viewAttraction ->
+                        new ViewAttractionDto(
+                                viewAttraction.getId(), viewAttraction.getName(), viewAttraction.getAvgrate(),
+                                viewAttraction.getPrice(), viewAttraction.getOpenTime(), viewAttraction.getCloseTime(),
+                                viewAttraction.getType(), viewAttraction.getArea()));
+
+        return viewAttractionDtoPage;
+    }
+
+    public Page<ViewAttractionDto> findViewByArea(Pageable pageable, String search) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = 10;
+
+        Page<ViewAttraction> viewAttractionPage = viewAttractionRepository.findByAreaContaining(search, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+
+        Page<ViewAttractionDto> viewAttractionDtoPage = viewAttractionPage.
+                map(viewAttraction ->
+                        new ViewAttractionDto(
+                                viewAttraction.getId(), viewAttraction.getName(), viewAttraction.getAvgrate(),
+                                viewAttraction.getPrice(), viewAttraction.getOpenTime(), viewAttraction.getCloseTime(),
+                                viewAttraction.getType(), viewAttraction.getArea()));
+
+        return viewAttractionDtoPage;
+    }
 }

@@ -23,5 +23,15 @@ const attractionPagingLink = (id) => {
     if(id <= 0){
         id = 1;
     }
-    location.href = "/attraction/list?page=" + id;
+    const urlParams = new URLSearchParams(window.location.search);
+    const type = urlParams.get("type");
+    const search = urlParams.get("search");
+    location.href = "/attraction/list?page=" + id + "&type=" + type + "&search=" + search;
+}
+const urlParams = new URLSearchParams(window.location.search);
+const type = urlParams.get("type");
+const search = urlParams.get("search");
+if(type !== null && search !== null){
+    document.getElementById("type").value = type;
+    document.getElementById("search").value = search;
 }

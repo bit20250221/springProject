@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>관광지 리스트</title>
     <script src="/js/alert.js"></script>
-    <script src="/js/attractionLink.js"></script>
+    <script src="/js/attractionLink.js" defer></script>
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
@@ -37,27 +37,30 @@
         <td><button th:onclick="|attractionDeleteLink(${viewAttractionDto.getId()})|">삭제</button></td>
     </tr>
 </table>
-<a href="#" onclick="attractionPagingLink(1)">처음</a>
-<!--<a href="/attraction/list?page=1">First</a>-->
-<!-- 이전 링크 활성화 비활성화 -->
-<!-- boardList.getNumber() 사용자:2페이지 getNumber()=1 -->
 
-<a href="#" th:onclick="|attractionPagingLink(${viewAttractionDtoPage.number})|">이전</a>
+<form action="/attraction/list" method="get">
+    <label for="type">항목</label>
+    <select name="type" id="type">
+        <option value="1">이름</option>
+        <option value="2">구분</option>
+        <option value="3">지역</option>
+    </select>
+    <label for="search">검색어</label>
+    <input type="text" id="search" name="search">
+    <button type="submit">검색</button>
+</form>
 
-<!-- 페이지 번호 링크(현재 페이지는 숫자만)
-        for(int page=startPage; page<=endPage; page++)-->
-<span th:each="page: ${#numbers.sequence(startPage, endPage)}">
-    <!-- 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 -->
-    <a href="#" th:onclick="|attractionPagingLink(${page})|" th:text="${page}"></a>
-</span>
+<div>
+    <a href="#" onclick="attractionPagingLink(1)">처음</a>
+    <a href="#" th:onclick="|attractionPagingLink(${viewAttractionDtoPage.number})|">이전</a>
+    <span th:each="page: ${#numbers.sequence(startPage, endPage)}">
+        <a href="#" th:onclick="|attractionPagingLink(${page})|" th:text="${page}"></a>
+    </span>
+    <a href="#" th:onclick="|attractionPagingLink(${viewAttractionDtoPage.number + 2})|">다음</a>
+    <a href="#" th:onclick="|attractionPagingLink(${viewAttractionDtoPage.totalPages})|">마지막</a>
+    <button onclick="attractionSaveLink()">관광지 등록</button>
+</div>
 
-<!-- 다음 링크 활성화 비활성화
-    사용자: 2페이지, getNumber: 1, 3페이지-->
-<a href="#" th:onclick="|attractionPagingLink(${viewAttractionDtoPage.number + 2})|">다음</a>
-<!-- 마지막 페이지로 이동 -->
-<!--<a th:href="@{/attraction/list(page=${viewAttractionDtoPage.totalPages})}">Last</a>-->
-<a href="#" th:onclick="|attractionPagingLink(${viewAttractionDtoPage.totalPages})|">마지막</a>
-<button onclick="attractionSaveLink()">관광지 등록</button>
 
 <script th:inline="javascript">
     alertMessage([[${message}]])

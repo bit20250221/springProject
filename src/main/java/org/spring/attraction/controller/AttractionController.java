@@ -7,14 +7,12 @@ import org.spring.attraction.repository.AttractionImgRepository;
 import org.spring.attraction.service.*;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
@@ -63,12 +61,26 @@ public class AttractionController {
 //    }
 
     @GetMapping("/list")
-    public String list(@PageableDefault(page = 1) Pageable pageable, Model model) {
-        Page<ViewAttractionDto> viewAttractionDtoPage = attractionService.findViewAll(pageable);
-
+    public String list(@PageableDefault(page = 1) Pageable pageable, Model model,
+                       @RequestParam(required = false) Integer type, @RequestParam(required = false) String search) {
+        Page<ViewAttractionDto> viewAttractionDtoPage = new PageImpl<>(new ArrayList<>());
+        if(search != null && type != null){
+            if(type == 1){
+                viewAttractionDtoPage = attractionService.findViewByName(pageable, search);
+            }else if(type == 2){
+                viewAttractionDtoPage = attractionService.findViewByType(pageable, search);
+            }else if(type == 3){
+                viewAttractionDtoPage = attractionService.findViewByArea(pageable, search);
+            }else{
+                viewAttractionDtoPage = attractionService.findViewAll(pageable);
+            }
+        } else{
+            viewAttractionDtoPage = attractionService.findViewAll(pageable);
+        }
         int blockLimit = 10;
         int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
         int endPage = ((startPage + blockLimit - 1) < viewAttractionDtoPage.getTotalPages()) ? startPage + blockLimit - 1 : viewAttractionDtoPage.getTotalPages();
+
 
         model.addAttribute("viewAttractionDtoPage", viewAttractionDtoPage);
         model.addAttribute("startPage", startPage);
