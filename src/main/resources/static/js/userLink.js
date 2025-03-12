@@ -4,3 +4,6 @@ const userSaveLink = () => {
 const userLoginLink = () => {
     location.href = "/user/login";
 }
+const userLogoutLink = () => {
+    location.href = "/user/logout";
+}
