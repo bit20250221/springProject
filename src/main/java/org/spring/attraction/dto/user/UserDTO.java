@@ -18,6 +18,15 @@ public class UserDTO {
     private Grade grade;
     private Long attraction;
 
+    public UserDTO(Long id, String userLoginId, LocalDate birthDate, UserType userType, Grade grade, Long attraction) {
+        this.id = id;
+        this.userLoginId = userLoginId;
+        this.birthDate = birthDate;
+        this.userType = userType;
+        this.grade = grade;
+        this.attraction = attraction;
+    }
+
     public static UserDTO fromUser(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());

@@ -4,11 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.spring.attraction.dto.user.UserDTO;
 import org.spring.attraction.service.AdminService;
 import org.spring.attraction.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -28,12 +29,18 @@ public class AdminController {
         return "admin";
     }
 
-    // 전체 유저 목록 조회
+    // 전체 유저 목록 조회 (페이징 추가)
     @GetMapping("/user/")
-    public String userListForm(Model model){
-        List<UserDTO> viewUserDTOList = adminService.getAllUsers();
-        model.addAttribute("userList", viewUserDTOList);
-        return "userList";
+    public String userListForm(@PageableDefault(page = 1) Pageable pageable, Model model) {
+        Page<UserDTO> userList = adminService.paging(pageable);  // 페이징 처리된 유저 리스트 조회
+        int blockLimit = 3;
+        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit;
+        int endPage = (startPage + blockLimit - 1) < userList.getTotalPages() ? startPage + blockLimit : userList.getTotalPages();
+
+        model.addAttribute("userList", userList);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        return "userList";  // userList.html에서 페이징 처리를 표시하도록 함
     }
 
     // 특정 유저 조회

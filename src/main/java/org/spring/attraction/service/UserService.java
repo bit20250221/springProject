@@ -32,7 +32,6 @@ public class UserService {
 
         User user = new User();
 
-        user.setId(userDTO.getId());
         user.setUserLoginId(userDTO.getUserLoginId());
         user.setUserType(nomal);
         user.setPass(bCryptPasswordEncoder.encode(userDTO.getPass()));
@@ -75,18 +74,17 @@ public class UserService {
         return userDTO;
     }
 
-    // 유저의 기본 Id 값으로 유저 찾기
+    // 유저의 기본 Id (Long) 값으로 유저 찾기
     public UserDTO getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("유저가 없습니다"));
         return UserDTO.fromUser(user);
     }
 
+    // 현재 로그인한 사용자의 권한 가져오기
     public String getCurrentUserAuthority() {
-        // 현재 로그인된 사용자 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
-            // 로그인한 사용자 권한 가져오기
             return authentication.getAuthorities().iterator().next().getAuthority();
         }
         return null; // 인증되지 않은 사용자
