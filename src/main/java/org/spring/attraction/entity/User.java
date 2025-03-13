@@ -23,12 +23,14 @@ public class User {
     private Long id;
 
     @Column(name = "user_login_id", length = 45, nullable = false, unique = true, updatable = false)
+
     private String userLoginId;
 
     @Column(nullable = false)
     private String pass;
 
     @Column(nullable = false)
+
     private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)

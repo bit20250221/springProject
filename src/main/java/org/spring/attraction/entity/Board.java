@@ -25,7 +25,7 @@ public class Board {
     private String content;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdate;
+    private LocalDateTime createDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -35,7 +35,7 @@ public class Board {
     private int rate;
 
     @Column()
-    private LocalDateTime updatedate;
+    private LocalDateTime updateDate;
 
     @ManyToOne
     @JoinColumn(name="userId", nullable = false)
