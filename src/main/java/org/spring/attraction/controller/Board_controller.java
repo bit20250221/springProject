@@ -29,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RequestMapping("/board")
 @RequiredArgsConstructor
@@ -285,9 +286,11 @@ public class Board_controller {
             */
             Long BoardAttractionId= OneBoard.getAttraction_id();
             if(BoardAttractionId!=null) {
-                User isExist = userRepository.getReferenceById(OneBoard.getUser_id());
+                Optional<User> optionalUser = userRepository.findById(OneBoard.getUser_id());
+
                 Attraction writerattraction;
-                if (isExist != null) {
+                if (optionalUser.isPresent()) {
+                    User isExist = optionalUser.get();
                     writerattraction = isExist.getAttraction();
                     if (writerattraction != null
                             && BoardAttractionId == writerattraction.getId()) {
