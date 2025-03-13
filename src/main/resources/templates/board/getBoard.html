@@ -10,12 +10,13 @@
 <body>
 <input type="hidden" id="message" th:value="${message}" />
     <div class="top_button_list">
-        <button onclick="back()">목록</button>
+        <button onclick="back()">전체 게시글 목록</button>
         <button onclick="deleteboard()">삭제하기</button>
         <button onclick="updateboard()">수정하기</button>
     </div>
     <p class="boardID" th:text="${board.board_id}"></p>
     <div class="normal_board" th:if="${board.tab=='일반'}">
+        <button onclick="window.location.href='/board/normal'">일반 게시글 목록으로</button>
         <h1 id="nomal_title" th:text="${board.title}"></h1>
 
         <div class="boardElement">
@@ -33,6 +34,7 @@
     </div>
 
     <div class="review_board" th:if="${board.tab=='리뷰'}">
+        <button onclick="window.location.href='/board/review'">리뷰 게시글 목록으로</button>
         <h1 id="review_title" th:text="${board.title}"></h1>
 
         <div class="boardElement">
@@ -68,7 +70,7 @@
     </div>
 
     <div class="inquiry_board" th:if="${board.tab=='문의'}">
-
+        <button onclick="window.location.href='/board/inquiry'">문의 게시글 목록으로</button>
         <h1 id="inquiry_title" th:text="${board.title}"></h1>
 
         <div class="boardElement">
@@ -100,7 +102,7 @@
     </div>
 
     <div class="report_board" th:if="${board.tab=='신고'}">
-
+        <button onclick="window.location.href='/board/report'">신고 게시글 목록으로</button>
         <h1 id="report_title" th:text="${board.title}"></h1>
 
         <div class="boardElement">
@@ -131,8 +133,8 @@
 
     </div>
 
-    <div th:if="${board.tab=='공지'}">
-
+    <div class="announce_board" th:if="${board.tab=='공지'}">
+        <button onclick="window.location.href='/board/announce'">공지 게시글 목록으로</button>
         <label for="announce_title">공지</label>
         <h1 id="announce_title" th:text="${board.title}"></h1>
 

@@ -47,6 +47,9 @@
 
     </form>
 
+    <button class="boardFormTempSubmit">임시저장</button>
+    <button class="boardFormSubmit">작성</button>
+    <button onclick="window.location.href='/board/normal'">목록으로</button>
 </div>
 
 <div class="review_from" th:if="${tab =='리뷰'}">
@@ -154,6 +157,9 @@
 
     </form>
 
+    <button class="boardFormTempSubmit">임시저장</button>
+    <button class="boardFormSubmit">작성</button>
+    <button onclick="window.location.href='/board/review'">목록으로</button>
 </div>
 
 <div class="inquiry_form" th:if="${tab =='문의'}">
@@ -255,6 +261,9 @@
 
     </form>
 
+    <button class="boardFormTempSubmit">임시저장</button>
+    <button class="boardFormSubmit">작성</button>
+    <button onclick="window.location.href='/board/inquiry'">목록으로</button>
 </div>
 
 <div class="report_form" th:if="${tab =='신고'}">
@@ -354,6 +363,9 @@
         </div>
     </form>
 
+    <button class="boardFormTempSubmit">임시저장</button>
+    <button class="boardFormSubmit">작성</button>
+    <button onclick="window.location.href='/board/report'">목록으로</button>
 </div>
 
 <div class="announce_form" th:if="${tab =='공지'}">
@@ -403,13 +415,16 @@
 
     </form>
 
+    <button class="boardFormTempSubmit">임시저장</button>
+    <button class="boardFormSubmit">작성</button>
+    <button onclick="window.location.href='/board/announce'">목록으로</button>
 </div>
 <div class="boardImageList">
 
 </div>
-    <button class="boardFormTempSubmit">임시저장</button>
-    <button class="boardFormSubmit">작성</button>
-    <a href="/board/list">목록으로</a>
+
+<button onclick="window.location.href='/board/list'">전체 목록으로</button>
+
 <script rel="text/javascript" th:src="@{/js/InsertBoardForm.js}"></script>
 </body>
 </html>

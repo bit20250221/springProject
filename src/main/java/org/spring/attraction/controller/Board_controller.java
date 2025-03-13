@@ -297,6 +297,11 @@ public class Board_controller {
         session.setAttribute("orgTab",tab);
         Board_dto board=new Board_dto();
         board.setTab(tab);
+        if(principal ==null){
+            message="비로그인 사용자의 부적절한 접근입니다.";
+            redirectAttributes.addFlashAttribute("message",message);
+            return "redirect:/";
+        }
         if(tab.compareTo("공지")==0 && Auth.compareTo("manager")!=0){
             log.info("{} User is Not Authenticated", principal.getName());
             model.addAttribute("authority","권한이 없습니다");
