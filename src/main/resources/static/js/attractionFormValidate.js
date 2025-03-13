@@ -26,6 +26,7 @@ document.getElementById("saveForm").addEventListener("submit", function(event){
     }
 
     if(errorMessageName.innerText !== "" || errorMessagePrice.innerText !== "" || errorMessageType.innerText !== ""){
+        alert("입력하신 정보를 확인하세요.");
         return false;
     }
 

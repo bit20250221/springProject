@@ -1,12 +1,36 @@
-<div th:fragment="header(userRole)" class="header">
-  <h1>지역기반 관광지 정보 서비스</h1>
-  <nav>
-    <button th:if="${userRole == 'manager'}" onclick=location.href="/attractionType/list">관광지 구분 메인화면</button>
-    <button th:if="${userRole == 'manager'}" onclick=location.href="/area/list">지역 메인화면</button>
-    <button onclick=location.href="/attraction/list">관광지 메인화면</button>
-    <button onclick=location.href="/reservation/list">관광지 예약 메인화면</button>
-    <button onclick=location.href="/user/myPage">마이 페이지</button>
-    <button th:if="${userRole == 'manager'}" onclick=location.href="/admin">어드민 페이지</button>
-    <button onclick=location.href="/user/login">로그아웃</button>
+<div th:fragment="header(userRole)" class="user-header">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">관광지 정보 사이트</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/attraction/list">관광지 메인화면</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/reservation/list">관광지 예약 메인화면</a>
+          </li>
+          <li class="nav-item" th:if="${userRole != null}">
+            <a class="nav-link" href="/user/myPage">마이 페이지</a>
+          </li>
+          <li class="nav-item" th:if="${userRole == 'manager'}">
+            <a class="nav-link" href="/attractionType/list">관광지 구분 관리</a>
+          </li>
+          <li class="nav-item" th:if="${userRole == 'manager'}">
+            <a class="nav-link" href="/area/list">관광지 지역 관리</a>
+          </li>
+          <li class="nav-item" th:if="${userRole == 'manager'}">
+            <a class="nav-link" href="/admin">어드민 페이지</a>
+          </li>
+          <li class="nav-item" th:if="${userRole != null}">
+            <a class="nav-link" href="/user/login">로그아웃</a>
+          </li>
+
+        </ul>
+      </div>
+    </div>
   </nav>
 </div>
