@@ -24,6 +24,36 @@
 
 <hr>
 
+<h3>예약한 관광지 보기</h3>
+<button class="button" onclick="toggleForm('reservationList')">예약 관광지 보기</button>
+<div id="reservationList" class="hidden">
+    <h3>내가 예약한 관광지</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>예약 ID</th>
+            <th>관광지 이름</th>
+            <th>예약 날짜</th>
+            <th>삭제</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="reservation : ${reservations}">
+            <td th:text="${reservation.id}"></td>
+            <td th:text="${reservation.attraction.name}"></td>
+            <td th:text="${#strings.substringBefore(reservation.reservedate.toString(), 'T')}"></td>
+            <td>
+                <form th:action="@{/user/reservation/delete/{id}(id=${reservation.id})}" method="post">
+                    <button type="submit">삭제</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<hr>
+
 <h3>화면 열기</h3>
 <button class="button" onclick="toggleForm('updatePasswordForm')">비밀번호 변경</button>
 <form id="updatePasswordForm" class="hidden" action="/user/update" method="post">
