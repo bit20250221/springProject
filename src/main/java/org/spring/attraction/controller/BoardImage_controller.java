@@ -155,7 +155,7 @@ public class BoardImage_controller {
         List<BoardImage_dto> sessionImages = (List<BoardImage_dto>) session.getAttribute("tempImages");
         List<BoardImage_dto> sessionImages2 = (List<BoardImage_dto>) session.getAttribute("UpdateImages");
 
-        //게시글 수정 화면에서 동작(실제로는 게시글 수정화면에서 이미지 삭제, 등록이 즉각적으로 반영되서 사용안 될듯)
+        //게시글 수정 화면에서 동작
         if( sessionImages2!=null && sessionImages==null){
             for(BoardImage_dto dto : sessionImages2) {
                 boardImageService.deleteImageFile(dto.getUUID(), dto.getUUIDName(), dto.getBoardId());
@@ -186,7 +186,7 @@ public class BoardImage_controller {
                                                               @RequestParam("ImageUUIDName") String ImageUUIDName) {
         Map<String, Object> response = new HashMap<>();
         List<BoardImage_dto> sessionImages1 = (List<BoardImage_dto>) session.getAttribute("tempImages");
-        List<BoardImage_dto> sessionImages2 = (List<BoardImage_dto>) session.getAttribute("CurrentImage");
+        List<BoardImage_dto> sessionImages2 = (List<BoardImage_dto>) session.getAttribute("UpdateImages");
         // 게시글 수정의 임시 업로드인 경우
         if (sessionImages1 == null && sessionImages2!=null) {
             log.info("게시글 수정의 임시 이미지 삭제");
@@ -211,10 +211,6 @@ public class BoardImage_controller {
     }
 
     //특정 게시물의 이미지 하나 삭제(이미 등록된 것을 삭제)
-    /*
-        해당 게시물 내의 이미지가 맞는지, 실제 게시글 작성자가 맞는지 확인 필요(변조 방지)
-        세션과 시큐리티 활용
-    */
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/deleteImage")
     @ResponseBody
@@ -233,7 +229,6 @@ public class BoardImage_controller {
             response.put("message", "NOBoard");
             return ResponseEntity.ok(response);
         }
-        //만약 게시물 내의 이미지가 아니거나 본인이 작성한 게시물이 아니면 에러화면 출력
 
         List<BoardImage_dto> sessionImages = (List<BoardImage_dto>) session.getAttribute("CurrentImage");
         if (sessionImages == null) {

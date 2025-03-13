@@ -193,7 +193,6 @@ public class Board_controller {
     }
 
     //검색, 페이징 기능 포함, 탭에 따라 ui 변경
-    //(일반 사용자 기준, 해당 사용자가 하지 않은 신고와 문의는 안 보여준다)
     @PermitAll
     @GetMapping("/list")
     public String list(Model model,
@@ -222,12 +221,11 @@ public class Board_controller {
         return "board/boardList";
     }
 
-    //검색, 페이징 기능 포함, 탭에 따라 ui 변경(관리자 기준)(모든 정보 출력)
 
 
 
     /*
-    사용자와 탭, 글 작성자에 따라서 비공개 처리 로직이 있어야한다.(아직 미포함)
+    사용자와 탭, 글 작성자에 따라서 비공개 처리 로직이 있어야한다.
     탭(리뷰, 문의, 신고, 일반, 공지)에 따라 화면에 다르게 표현해야한다.)
     댓글 추가 로직 필요
     Principal 활용해서 사용자 아이디 가져온다.
@@ -245,7 +243,7 @@ public class Board_controller {
         if((OneTab.compareTo("신고")==0) &&(!OneBoard.getUser_login_Id().equals(principal.getName())
                 && Auth.compareTo("manager")!=0)){
             log.info(Auth);
-            log.info("1 "+principal.getName() + " User is Not Authenticated");
+            log.info(principal.getName() + " User is Not Authenticated about this report");
             return "redirect:/board/list";
         }
 
@@ -256,7 +254,7 @@ public class Board_controller {
                 !(Auth.compareTo("manager") == 0))
         {
             log.info(Auth);
-            log.info("1 "+principal.getName() + " User is Not Authenticated");
+            log.info(principal.getName() + " User is Not Authenticated about this inquiry");
             return "redirect:/board/list";
         }
 
@@ -270,7 +268,6 @@ public class Board_controller {
         return "board/getBoard";
     }
 
-    //나중에 Spring Security 활용해서 권한 관련 기능 추가
     /*
     로그인된 사용자, 탭(리뷰, 문의, 신고, 일반, 공지)에 따라서 작성 제한 필요(탭 고르는 것을 제한),
     탭에 따라 글 작성 폼 UI 변화
@@ -280,8 +277,7 @@ public class Board_controller {
     @GetMapping("/insertBoard")
     public String InsertBoardView(Model model, Board_dto boardDto, HttpSession session, String tab, Principal principal){
 
-        //탭과 사용자에 따라 다르게 적용(사용자의 권한 여부를 확인하는 로직 필요)
-        //유저 관련은 일단 일시적인 값을 넣고 세션 활용
+        //탭과 사용자에 따라 다르게 적용
         String Auth=SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority();
         session.setAttribute("orgTab",tab);
         Board_dto board=new Board_dto();
@@ -333,7 +329,7 @@ public class Board_controller {
 
         /*
             관광지 확인 필요(실제 존재하는지 검증), 만약 기타에 db에 없는 관광지를 입력했다면
-            기존의 라디오 선택을 무시하고 기타내 입력된 값을 저장(attraction_id는 null)
+            기존의 라디오 선택을 무시하고 기타 내 입력된 값을 저장(attraction_id는 null)
         */
 
         //기타 옵션을 선택한 경우 값이 존재
@@ -381,7 +377,7 @@ public class Board_controller {
         }
     }
 
-    //오직 글 작성자만 수정 가능하도록 한다.(일단 파일 수정은 제외)
+    //오직 글 작성자만 수정 가능하도록 한다.(파일 수정은 제외)
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/updateBoard/{id}")
     public String updateBoardView(Model model,
@@ -427,10 +423,7 @@ public class Board_controller {
         return "board/updateBoard";
     }
 
-    /*
-        탭을 임의로 수정 못하도록 막는 로직 필요
-        그리고 현재 로그인 정보를 가져올 필요가 있음(일단은 form으로 가져오고 나중에 principal 객체를 이용해 처리)
-    */
+
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/updateBoard/{id}")
     public String updateBoardAction(@PathVariable("id") Long id, Board_dto boardDTO, HttpSession session, Principal principal){
