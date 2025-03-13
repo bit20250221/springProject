@@ -20,10 +20,10 @@ public class Reservation {
     private Long id;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdate;
+    private LocalDateTime createDate;
 
     @Column(nullable = false)
-    private int peplenum;
+    private int pepleNum;
 
     @Column(nullable = false)
     private LocalDateTime reservedate;

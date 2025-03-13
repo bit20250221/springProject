@@ -25,12 +25,13 @@ public class Attraction{
 
     @ColumnDefault("0")
     @Column(nullable = false)
-    private double avgrate;
+    private double avgRate;
 
     @Column(nullable = false)
     private int price;
 
     @Column(nullable = false)
+
     private LocalTime opentime;
 
     @Column(nullable = false)
