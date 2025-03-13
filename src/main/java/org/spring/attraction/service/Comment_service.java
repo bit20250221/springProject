@@ -13,7 +13,9 @@ import org.spring.attraction.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +30,23 @@ public class Comment_service {
     public Comment_dto writeComment(User user, Long boardId, String content) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new EntityNotFoundException("Board not found with id: " + boardId));
 
+        String boardTab=board.getTab().name();
+        String Auth=user.getUserType().name();
+        if(Auth.compareTo("nomal")==0 &&
+                !((boardTab.compareTo("신고")==0 || boardTab.compareTo("문의")==0)&&
+                        board.getUser().getUserLoginId().compareTo(user.getUserLoginId())==0)&&
+                (boardTab.compareTo("공지")==0)){
+            //댓글 입력 불가
+            return null;
+        }
+        if(Auth.compareTo("attraction")==0 &&
+                !((boardTab.compareTo("신고")==0 || boardTab.compareTo("문의")==0)&&
+                        ((board.getUser().getUserLoginId().compareTo(user.getUserLoginId())==0)||
+                                Objects.equals(board.getAttraction().getId(), user.getAttraction().getId())))&&
+                (boardTab.compareTo("공지")==0)){
+            //댓글 입력 불가
+            return null;
+        }
         Comment comment = new Comment();
         comment.setUser(user);  // 전달받은 User 엔티티 사용
         comment.setBoard(board);
@@ -56,9 +75,9 @@ public class Comment_service {
 
         if (comment != null) {
             boolean isOwner = comment.getUser().getId().equals(user.getId());
-            boolean isAdmin = user.getUserType().equals("manager");
+            int isAdmin = user.getUserType().name().compareTo("manager");
 
-            if (isOwner || isAdmin) {
+            if (isOwner || isAdmin==0) {
                 commentRepository.delete(comment);
                 return true;
             }
@@ -67,9 +86,9 @@ public class Comment_service {
     }
 
     @Transactional
-    public List<Comment_dto> getCommentsByBoard(Long boardId) {
+    public ArrayList<Comment_dto> getCommentsByBoard(Long boardId) {
         List<Comment> comments = commentRepository.findByBoardId(boardId);
-        return comments.stream().map(Comment_dto::toDTO).collect(Collectors.toList());
+        return (ArrayList<Comment_dto>) comments.stream().map(Comment_dto::toDTO).collect(Collectors.toList());
     }
 }
 

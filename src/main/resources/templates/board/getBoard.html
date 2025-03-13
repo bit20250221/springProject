@@ -9,10 +9,21 @@
 </head>
 <body>
 <input type="hidden" id="message" th:value="${message}" />
-    <div class="top_button_list">
-        <button onclick="back()">전체 게시글 목록</button>
-        <button onclick="deleteboard()">삭제하기</button>
-        <button onclick="updateboard()">수정하기</button>
+<input class="boardNum" type="hidden" th:value="${board.board_id}">
+<div sec:authorize="isAuthenticated()">
+    <input type="hidden" id="currentUser" th:value="${#authentication.principal.username}">
+</div>
+<div sec:authorize="!isAuthenticated()">
+</div>
+
+    <div class="top_element">
+        <div class="top_button_list">
+            <button onclick="back()">전체 게시글 목록</button>
+            <div sec:authorize="isAuthenticated()">
+                <button onclick="deleteboard()">삭제하기</button>
+                <button onclick="updateboard()">수정하기</button>
+            </div>
+        </div>
     </div>
     <p class="boardID" th:text="${board.board_id}"></p>
     <div class="normal_board" th:if="${board.tab=='일반'}">
@@ -166,6 +177,44 @@
 
     </div>
 
+    <div class="bottom">
+        <div class="comment count">
+            <p>현재 댓글수</p>
+            <p id="commentCount" th:text="${board.comment_Num}"></p>
+        </div>
+        <div class="comment insert" sec:authorize="isAuthenticated()">
+            <input class="commentInput" name="commentInput" type="text" placeholder="Insert comment">
+            <button class="comment_insert" onclick="commentInsert()">등록</button>
+        </div>
+        <div class="comment list" id="commentList">
+            <div th:if="${commentlist != null and !commentlist.isEmpty()}">
+            <button class="comment_refresh" onclick="commentRefresh()">새로고침</button>
+            <div class="comment elements">
+            <div class="comment element" th:each="comment, loop: ${commentlist}">
+                <div class="comment element content">
+                    <input class="comment element content num" type="hidden" th:value="${comment.id}">
+                    <p class="comment element content user" th:text="${comment.userLoginId}"></p>
+                    <p class="comment element content content" th:text="${comment.content}"></p>
+                    <p class="comment element content credate" th:text="${comment.createDate}"></p>
+                    <p class="comment element content update" th:text="${comment.updateDate}"></p>
+                </div>
+                <div class="comment button" sec:authorize="isAuthenticated()">
+                    <button class="comment_delete" onclick="commentDelete(this)">삭제하기</button>
+                    <div th:if="${comment.userLoginId == #authentication.principal.username}">
+                        <button class="comment_update" onclick="commentUpdate(this)">수정하기</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
+        </div>
+        <div class="comment list" id="emptyCommentList">
+            <div th:if="${commentlist == null or commentlist.isEmpty()}">
+                <button class="comment_refresh" onclick="commentRefresh()">새로고침</button>
+                <p>댓글이 없습니다.</p>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript" th:src="@{/js/getBoard.js}"></script>
 </body>
 </html>

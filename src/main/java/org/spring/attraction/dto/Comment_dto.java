@@ -12,6 +12,7 @@ public class Comment_dto {
 
     private Long id;
     private Long userId;
+    private String userLoginId;
     private Long boardId;
     private String content;
     private String createDate;
@@ -21,6 +22,7 @@ public class Comment_dto {
         return new Comment_dto(
                 commentEntity.getId(),
                 commentEntity.getUser().getId(),
+                commentEntity.getUser().getUserLoginId(),
                 commentEntity.getBoard().getId(),
                 commentEntity.getContent(),
                 commentEntity.getCreateDate().toString(),

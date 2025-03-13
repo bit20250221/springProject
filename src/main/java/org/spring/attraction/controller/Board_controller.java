@@ -8,6 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import org.spring.attraction.dto.AttractionDto;
 import org.spring.attraction.dto.BoardImage_dto;
 import org.spring.attraction.dto.Board_dto;
+import org.spring.attraction.dto.Comment_dto;
 import org.spring.attraction.dto.user.UserDTO;
 import org.spring.attraction.entity.Attraction;
 import org.spring.attraction.entity.Board;
@@ -27,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -237,6 +239,7 @@ public class Board_controller {
                            @PathVariable("id") Long id, Principal principal, RedirectAttributes redirectAttributes) {
         String message;
         Board_dto OneBoard=boardService.getBoard(id);
+        ArrayList<Comment_dto> commentList= (ArrayList<Comment_dto>) commentService.getCommentsByBoard(id);
         if(OneBoard==null){
             model.addAttribute("result","NONE");
             message="NONE EXIST BOARD";
@@ -298,6 +301,7 @@ public class Board_controller {
                     }
                 }
             }
+            model.addAttribute("commentlist",commentList);
             model.addAttribute("result","NORMAL");
             model.addAttribute("board",OneBoard);
         }
@@ -350,7 +354,7 @@ public class Board_controller {
                 default:
                     message="NONE EXIST TAB ABOUT INSERT FORM";
                     redirectAttributes.addFlashAttribute("message",message);
-                    return "redirect:/board/error";
+                    return "redirect:board/error";
 
             }
         }
@@ -369,7 +373,7 @@ public class Board_controller {
             session.removeAttribute("orgTab");
             message="작성자 정보와 로그인된 사용자 아이디가 다릅니다.";
             redirectAttributes.addFlashAttribute("message",message);
-            return "redirect:/board/error";
+            return "redirect:board/error";
         }
         //제출된 탭과 처음 입력하려는 탭을 비교할 필요 있음(탭 조작 방지)
         if(session.getAttribute("orgTab").toString().compareTo(dto.getTab())!=0){
@@ -377,7 +381,7 @@ public class Board_controller {
             session.removeAttribute("orgTab");
             message="등록된 탭 정보와 세션 내의 탭 정보가 다릅니다.";
             redirectAttributes.addFlashAttribute("message",message);
-            return "redirect:/board/error";
+            return "redirect:board/error";
         }
 
         /*
@@ -460,7 +464,7 @@ public class Board_controller {
             model.addAttribute("result","NONE");
             message="NONE BOARD";
             redirectAttributes.addFlashAttribute("message",message);
-            return "redirect:/board/error";
+            return "redirect:board/error";
         }
 
         //만약 로그인된 사용자와 작성자 아이디가 일치하지 않는다면 (사용자 아이디 조작 방지)(스프링 시큐리티 활용));
@@ -507,7 +511,7 @@ public class Board_controller {
             message="해당 글 작성자가 아닙니다.";
             log.info(message);
             redirectAttributes.addFlashAttribute("message",message);
-            return "redirect:/board/error";
+            return "redirect:board/error";
         }
         Board_dto UpdateBoard=boardService.updateBoard(boardDTO);
         if(UpdateBoard!=null&&UpdateBoard.getTab().compareTo("일반")!=0) {
