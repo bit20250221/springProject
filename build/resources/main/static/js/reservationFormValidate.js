@@ -37,6 +37,7 @@ document.getElementById("saveForm").addEventListener("submit", function(event){
     }
 
     if(errorMessagePeplenum.innerText !== "" || errorMessageReservedate.innerText !== ""){
+        alert("입력하신 정보를 확인하세요.");
         return false;
     }
 
