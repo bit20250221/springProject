@@ -9,7 +9,9 @@ import org.spring.attraction.dto.AttractionDto;
 import org.spring.attraction.dto.BoardImage_dto;
 import org.spring.attraction.dto.Board_dto;
 import org.spring.attraction.dto.user.UserDTO;
+import org.spring.attraction.entity.Attraction;
 import org.spring.attraction.entity.Board;
+import org.spring.attraction.entity.User;
 import org.spring.attraction.repository.AttractionRepository;
 import org.spring.attraction.repository.UserRepository;
 import org.spring.attraction.service.*;
@@ -222,9 +224,6 @@ public class Board_controller {
         return "board/boardList";
     }
 
-
-
-
     /*
     사용자와 탭, 글 작성자에 따라서 비공개 처리 로직이 있어야한다.
     탭(리뷰, 문의, 신고, 일반, 공지)에 따라 화면에 다르게 표현해야한다.)
@@ -237,10 +236,20 @@ public class Board_controller {
                            @PathVariable("id") Long id, Principal principal, RedirectAttributes redirectAttributes) {
         String message;
         Board_dto OneBoard=boardService.getBoard(id);
-        String Auth=SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority();
-        UserDTO OneUser=boardSecurityService.getUser();
-        //만약 탭이 문의, 신고인데, 작성자 또는 해당 관광지가 아니면 해당 화면을 보면 안된다.
+        if(OneBoard==null){
+            model.addAttribute("result","NONE");
+            message="NONE EXIST BOARD";
+            redirectAttributes.addFlashAttribute("message",message);
+            return "redirect:/board/list";
+        }
+
         String OneTab=OneBoard.getTab().toString();
+        String Auth=SecurityContextHolder.getContext()
+                .getAuthentication().getAuthorities()
+                .iterator().next().getAuthority();
+        UserDTO OneUser=boardSecurityService.getUser();
+
+        //만약 탭이 문의, 신고인데, 작성자 또는 해당 관광지가 아니면 해당 화면을 보면 안된다.
         if((OneTab.compareTo("문의")==0 || OneTab.compareTo("신고")==0) && (principal==null)){
             message="아이디 " +OneBoard.getBoard_id()+ " 문의, 신고 게시물에 비로그인 사용자 접근 차단";
             log.info(message);
@@ -270,13 +279,24 @@ public class Board_controller {
         }
 
         if(OneBoard!=null){
+            /*
+            만약 해당 관광지 리뷰가 관광지 본인 계정으로 작성한 리뷰이면 그
+            것을 알려줘야한다.(즉 제목에 (관광지 계정입니다.) 라고 표시해줘야한다.)
+            */
+            Long BoardAttractionId= OneBoard.getAttraction_id();
+            if(BoardAttractionId!=null) {
+                User isExist = userRepository.getReferenceById(OneBoard.getUser_id());
+                Attraction writerattraction;
+                if (isExist != null) {
+                    writerattraction = isExist.getAttraction();
+                    if (writerattraction != null
+                            && BoardAttractionId == writerattraction.getId()) {
+                        OneBoard.setTitle(OneBoard.getTitle() + " (본인 관광지 계정입니다.)");
+                    }
+                }
+            }
             model.addAttribute("result","NORMAL");
             model.addAttribute("board",OneBoard);
-        }else{
-            model.addAttribute("result","NONE");
-            message="NONE EXIST BOARD";
-            redirectAttributes.addFlashAttribute("message",message);
-            return "redirect:/board/list";
         }
 
         return "board/getBoard";
@@ -339,6 +359,8 @@ public class Board_controller {
     public String InsertBoardAction(Board_dto dto, HttpSession session, Principal principal,RedirectAttributes redirectAttributes){
         //만약 로그인된 사용자와 작성자 아이디 다르면 취소(사용자 아이디 조작 방지)(스프링 시큐리티 활용)
         String message;
+        User currentUser=boardSecurityService.getUserEntity();
+        String auth=SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority();
         if(dto.getUser_login_Id().compareTo(principal.getName())!=0){
             session.removeAttribute("tempImages");
             session.removeAttribute("orgTab");
@@ -359,11 +381,18 @@ public class Board_controller {
             관광지 확인 필요(실제 존재하는지 검증), 만약 기타에 db에 없는 관광지를 입력했다면
             기존의 라디오 선택을 무시하고 기타 내 입력된 값을 저장(attraction_id는 null)
         */
+        Long attraction_id = dto.getAttraction_id();
+        Long writer_attraction_id=currentUser.getAttraction() != null
+                ? currentUser.getAttraction().getId() : null;
+        if(auth.compareTo("attraction")==0 && attraction_id != writer_attraction_id){
+            message="본인 관광지 리뷰만 작성 가능합니다.";
+            redirectAttributes.addFlashAttribute("message",message);
+            return "redirect:/board/insertBoard";
+        }
 
         //기타 옵션을 선택한 경우 값이 존재
         String attractionName=dto.getAttraction_Name();
         if(attractionName!=null &&!attractionName.equals("기타")){
-            Long attraction_id = dto.getAttraction_id();
             System.out.println(attraction_id);
             if(attraction_id!=null) {
                 if (attractionService.findById(attraction_id) == null) {
