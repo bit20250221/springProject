@@ -1,31 +1,30 @@
 package org.spring.attraction.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.spring.attraction.entity.Comment;
 
-import java.time.LocalDateTime;
-
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class Comment_dto {
-    private Long id;
-    private String content;
-    private Long user_id;
-    private Long board_id;
-    private LocalDateTime createdate;
-    private LocalDateTime updatedate;
 
-    public static Comment_dto to_dto(Comment entity, Long user_id, Long board_id){
-        Comment_dto dto=new Comment_dto();
-        dto.setId(entity.getId());
-        dto.setContent(entity.getContent());
-        dto.setUser_id(user_id);
-        dto.setBoard_id(board_id);
-        dto.setCreatedate(entity.getCreateDate());
-        dto.setUpdatedate(entity.getUpdateDate());
-        return dto;
+    private Long id;
+    private Long userId;
+    private Long boardId;
+    private String content;
+    private String createDate;
+    private String updateDate;
+
+    public static Comment_dto toDTO(Comment commentEntity) {
+        return new Comment_dto(
+                commentEntity.getId(),
+                commentEntity.getUser().getId(),
+                commentEntity.getBoard().getId(),
+                commentEntity.getContent(),
+                commentEntity.getCreateDate().toString(),
+                commentEntity.getUpdateDate() != null ? commentEntity.getUpdateDate().toString() : null
+        );
     }
 }

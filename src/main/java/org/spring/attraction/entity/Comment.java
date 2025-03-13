@@ -11,26 +11,36 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "commentId")
     private Long id;
+
+    @Column(nullable = false)
+    private String content;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createDate;
 
-    @Column(length = 300, nullable = false)
-    private String content;
-
-    @Column(updatable = true)
+    @Column
     private LocalDateTime updateDate;
 
     @ManyToOne
-    @JoinColumn(name="userId", nullable = false)
+    @JoinColumn(name = "userId", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="boardId", nullable = false)
+    @JoinColumn(name = "boardId", nullable = false)
     private Board board;
 
+    @PrePersist
+    public void prePersist() {
+        this.createDate = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updateDate = LocalDateTime.now();
+    }
 }
