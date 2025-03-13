@@ -41,6 +41,8 @@
     </table>
 
     <div class="user-search">
+        <button th:if="${userRole == 'attraction' && userAttractionId != null}" th:onclick="|attractionUpdateLink(${userAttractionId})|">관광지 관리</button>
+        <button th:if="${userRole == 'attraction' && userAttractionId == null}" onclick="attractionSaveLink()">관광지 관리</button>
         <form action="/attraction/list" method="get">
             <label for="type">항목</label>
             <select name="type" id="type">
@@ -69,6 +71,7 @@
             </ul>
         </nav>
     </div>
+
 
     <div th:replace="fragments/footer :: footer"></div>
 

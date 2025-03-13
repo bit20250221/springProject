@@ -71,7 +71,8 @@ public class AttractionController {
     public String list(@PageableDefault(page = 1) Pageable pageable, Model model,
                        @RequestParam(required = false) Integer type, @RequestParam(required = false) String search,
                        @AuthenticationPrincipal UserDetails userDetails) {
-        model.addAttribute("userRole", userService.getUserRole(userDetails));
+        String userRole = userService.getUserRole(userDetails);
+        model.addAttribute("userRole", userRole);
         model.addAttribute("userAttractionId", userService.getAttractionId(userDetails));
         Page<ViewAttractionDto> viewAttractionDtoPage = new PageImpl<>(new ArrayList<>());
         if(search != null && type != null){
@@ -155,10 +156,7 @@ public class AttractionController {
         attractionDto.setUserDetails(userDetails);
         AttractionMessage result = attractionService.update(attractionDto);
         redirectAttributes.addFlashAttribute("message", result.getMessage());
-        if(result.getId() < 0){
-            return "redirect:/attraction/update/" + attractionDto.getId();
-        }
-        return "redirect:/attraction/list";
+        return "redirect:/attraction/update/" + attractionDto.getId();
     }
 
 

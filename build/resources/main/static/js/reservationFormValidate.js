@@ -41,7 +41,7 @@ document.getElementById("saveForm").addEventListener("submit", function(event){
         return false;
     }
 
-    if(confirm("인원수 : " + peplenum + ", 총 비용 : " + peplenum * price + " 저장하시겠습니까?", )){
+    if(confirm("인원수 : " + peplenum + ", 총 비용 : " + peplenum * price + " 예약하시겠습니까?", )){
         alert("요청이 완료되었습니다.!");
         document.getElementById("saveForm").submit();
     }
