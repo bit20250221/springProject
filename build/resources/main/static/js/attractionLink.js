@@ -24,8 +24,12 @@ const attractionPagingLink = (id) => {
         id = 1;
     }
     const urlParams = new URLSearchParams(window.location.search);
-    const type = urlParams.get("type");
-    const search = urlParams.get("search");
+    let type = urlParams.get("type");
+    let search = urlParams.get("search");
+    if(type === null || search === null){
+        type = "";
+        search = "";
+    }
     location.href = "/attraction/list?page=" + id + "&type=" + type + "&search=" + search;
 }
 const urlParams = new URLSearchParams(window.location.search);

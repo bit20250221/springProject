@@ -101,4 +101,32 @@ public class UserService {
         }
         return null;
     }
+
+    public Long getAttractionId(UserDetails userDetails) {
+        if (userDetails != null) {  // 로그인한 사용자가 있을 경우
+            String userRole = userDetails.getAuthorities().stream()
+                    .map(grantedAuthority -> grantedAuthority.getAuthority())
+                    .collect(Collectors.joining(", "));
+            if(userRole.equals("attraction")){
+                User user = userRepository.findByUserLoginId(userDetails.getUsername()).orElse(null);
+                if(user != null){
+                    if(user.getAttraction() != null){
+                        return user.getAttraction().getId();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public User getUser(UserDetails userDetails) {
+        if (userDetails != null) {
+            String userLoginId = userDetails.getUsername();
+            User user = userRepository.findByUserLoginId(userLoginId).orElse(null);
+            if(user != null){
+                return user;
+            }
+        }
+        return null;
+    }
 }

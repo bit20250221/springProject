@@ -21,7 +21,7 @@
         <th>결제방법</th>
         <th>총 비용</th>
         <th>상세</th>
-        <th>삭제</th>
+        <th th:if="${userRole == 'manager'}">삭제</th>
     </tr>
     <tr th:each="viewReservationDto, index: ${viewReservationDtoList}">
         <td th:text="${viewReservationDto.getId()}"></td>
@@ -33,7 +33,7 @@
         <td th:text="${viewReservationDto.getPaymentTypeType()}"></td>
         <td th:text="${viewReservationDto.getTotalPrice()}"></td>
         <td><button th:onclick="|reservationDetailLink(${viewReservationDto.getId()})|">상세</button></td>
-        <td><button th:onclick="|reservationDeleteLink(${viewReservationDto.getId()})|">삭제</button></td>
+        <td th:if="${userRole == 'manager'}"><button th:onclick="|reservationDeleteLink(${viewReservationDto.getId()})|">삭제</button></td>
     </tr>
 </table>
 <button onclick="attractionListLink()">관광지 리스트</button>

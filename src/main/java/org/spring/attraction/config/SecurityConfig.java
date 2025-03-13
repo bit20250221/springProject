@@ -29,7 +29,7 @@ public class SecurityConfig {
                         .loginProcessingUrl("/user/login")     // 로그인 데이터를 form 태그의 경로로 보냄
                         .usernameParameter("userLoginId")     // 시큐리티 기본 파라미터는 username
                         .passwordParameter("pass")            // 시큐리티 기본 파라미터는 userPassword
-                        .defaultSuccessUrl("/", true)
+                        .defaultSuccessUrl("/attraction/list", true)
                         .permitAll()
                 );
 

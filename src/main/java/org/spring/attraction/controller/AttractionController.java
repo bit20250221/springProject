@@ -50,6 +50,7 @@ public class AttractionController {
     @PostMapping("/save")
     public String save(AttractionDto attractionDto, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserDetails userDetails, Model model) {
         model.addAttribute("userRole", userService.getUserRole(userDetails));
+        attractionDto.setUserDetails(userDetails);
         AttractionMessage result = attractionService.save(attractionDto);
         redirectAttributes.addFlashAttribute("message", result.getMessage());
         if(result.getId() < 0){
@@ -71,6 +72,7 @@ public class AttractionController {
                        @RequestParam(required = false) Integer type, @RequestParam(required = false) String search,
                        @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("userRole", userService.getUserRole(userDetails));
+        model.addAttribute("userAttractionId", userService.getAttractionId(userDetails));
         Page<ViewAttractionDto> viewAttractionDtoPage = new PageImpl<>(new ArrayList<>());
         if(search != null && type != null){
             if(type == 1){
@@ -123,7 +125,7 @@ public class AttractionController {
     }
 
     @GetMapping("/update/{id}")
-    public String update(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String update(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails userDetails, RedirectAttributes redirectAttributes) {
         model.addAttribute("userRole", userService.getUserRole(userDetails));
         AttractionDto attractionDto = attractionService.findById(id);
         List<AttractionTypeListDto> attractionTypeListDtoList = attractionTypeListService.findByAttractionId(id);
@@ -150,6 +152,7 @@ public class AttractionController {
     @PostMapping("/update")
     public String update(AttractionDto attractionDto, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserDetails userDetails, Model model) {
         model.addAttribute("userRole", userService.getUserRole(userDetails));
+        attractionDto.setUserDetails(userDetails);
         AttractionMessage result = attractionService.update(attractionDto);
         redirectAttributes.addFlashAttribute("message", result.getMessage());
         if(result.getId() < 0){

@@ -74,10 +74,25 @@ public class ReservationController {
     }
 
     @GetMapping("/list")
-    public String list(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        model.addAttribute("userRole", userService.getUserRole(userDetails));
-        String userLoginId = userService.getUserLoginId(userDetails);
-        List<ViewReservationDto> viewReservationDtoList = reservationService.findViewAllByUserLoginId(userLoginId);
+    public String list(Model model, @AuthenticationPrincipal UserDetails userDetails, RedirectAttributes redirectAttributes) {
+        String userRole = userService.getUserRole(userDetails);
+
+        List<ViewReservationDto> viewReservationDtoList;
+        if(userRole.equals("manager")){
+            viewReservationDtoList = reservationService.findViewAll();
+        }else if(userRole.equals("attraction")){
+            Long attractionId = userService.getAttractionId(userDetails);
+            if (attractionId == null) {
+                redirectAttributes.addFlashAttribute("message", ReservationMessage.getTypeById(-13).getMessage());
+                return "redirect:/attraction/save";
+            }
+            viewReservationDtoList = reservationService.findViewAllByAttractionId(attractionId);
+        }else{
+            String userLoginId = userService.getUserLoginId(userDetails);
+            viewReservationDtoList = reservationService.findViewAllByUserLoginId(userLoginId);
+        }
+
+        model.addAttribute("userRole", userRole);
         model.addAttribute("viewReservationDtoList", viewReservationDtoList);
         return "reservation/list";
     }

@@ -20,7 +20,9 @@ public enum ReservationMessage {
     RESERVEDATE_IS_PAST(-9, "예약일자는 과거의 날짜로는 입력하실 수 없습니다."),
     RESERVEDATE_IS_TOO_FAR(-10, "예약일자는 최대 60일 이내까지 입력이 가능합니다."),
     PAY_TYPE_IS_EMPTY(-11, "결제방법이 입력되지 않았습니다."),
-    CONVERSION_NOT_POSSIBLE(-12, "타입이 맞지 않아 형변환이 불가능합니다.");
+    CONVERSION_NOT_POSSIBLE(-12, "타입이 맞지 않아 형변환이 불가능합니다."),
+    ATTRACTION_NOT_REFISTERED(-13, "관리중인 관광지가 없습니다.(관광지를 먼저 등록하세요.)");
+
 
 
     private final int id;

@@ -139,4 +139,24 @@ public class ReservationService {
         }
         return ReservationMessage.getTypeById(-4);
     }
+
+    public List<ViewReservationDto> findViewAll() {
+        List<ViewReservation> viewReservationList = viewReservationRepository.findAll();
+        List<ViewReservationDto> viewReservationDtoList = new ArrayList<>();
+        for (ViewReservation viewReservation : viewReservationList) {
+            ViewReservationDto viewReservationDto = ViewReservationDto.toDto(viewReservation);
+            viewReservationDtoList.add(viewReservationDto);
+        }
+        return viewReservationDtoList;
+    }
+
+    public List<ViewReservationDto> findViewAllByAttractionId(Long attractionId) {
+        List<ViewReservation> viewReservationList = viewReservationRepository.findByAttractionId(attractionId);
+        List<ViewReservationDto> viewReservationDtoList = new ArrayList<>();
+        for (ViewReservation viewReservation : viewReservationList) {
+            ViewReservationDto viewReservationDto = ViewReservationDto.toDto(viewReservation);
+            viewReservationDtoList.add(viewReservationDto);
+        }
+        return viewReservationDtoList;
+    }
 }

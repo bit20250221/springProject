@@ -22,7 +22,10 @@ public enum AttractionMessage {
     IMG_SAVING_ERROR(-11, "이미지를 저장하던 중 오류가 발생하였습니다."),
     IMG_IS_EMPTY(-12, "삭제하려는 파일이 존재하지 않습니다."),
     UNEXPECTED_SAVING_ERROR(-13, "예상치 못한 오류가 발생하였습니다."),
-    IMG_NOT_FOUND(-14, "삭제하려는 이미지 정보을 찾을 수 없습니다.");
+    IMG_NOT_FOUND(-14, "삭제하려는 이미지 정보을 찾을 수 없습니다."),
+    NOT_SOMETHING_MANAGING(-15, "현재 계정이 관리하고 있는 관광지가 아닙니다."),
+    USER_NOT_FOUND(-16, "유저 정보를 불러오지 못 했습니다.");
+
 
     private final int id;
     private final String message;

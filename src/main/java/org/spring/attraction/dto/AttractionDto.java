@@ -3,6 +3,7 @@ package org.spring.attraction.dto;
 import lombok.*;
 import org.spring.attraction.ENUM.AttractionMessage;
 import org.spring.attraction.entity.Attraction;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ public class AttractionDto {
     private Long paymentTypeId;
     private MultipartFile img;
     private String imgUrl;
+    private UserDetails userDetails;
 
     public static AttractionDto toDto(Attraction attraction) {
         AttractionDto attractionDto = new AttractionDto();

@@ -35,6 +35,7 @@ public class AttractionService {
     private final AttractionImgRepository attractionImgRepository;
     private final AttractionImgService attractionImgService;
     private final ViewAttractionRepository viewAttractionRepository;
+    private final UserService userService;
 
     @Transactional
     public AttractionMessage save(AttractionDto attractionDto) {
@@ -71,6 +72,13 @@ public class AttractionService {
                 return AttractionMessage.getTypeById(-11);
             }
 
+        }
+
+        User user = userService.getUser(attractionDto.getUserDetails());
+        if(user != null) {
+            user.setAttraction(attraction);
+        }else{
+            return AttractionMessage.getTypeById(-16);
         }
 
         return AttractionMessage.getTypeById(1);
@@ -161,7 +169,7 @@ public class AttractionService {
             }
         }
 
-        if(attractionDto.getImg() != null) {
+        if(attractionDto.getImg() != null && !attractionDto.getImg().isEmpty()) {
 
             AttractionImg findAttractionImg = attractionImgRepository.findByAttractionId(attractionDto.getId()).orElse(null);
             if(findAttractionImg != null) {
