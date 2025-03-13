@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>관광지 예약 정보 화면</title>
+    <script src="/js/alert.js"></script>
+    <script src="/js/reservationLink.js"></script>
+    <script src="/js/reservationFormValidate.js" defer></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header(${userRole})"></div>
+<h2>관광지 예약 정보 화면</h2>
+<div>
+    <h3>관광지 예약 정보</h3>
+    <form action="/reservation/update" method="post" id="saveForm">
+        <label for="id">id</label><input type="text" id="id" name="id" th:value="${reservationDto.getId()}" readonly><br/>
+        <label for="name">이름</label><input type="text" id="name" name="name" th:value="${attractionDto.getName()}" readonly><br/>
+        <label for="price">가격</label><input type="number" id="price" name="price" maxlength="10" th:value="${attractionDto.getPrice()}" readonly><br/>
+        <label for="peplenum">인원수</label><input type="number" id="peplenum" name="peplenum" th:value="${reservationDto.getPeplenum()}" required><br/>
+        <p id="error-message-peplenum"></p>
+        <label for="reservedate">예약일자</label><input type="datetime-local" id="reservedate" name="reservedate" th:value="${reservationDto.getReservedate()}"><br/>
+        <p id="error-message-reservedate"></p>
+        <label for="paymentTypeId">결제방법</label>
+        <select id="paymentTypeId" name="paymentTypeId">
+            <option th:each="paymentTypeDto : ${paymentTypeDtoList}"
+                    th:value="${paymentTypeDto.getId()}"
+                    th:text="${paymentTypeDto.getType()}"
+                    th:selected="${paymentTypeDto.getId() == paymentDto.getPaymentType().getId()}">
+            </option>
+        </select><br/>
+        <button type="submit">수정하기</button>
+    </form>
+    <button onclick="reservationListLink()">관광지 예약 리스트 확인</button>
+</div>
+<script th:inline="javascript">
+    alertMessage([[${message}]])
+</script>
+</body>
+</html>

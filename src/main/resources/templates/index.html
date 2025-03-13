@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>인덱스</title>
+    <script src="/js/userLink.js" defer></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header(${userRole})"></div>
+<h2>인덱스 페이지</h2>
+<p th:text="${userLoginId}"></p>
+<div th:if="${userRole == null}">
+    <button onclick="userLoginLink()">로그인</button>
+    <button onclick="userSaveLink()">회원가입</button>
+</div>
+<div th:if="${userRole != null}">
+    <button onclick="userLogoutLink()">로그아웃</button>
+    <h3 th:text="${userRole}"></h3>
+</div>
+
+
+</body>
+</html>

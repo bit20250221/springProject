@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>관광지 상세</title>
+    <script src="/js/alert.js"></script>
+    <script src="/js/attractionLink.js"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header(${userRole})"></div>
+<h2>관광지 상세 페이지</h2>
+<form action="#">
+    <label for="id">id</label><input type="text" id="id" name="id" th:value="${attractionDto.getId()}" readonly><br/>
+    <div th:if="${attractionImgUrl}">
+        <h3>관광지 사진</h3>
+        <img th:src="${attractionImgUrl}" alt="이미지 없음" width="300">
+    </div>
+    <label for="name">이름</label><input type="text" id="name" name="name" th:value="${attractionDto.getName()}" readonly><br/>
+    <label for="price">가격</label><input type="number" id="price" name="price" maxlength="10" th:value="${attractionDto.getPrice()}" readonly><br/>
+    <label for="openTime">여는시간</label><input type="time" id="openTime" name="openTime" th:value="${attractionDto.getOpenTime()}" readonly><br/>
+    <label for="closeTime">닫는시간</label><input type="time" id="closeTime" name="closeTime" th:value="${attractionDto.getCloseTime()}" readonly><br/>
+    <label for="explanation">설명</label><textarea id="explanation" name="explanation" maxlength="100" readonly>[[${attractionDto.getExplanation()}]]</textarea><br/>
+    <label for="areaId">지역</label>
+    <select id="areaId" name="areaId" disabled>
+        <option th:each="areaDto : ${areaDtoList}" th:value="${areaDto.getId()}" th:text="|${areaDto.getCountry()} : ${areaDto.getCity()}|" th:selected="${areaDto.getId() == attractionDto.getAreaId()}"></option>
+    </select><br/>
+    <fieldset disabled>
+        <legend>관광지 구분을 선택하세요.</legend>
+        <div th:each="attractionTypeDto : ${attractionTypeDtoList}">
+            <label th:for="${attractionTypeDto.getId()}" th:text="${attractionTypeDto.getType()}"></label>
+            <input type="checkbox" th:id="${attractionTypeDto.getId()}" name="attractionTypeDtoIdList" th:value="${attractionTypeDto.getId()}"
+            th:checked="${selectedAttractionTypeIdList.contains(attractionTypeDto.getId())}"/>
+        </div>
+    </fieldset>
+</form>
+<button th:onclick="|attractionReservationLink(${attractionDto.getId()})|">예약하기</button>
+<button onclick="attractionListLink()">관광지 리스트 확인</button>
+
+<script th:inline="javascript">
+    alertMessage([[${message}]])
+</script>
+
+
+
+</body>
+</html>

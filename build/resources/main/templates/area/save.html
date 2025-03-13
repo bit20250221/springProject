@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>지역 등록</title>
+    <script src="/js/alert.js"></script>
+    <script src="/js/areaLink.js" defer></script>
+    <script src="/js/areaFormValidate.js" defer></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header(${userRole})"></div>
+  <h2>지역 등록 페이지</h2>
+  <form action="/area/save" method="post" id="saveForm">
+    <label for="country">국가</label><input type="text" id="country" name="country" maxlength="10" required><br/>
+      <p id="error-message-country"></p>
+    <label for="city">도시</label><input type="text" id="city" name="city" maxlength="10" required><br/>
+      <p id="error-message-city"></p>
+    <button type="submit">등록</button>
+  </form>
+  <button onclick="areaListLink()">지역 리스트 확인</button>
+
+<script th:inline="javascript">
+    alertMessage([[${message}]])
+</script>
+
+</body>
+</html>

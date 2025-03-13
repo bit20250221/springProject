@@ -4,8 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-
-import java.time.LocalDateTime;
+import org.spring.attraction.dto.AttractionDto;
+import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -30,10 +31,11 @@ public class Attraction{
     private int price;
 
     @Column(nullable = false)
-    private LocalDateTime openTime;
+
+    private LocalTime opentime;
 
     @Column(nullable = false)
-    private LocalDateTime closeTime;
+    private LocalTime closetime;
 
     @ColumnDefault("''")
     @Column(length = 500)
@@ -43,15 +45,32 @@ public class Attraction{
     @JoinColumn(name = "areaId", nullable = false)
     private Area area;
 
-    @OneToMany(mappedBy = "attraction")
-    private Set<AttractionTypeList> attractionsTypeLists;
+    @OneToMany(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AttractionTypeList> attractionsTypeLists = new HashSet<>();
 
-    @OneToMany(mappedBy = "attraction")
-    private Set<Board> Boards;
+    @OneToMany(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Board> Boards = new HashSet<>();
 
-    @OneToOne(mappedBy = "attraction")
+    @OneToOne(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
     private User user;
 
-    @OneToMany(mappedBy = "attraction")
-    private Set<Reservation> reservations;
+    @OneToMany(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Reservation> reservations = new HashSet<>();
+
+    @OneToOne(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
+    private AttractionImg attractionImg;
+
+    public static Attraction toAttractionEntity(AttractionDto attractionDto) {
+        Attraction attraction = new Attraction();
+        attraction.setId(attractionDto.getId());
+        attraction.setName(attractionDto.getName());
+        attraction.setPrice(attractionDto.getPrice());
+        attraction.setOpentime(attractionDto.getOpenTime());
+        attraction.setClosetime(attractionDto.getCloseTime());
+        attraction.setAvgrate(attractionDto.getAvgrate());
+        attraction.setExplanation(attractionDto.getExplanation());
+        return attraction;
+    }
+
+
 }

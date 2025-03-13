@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <script>
+        window.onload = function () {
+            if(window.location.search === "?error"){
+                alert("로그인 실패!");
+            };
+        }
+    </script>
+    <script src="/js/userLink.js" defer></script>
+    <script src="/js/alert.js"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header(${userRole})"></div>
+<h2>로그인</h2>
+<form method="post" action="/user/login">
+    <input type="text" name="userLoginId" placeholder="아이디"><br>
+    <input type="password" name="pass" placeholder="비밀번호"><br>
+    <button type="submit">로그인</button>
+</form>
+<button onclick="userSaveLink()">회원가입</button>
+
+<script th:inline="javascript">
+    alertMessage([[${message}]])
+</script>
+</body>
+</html>
+
+
+

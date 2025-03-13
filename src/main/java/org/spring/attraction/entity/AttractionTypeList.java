@@ -3,6 +3,7 @@ package org.spring.attraction.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.spring.attraction.dto.AttractionTypeListDto;
 
 @Entity
 @Table(name = "attractiontypelist")
@@ -21,4 +22,5 @@ public class AttractionTypeList {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "attractionTypeId", nullable = false)
     private AttractionType attractionType;
+
 }

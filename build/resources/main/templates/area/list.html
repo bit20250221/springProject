@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>지역 리스트</title>
+    <script src="/js/alert.js"></script>
+    <script src="/js/areaLink.js"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header(${userRole})"></div>
+<h2>지역 리스트</h2>
+<table>
+    <tr>
+        <th>id</th>
+        <th>국가</th>
+        <th>도시</th>
+        <th>상세</th>
+        <th>수정</th>
+        <th>삭제</th>
+    </tr>
+    <tr th:each="areaDto, index: ${areaDtoList}">
+        <td th:text="${areaDto.getId()}"></td>
+        <td th:text="${areaDto.getCountry()}"></td>
+        <td th:text="${areaDto.getCity()}"></td>
+        <td><button th:onclick="|areaDetailLink(${areaDto.getId()})|">상세</button></td>
+        <td><button th:onclick="|areaUpdateLink(${areaDto.getId()})|">수정</button></td>
+        <td><button th:onclick="|areaDeleteLink(${areaDto.getId()})|">삭제</button></td>
+    </tr>
+</table>
+<button onclick="areaSaveLink()">지역 등록</button>
+
+<script th:inline="javascript">
+    alertMessage([[${message}]])
+</script>
+</body>
+</html>

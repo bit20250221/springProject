@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <script>
+        function validatePasswords() {
+            const pass = document.registerForm.pass.value;
+            const confirmPass = document.registerForm.confirmPass.value;
+
+            if (pass !== confirmPass) {
+                alert("비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
+                return false; // 폼 제출 방지
+            }
+            return true;
+        }
+    </script>
+    <script src="/js/userLink.js"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header(${userRole})"></div>
+<form action="/user/save" method="post" name="registerForm" onsubmit="validatePasswords()">
+    아이디 : <input type="text" name="userLoginId" placeholder="아이디"/><br>
+    비밀번호 : <input type="password" name="pass" placeholder="비밀번호"/><br>
+    비밀번호 확인 : <input type="password" name="confirmPass" placeholder="비밀번호 확인"/><br>
+    생년월일 : <input type="date" name="birthDate" max="2025-01-01" min="1925-01-01" placeholder="생년월일"/><br>
+    제출 : <input type="submit"/>
+</form>
+<button onclick="userLoginLink()">로그인</button>
+</body>
+</html>
