@@ -1,54 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>관광지 상세</title>
-  <script src="/js/alert.js"></script>
-  <script src="/js/attractionLink.js" defer></script>
-  <script src="/js/attractionFormValidate.js" defer></script>
-  <script src="/js/attractionFunction.js" defer></script>
-  <link rel="stylesheet" href="/css/main.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>관광지 상세</title>
+    <script src="/js/alert.js"></script>
+    <script src="/js/attractionLink.js" defer></script>
+    <script src="/js/attractionFormValidate.js" defer></script>
+    <script src="/js/attractionFunction.js" defer></script>
+    <link rel="stylesheet" href="/css/main.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-<div th:replace="fragments/header :: header(${userRole})"></div>
-<h2 class="user-h2">관광지 상세 페이지</h2>
-<form action="/attraction/update" method="post" id="saveForm" enctype="multipart/form-data">
-  <label for="id">id</label><input type="text" id="id" name="id" th:value="${attractionDto.getId()}" readonly><br/>
-  <div th:if="${attractionImgUrl}">
-    <h3>관광지 사진</h3>
-    <img th:src="${attractionImgUrl}" alt="업로드된 이미지" width="300" id="previewImage">
-  </div>
-  <label for="name">이름</label><input type="text" id="name" name="name" th:value="${attractionDto.getName()}" maxlength="10" required><br/>
-  <p id="error-message-name"></p>
-  <label for="price">가격</label><input type="number" id="price" name="price" th:value="${attractionDto.getPrice()}" maxlength="10" required><br/>
-  <p id="error-message-price"></p>
-  <label for="openTime">여는시간</label><input type="time" id="openTime" name="openTime" th:value="${attractionDto.getOpenTime()}"><br/>
-  <label for="closeTime">닫는시간</label><input type="time" id="closeTime" name="closeTime" th:value="${attractionDto.getCloseTime()}"><br/>
-  <label for="explanation">설명</label><textarea id="explanation" name="explanation" maxlength="100">[[${attractionDto.getExplanation()}]]</textarea><br/>
-  <label for="areaId">지역</label>
-  <select id="areaId" name="areaId">
-    <option th:each="areaDto : ${areaDtoList}" th:value="${areaDto.getId()}" th:text="|${areaDto.getCountry()} : ${areaDto.getCity()}|" th:selected="${areaDto.getId() == attractionDto.getAreaId()}"></option>
-  </select><br/>
-  <fieldset>
-    <legend>관광지 구분을 선택하세요.</legend>
-    <div th:each="attractionTypeDto : ${attractionTypeDtoList}">
-      <label th:for="${attractionTypeDto.getId()}" th:text="${attractionTypeDto.getType()}"></label>
-      <input type="checkbox" th:id="${attractionTypeDto.getId()}" name="attractionTypeDtoIdList" th:value="${attractionTypeDto.getId()}"
-             th:checked="${selectedAttractionTypeIdList.contains(attractionTypeDto.getId())}"/>
-    </div>
-  </fieldset>
-  <p id="error-message-type"></p>
-  <label for="img">사진</label><input type="file" id="img" name="img"><br/>
-  <button type="submit">수정</button>
-</form>
-<button onclick="attractionListLink()">관광지 리스트 확인</button>
-<div th:replace="fragments/footer :: footer"></div>
-<script th:inline="javascript">
-  alertMessage([[${message}]])
-</script>
+    <div th:replace="fragments/header :: header(${userRole})"></div>
 
+    <h2 class="user-h2">관광지 상세 페이지</h2>
 
+    <form action="/attraction/update" method="post" id="saveForm" enctype="multipart/form-data">
+        <label for="id">id</label><input type="text" id="id" name="id" th:value="${attractionDto.getId()}" readonly><br/>
+        <div th:if="${attractionImgUrl}">
+            <h3>관광지 사진</h3>
+            <img th:src="${attractionImgUrl}" alt="업로드된 이미지" width="300" id="previewImage">
+        </div>
 
+        <label for="name">이름</label><input type="text" id="name" name="name" th:value="${attractionDto.getName()}" maxlength="10" required><br/>
+        <p id="error-message-name"></p>
+
+        <label for="price">가격</label><input type="number" id="price" name="price" th:value="${attractionDto.getPrice()}" maxlength="10" required><br/>
+        <p id="error-message-price"></p>
+
+        <label for="openTime">여는시간</label><input type="time" id="openTime" name="openTime" th:value="${attractionDto.getOpenTime()}"><br/>
+        <label for="closeTime">닫는시간</label><input type="time" id="closeTime" name="closeTime" th:value="${attractionDto.getCloseTime()}"><br/>
+
+        <label for="explanation">설명</label><textarea id="explanation" name="explanation" maxlength="100">[[${attractionDto.getExplanation()}]]</textarea><br/>
+
+        <label for="areaId">지역</label>
+        <select id="areaId" name="areaId">
+            <option th:each="areaDto : ${areaDtoList}" th:value="${areaDto.getId()}" th:text="|${areaDto.getCountry()} : ${areaDto.getCity()}|" th:selected="${areaDto.getId() == attractionDto.getAreaId()}"></option>
+        </select><br/>
+
+        <fieldset>
+            <legend>관광지 구분을 선택하세요.</legend>
+            <div th:each="attractionTypeDto : ${attractionTypeDtoList}">
+                <label th:for="${attractionTypeDto.getId()}" th:text="${attractionTypeDto.getType()}"></label>
+                <input type="checkbox" th:id="${attractionTypeDto.getId()}" name="attractionTypeDtoIdList" th:value="${attractionTypeDto.getId()}"
+                       th:checked="${selectedAttractionTypeIdList.contains(attractionTypeDto.getId())}"/>
+          </div>
+        </fieldset>
+        <p id="error-message-type"></p>
+
+        <label for="img">사진</label><input type="file" id="img" name="img"><br/>
+
+        <button type="submit">수정</button>
+    </form>
+
+    <button onclick="attractionListLink()">관광지 리스트 확인</button>
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:inline="javascript">alertMessage([[${message}]])</script>
 </body>
 </html>
