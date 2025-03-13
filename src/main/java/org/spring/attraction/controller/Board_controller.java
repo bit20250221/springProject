@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
@@ -134,7 +135,7 @@ public class Board_controller {
         return "board/boardList";
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PermitAll
     @GetMapping("/normal")
     public String normal(Model model,
                          @RequestParam(name = "pageAmount",defaultValue = "10") int pageAmount,
@@ -233,18 +234,26 @@ public class Board_controller {
 
     @GetMapping("/getBoard/{id}")
     public String getBoard(Model model,
-                           @PathVariable("id") Long id, Principal principal){
-
+                           @PathVariable("id") Long id, Principal principal, RedirectAttributes redirectAttributes) {
+        String message;
         Board_dto OneBoard=boardService.getBoard(id);
         String Auth=SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority();
         UserDTO OneUser=boardSecurityService.getUser();
         //만약 탭이 문의, 신고인데, 작성자 또는 해당 관광지가 아니면 해당 화면을 보면 안된다.
         String OneTab=OneBoard.getTab().toString();
-        if((OneTab.compareTo("신고")==0) &&(!OneBoard.getUser_login_Id().equals(principal.getName())
+        if((OneTab.compareTo("문의")==0 || OneTab.compareTo("신고")==0) && (principal==null)){
+            message="아이디 " +OneBoard.getBoard_id()+ " 문의, 신고 게시물에 비로그인 사용자 접근 차단";
+            log.info(message);
+            redirectAttributes.addFlashAttribute("message", message);
+            return "redirect:/";
+        }
+        if((OneTab.compareTo("신고")==0)&&(principal!=null) &&(!OneBoard.getUser_login_Id().equals(principal.getName())
                 && Auth.compareTo("manager")!=0)){
+            message=principal.getName() + " User is Not Authenticated about this report";
             log.info(Auth);
-            log.info(principal.getName() + " User is Not Authenticated about this report");
-            return "redirect:/board/list";
+            log.info(message);
+            redirectAttributes.addFlashAttribute("message",message);
+            return "redirect:/board/report";
         }
 
         //문의면 문의 관리자, 작성자 또는 문의의 대상이 되는 관광지만 봐야한다
@@ -254,8 +263,10 @@ public class Board_controller {
                 !(Auth.compareTo("manager") == 0))
         {
             log.info(Auth);
-            log.info(principal.getName() + " User is Not Authenticated about this inquiry");
-            return "redirect:/board/list";
+            message=principal.getName() + " User is Not Authenticated about this inquiry";
+            log.info(message);
+            redirectAttributes.addFlashAttribute("message",message);
+            return "redirect:/board/inquiry";
         }
 
         if(OneBoard!=null){
@@ -263,6 +274,9 @@ public class Board_controller {
             model.addAttribute("board",OneBoard);
         }else{
             model.addAttribute("result","NONE");
+            message="NONE EXIST BOARD";
+            redirectAttributes.addFlashAttribute("message",message);
+            return "redirect:/board/list";
         }
 
         return "board/getBoard";
@@ -275,9 +289,10 @@ public class Board_controller {
     */
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/insertBoard")
-    public String InsertBoardView(Model model, Board_dto boardDto, HttpSession session, String tab, Principal principal){
+    public String InsertBoardView(Model model, Board_dto boardDto, HttpSession session, String tab, Principal principal,RedirectAttributes redirectAttributes){
 
         //탭과 사용자에 따라 다르게 적용
+        String message;
         String Auth=SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority();
         session.setAttribute("orgTab",tab);
         Board_dto board=new Board_dto();
@@ -285,8 +300,9 @@ public class Board_controller {
         if(tab.compareTo("공지")==0 && Auth.compareTo("manager")!=0){
             log.info("{} User is Not Authenticated", principal.getName());
             model.addAttribute("authority","권한이 없습니다");
-            log.info("권한 부족!!!");
-            return "redirect:/board/list";
+            message="Only Manager can create announcements";
+            redirectAttributes.addFlashAttribute("message",message);
+            return "redirect:/board/announce";
         }else{
             log.info("게시글 작성 화면 출력!!!");
             model.addAttribute("boardDto",board);
@@ -304,7 +320,9 @@ public class Board_controller {
                 case "일반","공지","신고","리뷰","문의":
                     return "board/insertBoardForm";
                 default:
-                    return "board/error";
+                    message="NONE EXIST TAB ABOUT INSERT FORM";
+                    redirectAttributes.addFlashAttribute("message",message);
+                    return "redirect:/board/error";
 
             }
         }
@@ -313,17 +331,22 @@ public class Board_controller {
     //따로 유저 DTO, 관광지 DTO 받아오는 로직 필요, 검증 코드 필요(회원의 아이디, 탭, 파일)
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/insertBoard")
-    public String InsertBoardAction(Board_dto dto, HttpSession session, Principal principal){
+    public String InsertBoardAction(Board_dto dto, HttpSession session, Principal principal,RedirectAttributes redirectAttributes){
         //만약 로그인된 사용자와 작성자 아이디 다르면 취소(사용자 아이디 조작 방지)(스프링 시큐리티 활용)
+        String message;
         if(dto.getUser_login_Id().compareTo(principal.getName())!=0){
             session.removeAttribute("tempImages");
             session.removeAttribute("orgTab");
+            message="작성자 정보와 로그인된 사용자 아이디가 다릅니다.";
+            redirectAttributes.addFlashAttribute("message",message);
             return "redirect:/board/error";
         }
         //제출된 탭과 처음 입력하려는 탭을 비교할 필요 있음(탭 조작 방지)
         if(session.getAttribute("orgTab").toString().compareTo(dto.getTab())!=0){
             session.removeAttribute("tempImages");
             session.removeAttribute("orgTab");
+            message="등록된 탭 정보와 세션 내의 탭 정보가 다릅니다.";
+            redirectAttributes.addFlashAttribute("message",message);
             return "redirect:/board/error";
         }
 
@@ -341,7 +364,9 @@ public class Board_controller {
                 if (attractionService.findById(attraction_id) == null) {
                     session.removeAttribute("tempImages");
                     session.removeAttribute("orgTab");
-                    return "redirect:/board/error";
+                    message="등록된 관광지 정보가 서버상에 존재하지 않습니다.";
+                    redirectAttributes.addFlashAttribute("message",message);
+                    return "redirect:/board/insertBoard";
                 }
                 dto.setAttraction_id(attraction_id);
             }
@@ -361,18 +386,23 @@ public class Board_controller {
                     if(!boardImageService.saveImageFile(writeBoard,image,dtoimages.get(i))){
                         log.info("파일 정식 등록 메소드 실행중 오류 발생");
                         session.removeAttribute("tempImages");
-
-                        return "redirect:/board/list";
+                        message="이미지 등록 중 오류 발생";
+                        redirectAttributes.addFlashAttribute("message", message);
+                        return "redirect:/board/insertBoard";
                     }
                     i++;
                 }
             }
             session.removeAttribute("tempImages");
             session.removeAttribute("orgTab");
-            return "redirect:/board/list";
+            message=writeBoard.getId()+" 번 게시글 등록 완료";
+            redirectAttributes.addFlashAttribute("message",message);
+            return "redirect:/board/getBoard/"+writeBoard.getId();
         }else{
             session.removeAttribute("tempImages");
             session.removeAttribute("orgTab");
+            message="게시글 등록 실패";
+            redirectAttributes.addFlashAttribute("message",message);
             return "redirect:/board/insertBoard";
         }
     }
@@ -381,20 +411,28 @@ public class Board_controller {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/updateBoard/{id}")
     public String updateBoardView(Model model,
-                                  @PathVariable("id") Long id, Board_dto boardDTO, HttpSession session, Principal principal){
+                                  @PathVariable("id") Long id, Board_dto boardDTO, HttpSession session, Principal principal, RedirectAttributes redirectAttributes){
         Board_dto UpdateBoard=boardService.getBoard(id);
-
+        String message;
         UserDTO user=boardSecurityService.getUser();
         log.info("this is User info: \n id: {}, loginid: {}, password: {}, birthdate: {}, usertype: {}, grade: {}",
               user.getId(), user.getUserLoginId(), user.getPass(), user.getBirthDate(), user.getUserType(), user.getGrade());
+
+        if(UpdateBoard==null){
+            log.info("글이 존재하지 않음");
+            model.addAttribute("result","NONE");
+            message="NONE BOARD";
+            redirectAttributes.addFlashAttribute("message",message);
+            return "redirect:/board/error";
+        }
 
         //만약 로그인된 사용자와 작성자 아이디가 일치하지 않는다면 (사용자 아이디 조작 방지)(스프링 시큐리티 활용));
         if(UpdateBoard.getUser_login_Id().compareTo(user.getUserLoginId())!=0
             ||UpdateBoard.getUser_id() != user.getId())
         {
-
-            log.info("{} User is Not Authenticated", principal.getName());
-
+            message= principal.getName()+" User is Not Authenticated";
+            log.info(message);
+            redirectAttributes.addFlashAttribute("message",message);
             return "redirect:/board/getBoard/"+UpdateBoard.getBoard_id();
         }
 
@@ -415,10 +453,6 @@ public class Board_controller {
             model.addAttribute("result","NORMAL");
             model.addAttribute("board",UpdateBoard);
             model.addAttribute("tab",tab);
-        }else{
-            log.info("글이 존재하지 않음");
-            model.addAttribute("result","NONE");
-            return "board/error";
         }
         return "board/updateBoard";
     }
@@ -426,14 +460,16 @@ public class Board_controller {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/updateBoard/{id}")
-    public String updateBoardAction(@PathVariable("id") Long id, Board_dto boardDTO, HttpSession session, Principal principal){
+    public String updateBoardAction(@PathVariable("id") Long id, Board_dto boardDTO, HttpSession session, Principal principal,RedirectAttributes redirectAttributes){
         log.info(id+" board info: {},{},{},{},{},{},{},{},{}",
                 boardDTO.getBoard_id(), boardDTO.getTab(), boardDTO.getTitle(),
                 boardDTO.getContent(), boardDTO.getAttraction_id(), boardDTO.getUser_id(),
                 boardDTO.getRate(), boardDTO.getCreartedate(), boardDTO.getUpdatedate());
-
+        String message;
         if(boardDTO.getUser_login_Id().compareTo(principal.getName())!=0){
-            log.info("해당 글 작성자가 아닙니다.");
+            message="해당 글 작성자가 아닙니다.";
+            log.info(message);
+            redirectAttributes.addFlashAttribute("message",message);
             return "redirect:/board/error";
         }
         Board_dto UpdateBoard=boardService.updateBoard(boardDTO);
@@ -459,19 +495,27 @@ public class Board_controller {
         }
         session.removeAttribute("UpdateImages");
         session.removeAttribute("CurrentImage");
-        log.info("아이디 "+boardDTO.getBoard_id()+" 글 수정 완료");
+        message="아이디 "+boardDTO.getBoard_id()+" 글 수정 완료";
+        log.info(message);
+        redirectAttributes.addFlashAttribute("message", message);
         return "redirect:/board/getBoard/"+boardDTO.getBoard_id();
     }
 
     //글 작성자만 삭제하도록 필요
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/deleteBoard/{id}")
-    public String deleteBoard(@PathVariable("id") Long id, Principal principal){
+    public String deleteBoard(@PathVariable("id") Long id, Principal principal, RedirectAttributes redirectAttributes){
         String CurrentUser=principal.getName();
-
-        boardService.deleteBoard(id);
-
-        log.info(CurrentUser+" 유저의 아이디 "+id+" 글 삭제 완료");
-        return "redirect:/board/list";
+        String message;
+        if(boardService.deleteBoard(id)) {
+            message = "아이디 " + CurrentUser + "의 " + id + "번 글 삭제 완료";
+            log.info(message);
+            redirectAttributes.addFlashAttribute("message", message);
+            return "redirect:/board/list";
+        }else{
+            message="아이디 " + CurrentUser + "의 " + id + "번 글 삭제 실패";
+            redirectAttributes.addFlashAttribute("message", message);
+            return "redirect:/board/getBoard/"+id;
+        }
     }
 }

@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>오류 화면</title>
 </head>
 <body>
+<input type="hidden" id="message"  th:value="${message}" />
     <h1>Error: 404 Not Found</h1>
     <p>The requested URL was not found on this server.</p>
     <a th:href="@{/board/list}">게시판 홈으로 돌아가기</a>

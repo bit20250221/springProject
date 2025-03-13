@@ -1,3 +1,12 @@
+const alertMessage = (message) => {
+    if(message) {
+        alert(message);
+    }
+}
+  document.addEventListener("DOMContentLoaded", function() {
+      const flashMessageValue = document.getElementById("message").value;
+      alertMessage(flashMessageValue);
+  });
     function writeForm(){
         var tabvalue = document.querySelector('.write_type').value;
         window.location.href="/board/insertBoard?tab="+tabvalue;

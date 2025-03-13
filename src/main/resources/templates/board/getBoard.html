@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title th:text="${board.title}"></title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/getBoard.css}">
 </head>
 <body>
+<input type="hidden" id="message" th:value="${message}" />
     <div class="top_button_list">
         <button onclick="back()">목록</button>
         <button onclick="deleteboard()">삭제하기</button>

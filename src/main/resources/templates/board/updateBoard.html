@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/updateBoard.css}">
 </head>
 <body>
+<input type="hidden" id="message" th:value="${message}" />
 <form class="submitForm" th:action="@{/board/updateBoard/{id}(id=${board.board_id})}" method="post" th:object="${boardDto}"
       enctype="multipart/form-data">
     <input type="hidden" class="board_id" name="board_id" th:value="${board.board_id}">

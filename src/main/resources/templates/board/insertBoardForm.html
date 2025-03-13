@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/insertBoardForm.css}">
 </head>
 <body>
+<input type="hidden" id="message" th:value="${message}" />
 <!-- 탭에 따라 다양한 폼이 출력되고 그거에 따라 스타일 시트를 적용-->
 <div class="normal_form" th:if="${tab =='일반'}">
     <form th:object="${boardDto}" action="/board/insertBoard" method="post" enctype="multipart/form-data">

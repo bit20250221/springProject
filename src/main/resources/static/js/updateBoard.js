@@ -1,3 +1,13 @@
+const alertMessage = (message) => {
+    if(message) {
+        alert(message);
+    }
+}
+  document.addEventListener("DOMContentLoaded", function() {
+      const flashMessageValue = document.getElementById("message").value;
+      alertMessage(flashMessageValue);
+  });
+
     var uploadTempBtn = document.querySelector('.updateTempUpload');
     var uploadtemp = document.querySelector('.imageUpload');
     var deleteBtn = document.querySelector('.deleteBtn');

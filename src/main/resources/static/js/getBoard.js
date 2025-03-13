@@ -1,4 +1,12 @@
-
+const alertMessage = (message) => {
+    if(message) {
+        alert(message);
+    }
+}
+  document.addEventListener("DOMContentLoaded", function() {
+      const flashMessageValue = document.getElementById("message").value;
+      alertMessage(flashMessageValue);
+  });
 
     function back() {
         location.href="/board/list";

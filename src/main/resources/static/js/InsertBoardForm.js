@@ -1,3 +1,12 @@
+const alertMessage = (message) => {
+    if(message) {
+        alert(message);
+    }
+}
+  document.addEventListener("DOMContentLoaded", function() {
+      const flashMessageValue = document.getElementById("message").value;
+      alertMessage(flashMessageValue);
+  });
     var fileInput=document.querySelector('.board_image');
     var ImageFileDataList=document.querySelector('.boardImageList');
     var fileTempUploadButton = document.querySelector('.uploadBtn');
