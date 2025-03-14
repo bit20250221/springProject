@@ -21,6 +21,15 @@ public class UserDto {
     private Grade grade;
     private Long attraction;
 
+    public UserDto(Long id, String userLoginId, LocalDate birthDate, UserType userType, Grade grade, Long attraction) {
+        this.id = id;
+        this.userLoginId = userLoginId;
+        this.birthDate = birthDate;
+        this.userType = userType;
+        this.grade = grade;
+        this.attraction = attraction;
+    }
+
     public static UserDto fromUser(User user) {
         UserDto UserDto = new UserDto();
         UserDto.setId(user.getId());

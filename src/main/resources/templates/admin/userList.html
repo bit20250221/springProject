@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>전체 회원</title>
+</head>
+<body>
+<h2>유저 리스트</h2>
+<a href="save">유저 생성</a>
+<table>
+    <thead>
+    <tr>
+        <th>순번</th>
+        <th>유저id</th>
+        <th>생년월일</th>
+        <th>등급</th>
+        <th>권한</th>
+        <th>관광지id</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${userList}">
+        <td><a th:text="${user.id}" th:href="@{|/admin/user/${user.id}|}"></a></td>
+        <td th:text="${user.userLoginId}"></td>
+        <td th:text="${user.birthDate}"></td>
+        <td th:text="${user.grade}"></td>
+        <td th:text="${user.userType}"></td>
+        <td th:text="${user.attraction != null ? user.attraction : 'X'}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- 첫번째 페이지로 이동 -->
+<!-- /admin/user/?page=1 -->
+<a th:href="@{/admin/user/(page=1)}">처음</a>
+<!-- 이전 링크 활성화 비활성화 -->
+<!-- userList.getNumber() 사용자:2페이지 getNumber()=1 -->
+<a th:href="${userList.first} ? '#' : @{/admin/user/(page=${userList.number})}">이전</a>
+
+<!-- 페이지 번호 링크(현재 페이지는 숫자만)
+        for(int page=startPage; page<=endPage; page++)-->
+<span th:each="page: ${#numbers.sequence(startPage, endPage)}">
+<!-- 현재페이지는 링크 없이 숫자만 -->
+    <span th:if="${page != 0}">
+        <span th:if="${page == userList.number + 1}" th:text="${page}"></span>
+        <!-- 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 -->
+        <span th:unless="${page == userList.number + 1}">
+            <a th:href="@{/admin/user/(page=${page})}" th:text="${page}"></a>
+        </span>
+    </span>
+</span>
+
+<!-- 다음 링크 활성화 비활성화
+    사용자: 2페이지, getNumber: 1, 3페이지-->
+<a th:href="${userList.last} ? '#' : @{/admin/user/(page=${userList.number + 2})}">다음</a>
+<!-- 마지막 페이지로 이동 -->
+<a th:href="@{/admin/user/(page=${userList.totalPages})}">끝</a>
+
+</body>
+</html>

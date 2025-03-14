@@ -28,7 +28,10 @@
             <a class="nav-link" href="/area/list">관광지 지역 관리</a>
           </li>
           <li class="nav-item" th:if="${userRole == 'manager'}">
-            <a class="nav-link" href="/admin">어드민 페이지</a>
+            <a class="nav-link" href="/admin/user/">전체 유저 조회</a>
+          </li>
+          <li th:if="${userRole == 'manager' || userRole == 'attraction'}">
+            <a class="nav-link" href="/attraction/save">관광지 등록</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuLink" role="button" aria-expanded="false">

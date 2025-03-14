@@ -44,7 +44,7 @@ public class UserController {
 
         // View로 전달
         model.addAttribute("user", userDTO);
-        return "myPage";
+        return "/user/myPage";
     }
 
     @GetMapping("/save")

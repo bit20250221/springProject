@@ -23,6 +23,9 @@
             <th>게시글 제목</th>
             <th>회원의 아이디</th>
             <th>댓글 수</th>
+            <div th:if="${userRole == 'manager'}">
+                <button onclick="deletePost(${post.id})">삭제</button>
+            </div>
         </tr>
         </thead>
         <tbody>
