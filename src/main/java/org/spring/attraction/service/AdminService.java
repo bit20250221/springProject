@@ -1,6 +1,6 @@
 package org.spring.attraction.service;
 
-import org.spring.attraction.dto.user.UserDTO;
+import org.spring.attraction.dto.UserDto;
 import org.spring.attraction.entity.User;
 import org.spring.attraction.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +14,12 @@ public class AdminService {
     private UserRepository userRepository;
 
     // 전체 유저 조회
-    public List<UserDTO> getAllUsers() {
-        return userRepository.findAll().stream().map(UserDTO::fromUser).toList();
+    public List<UserDto> getAllUsers() {
+        return userRepository.findAll().stream().map(UserDto::fromUser).toList();
     }
 
     // 유저 정보 업데이트
-    public UserDTO updateUser(UserDTO userDTO) {
+    public UserDto updateUser(UserDto userDTO) {
         User existingUser = userRepository.findById(userDTO.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 

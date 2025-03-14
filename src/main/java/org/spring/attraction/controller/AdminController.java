@@ -1,7 +1,7 @@
 package org.spring.attraction.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.spring.attraction.dto.user.UserDTO;
+import org.spring.attraction.dto.UserDto;
 import org.spring.attraction.service.AdminService;
 import org.spring.attraction.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -31,7 +31,7 @@ public class AdminController {
     // 전체 유저 목록 조회
     @GetMapping("/user/")
     public String userListForm(Model model){
-        List<UserDTO> viewUserDTOList = adminService.getAllUsers();
+        List<UserDto> viewUserDTOList = adminService.getAllUsers();
         model.addAttribute("userList", viewUserDTOList);
         return "userList";
     }
@@ -39,8 +39,8 @@ public class AdminController {
     // 특정 유저 조회
     @GetMapping("/user/{id}")
     public String findById(@PathVariable Long id, Model model) {
-        UserDTO userDTO = userService.getUserById(id);  // ID로 조회
-        model.addAttribute("user", userDTO);
+        UserDto userDto = userService.getUserById(id);  // ID로 조회
+        model.addAttribute("user", userDto);
         return "userDetail";
     }
 
@@ -48,16 +48,16 @@ public class AdminController {
     // 수정 페이지로 이동 (ID 사용)
     @GetMapping("/user/update/{id}")
     public String updateForm(@PathVariable Long id, Model model) {
-        UserDTO userDTO = userService.getUserById(id);  // ID로 조회
-        model.addAttribute("user", userDTO);
+        UserDto userDto = userService.getUserById(id);  // ID로 조회
+        model.addAttribute("user", userDto);
         return "userUpdate";
     }
 
     // 수정 처리 (ID 사용)
     @PostMapping("/user/update")
-    public String updateUser(Long id, @ModelAttribute("user") UserDTO userDTO) {
-        userDTO.setId(id);  // ID 설정
-        adminService.updateUser(userDTO);
+    public String updateUser(Long id, @ModelAttribute("user") UserDto userDto) {
+        userDto.setId(id);  // ID 설정
+        adminService.updateUser(userDto);
         return "redirect:/admin/user/" + id;
     }
 

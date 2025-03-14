@@ -5,11 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.spring.attraction.dto.AttractionDto;
-import org.spring.attraction.dto.BoardImage_dto;
-import org.spring.attraction.dto.Board_dto;
-import org.spring.attraction.dto.Comment_dto;
-import org.spring.attraction.dto.user.UserDTO;
+import org.spring.attraction.dto.*;
 import org.spring.attraction.entity.Attraction;
 import org.spring.attraction.entity.Board;
 import org.spring.attraction.entity.User;
@@ -252,7 +248,7 @@ public class Board_controller {
         String Auth=SecurityContextHolder.getContext()
                 .getAuthentication().getAuthorities()
                 .iterator().next().getAuthority();
-        UserDTO OneUser=boardSecurityService.getUser();
+        UserDto OneUser=boardSecurityService.getUser();
 
         //만약 탭이 문의, 신고인데, 작성자 또는 해당 관광지가 아니면 해당 화면을 보면 안된다.
         if((OneTab.compareTo("문의")==0 || OneTab.compareTo("신고")==0) && (principal==null)){
@@ -347,7 +343,7 @@ public class Board_controller {
 
             //아래 두줄은 스프링 시큐리티에서 값을 가져온다
             model.addAttribute("writer",principal.getName());
-            UserDTO user=boardSecurityService.getUser();
+            UserDto user=boardSecurityService.getUser();
             model.addAttribute("user_id",user.getId());
             switch (tab){
                 case "일반","공지","신고","리뷰","문의":
@@ -490,7 +486,7 @@ public class Board_controller {
                                   @PathVariable("id") Long id, Board_dto boardDTO, HttpSession session, Principal principal, RedirectAttributes redirectAttributes){
         Board_dto UpdateBoard=boardService.getBoard(id);
         String message;
-        UserDTO user=boardSecurityService.getUser();
+        UserDto user=boardSecurityService.getUser();
         log.info("this is User info: \n id: {}, loginid: {}, password: {}, birthdate: {}, usertype: {}, grade: {}",
               user.getId(), user.getUserLoginId(), user.getPass(), user.getBirthDate(), user.getUserType(), user.getGrade());
 

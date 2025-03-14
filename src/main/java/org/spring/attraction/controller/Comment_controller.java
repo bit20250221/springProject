@@ -3,7 +3,7 @@ package org.spring.attraction.controller;
 import lombok.RequiredArgsConstructor;
 import org.spring.attraction.dto.Board_dto;
 import org.spring.attraction.dto.Comment_dto;
-import org.spring.attraction.dto.user.CustomUserDetails;
+import org.spring.attraction.dto.CustomUserDetails;
 import org.spring.attraction.entity.User;
 import org.spring.attraction.service.Board_service;
 import org.spring.attraction.service.Comment_service;

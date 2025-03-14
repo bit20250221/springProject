@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.spring.attraction.dto.BoardImage_dto;
 import org.spring.attraction.dto.Board_dto;
-import org.spring.attraction.dto.user.UserDTO;
+import org.spring.attraction.dto.UserDto;
 import org.spring.attraction.service.BoardImage_service;
 import org.spring.attraction.service.Board_SecurityService;
 import org.spring.attraction.service.Board_service;
@@ -82,7 +82,7 @@ public class BoardImage_controller {
     @ResponseBody
     public ResponseEntity<?> saveImage(@RequestParam("boardId") Long boardId, MultipartFile[] images, HttpSession session) {
         log.info("게시글 내 새로운 이미지 임시 등록");
-        UserDTO userDto=boardSecurityService.getUser();
+        UserDto userDto=boardSecurityService.getUser();
         Map<String, Object> jsonMeta = new HashMap<>();
         Board_dto boardDto=boardService.getBoard(boardId);
 
@@ -220,7 +220,7 @@ public class BoardImage_controller {
                                                               @RequestParam("ImageUUIDName") String ImageUUIDName) {
         Map<String, Object> response = new HashMap<>();
         Board_dto boardDto=boardService.getBoard(boardId);
-        UserDTO userDTO=boardSecurityService.getUser();
+        UserDto userDTO=boardSecurityService.getUser();
         if(boardDto.getUser_login_Id().compareTo(userDTO.getUserLoginId())!=0){
             response.put("message", "Not Authorized");
             return ResponseEntity.ok(response);
