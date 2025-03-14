@@ -123,6 +123,26 @@ public class Board_service {
         }
     }
 
+    //관광지 별 리뷰 검색(리뷰 게시판에서만 이용)
+    public Page<Board_dto> getSearchReviewBoard(String AttractionName, int pageNum, int pageAmount){
+        List<Sort.Order> sorts=new ArrayList<>();
+        sorts.add(Sort.Order.desc("id"));
+        Pageable pageable= PageRequest.of(pageNum,pageAmount,Sort.by(sorts));
+
+        Page<Board> entityPage;
+        if(!AttractionName.isEmpty()) {
+            entityPage=repository.findReviewAttraction(AttractionName, pageable);
+        }else{
+            entityPage=repository.findByTab(Tab.valueOf("리뷰"),pageable);
+        }
+        return Objects.requireNonNull(entityPage).map(
+                entity-> Board_dto.to_dto_2(
+                        entity,
+                        entity.getUser().getId(),
+                        entity.getAttraction() != null ? entity.getAttraction().getId() : null)
+        );
+    }
+
     //게시판 검색(페이징 처리 포함)
     @Transactional
     public Page<Board_dto> getSearchPageBoard(String tab,  String type, String keyword, int pageNum, int pageAmount){

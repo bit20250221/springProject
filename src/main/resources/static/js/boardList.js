@@ -93,3 +93,14 @@ const alertMessage = (message) => {
         window.location.href="/board/report?page=0&pageAmount=10&type="+typeValue+"&Keyword="+keywordValue;
     });
     }
+
+    //관광지 별 검색 기능
+    var subsearchbtn6=document.querySelector('.subsearch_button_6');
+    if(subsearchbtn6){
+        subsearchbtn6.addEventListener('click', function(){
+        var typeValue = 'attraction';
+        var keywordValue = document.querySelector('.search_keyword_2').value;
+
+        window.location.href="/board/review?page=0&pageAmount=10&type="+typeValue+"&Keyword="+keywordValue;
+        });
+    }

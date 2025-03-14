@@ -48,6 +48,8 @@ public interface Board_repository extends JpaRepository<Board,Long> {
     @Query(value = "select b from Board b Where b.tab = :tab and b.user.userLoginId like concat('%', :keyword, '%')")
     Page<Board> boardWriterSearch(@Param("tab") Tab tab, @Param("keyword") String keyword, Pageable pageable);
 
+    @Query(value = "select b from Board b Where b.tab = '리뷰' and b.attraction.name like concat('%', :keyword, '%')")
+    Page<Board> findReviewAttraction(@Param("keyword") String keyword, Pageable pageable);
 
     //페이징 처리가 포함된 작성자 아이디, 제목, 내용에 따른 검색 쿼리
     Page<Board> findByTitleContaining(String keyword, Pageable pageable);
