@@ -12,13 +12,6 @@
 <body>
 <div th:replace="fragments/header :: header(${userRole})"></div>
 <input type="hidden" id="message" th:value="${message}" />
-<!--홈페이지 위쪽에는 관광지 페이지와 예약할 수 있는 메뉴를 표시-->
-<div class="top">
-    <a></a>
-    <a></a>
-    <a></a>
-
-</div>
 
 <div th:if="${method eq 'Announce'}" class="board_announce">
 

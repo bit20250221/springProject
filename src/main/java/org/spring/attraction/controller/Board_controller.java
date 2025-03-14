@@ -62,14 +62,12 @@ public class Board_controller {
                            @RequestParam(name = "Keyword",defaultValue = "") String Keyword)
     {
         String tab="공지";
-
         Page<Board_dto> boardPageList=boardService.getSearchPageBoard(tab,type,Keyword,page,pageAmount);
         Integer boardSize=boardPageList.getSize();
 
-
+        model.addAttribute("method","Announce");
+        model.addAttribute("result","NORMAL");
         if(!boardPageList.isEmpty()) {
-            model.addAttribute("method","Announce");
-            model.addAttribute("result","NORMAL");
             model.addAttribute("pageNum",page);
             model.addAttribute("pageAmount",pageAmount);
             model.addAttribute("boardList", boardPageList);
@@ -94,9 +92,9 @@ public class Board_controller {
         Page<Board_dto> boardPageList=boardService.getSearchPageBoard(tab,type,Keyword,page,pageAmount);
         Integer boardSize=boardPageList.getSize();
 
+        model.addAttribute("method","Inquiry");
+        model.addAttribute("result","NORMAL");
         if(!boardPageList.isEmpty()) {
-            model.addAttribute("method","Inquiry");
-            model.addAttribute("result","NORMAL");
             model.addAttribute("pageNum",page);
             model.addAttribute("pageAmount",pageAmount);
             model.addAttribute("boardList", boardPageList);
@@ -122,9 +120,9 @@ public class Board_controller {
         Page<Board_dto> boardPageList=boardService.getSearchPageBoard(tab,type,Keyword,page,pageAmount);
         Integer boardSize=boardPageList.getSize();
 
+        model.addAttribute("method","Review");
+        model.addAttribute("result","NORMAL");
         if(!boardPageList.isEmpty()) {
-            model.addAttribute("method","Review");
-            model.addAttribute("result","NORMAL");
             model.addAttribute("pageNum",page);
             model.addAttribute("pageAmount",pageAmount);
             model.addAttribute("boardList", boardPageList);
@@ -150,9 +148,9 @@ public class Board_controller {
         Page<Board_dto> boardPageList=boardService.getSearchPageBoard(tab,type,Keyword,page,pageAmount);
         Integer boardSize=boardPageList.getSize();
 
+        model.addAttribute("method","Normal");
+        model.addAttribute("result","NORMAL");
         if(!boardPageList.isEmpty()) {
-            model.addAttribute("method","Normal");
-            model.addAttribute("result","NORMAL");
             model.addAttribute("pageNum",page);
             model.addAttribute("pageAmount",pageAmount);
             model.addAttribute("boardList", boardPageList);
@@ -179,9 +177,9 @@ public class Board_controller {
         Page<Board_dto> boardPageList=boardService.getSearchPageBoard(tab,type,Keyword,page,pageAmount);
         Integer boardSize=boardPageList.getSize();
 
+        model.addAttribute("method","Report");
+        model.addAttribute("result","NORMAL");
         if(!boardPageList.isEmpty()) {
-            model.addAttribute("method","Report");
-            model.addAttribute("result","NORMAL");
             model.addAttribute("pageNum",page);
             model.addAttribute("pageAmount",pageAmount);
             model.addAttribute("boardList", boardPageList);
@@ -208,10 +206,9 @@ public class Board_controller {
         Page<Board_dto> boardPageList=boardService.getSearchPageBoard(tab,type,Keyword,page,pageAmount);
         Integer boardSize=boardPageList.getSize();
 
-
+        model.addAttribute("method","AllList");
+        model.addAttribute("result","NORMAL");
         if(!boardPageList.isEmpty()) {
-            model.addAttribute("method","AllList");
-            model.addAttribute("result","NORMAL");
             model.addAttribute("pageNum",page);
             model.addAttribute("pageAmount",pageAmount);
             model.addAttribute("boardList", boardPageList);
