@@ -18,7 +18,7 @@ public class Payment {
     private Long id;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdate;
+    private LocalDateTime createDate;
 
     @ManyToOne
     @JoinColumn(name="paymentTypeId", nullable = false)
@@ -31,7 +31,7 @@ public class Payment {
     public static Payment toEntity(PaymentDto paymentDto) {
         Payment payment = new Payment();
         payment.setId(paymentDto.getId());
-        payment.setCreatedate(paymentDto.getCreatedate());
+        payment.setCreateDate(paymentDto.getCreatedate());
         payment.setPaymentType(paymentDto.getPaymentType());
         payment.setReservation(paymentDto.getReservation());
         return payment;

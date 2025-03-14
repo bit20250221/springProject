@@ -1,5 +1,4 @@
 package org.spring.attraction.service;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.spring.attraction.dto.UserDto;
@@ -130,3 +129,4 @@ public class UserService {
         return null;
     }
 }
+

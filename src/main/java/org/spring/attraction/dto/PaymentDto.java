@@ -23,7 +23,7 @@ public class PaymentDto {
     public static PaymentDto toDto(Payment payment) {
         PaymentDto paymentDto = new PaymentDto();
         paymentDto.setId(payment.getId());
-        paymentDto.setCreatedate(payment.getCreatedate());
+        paymentDto.setCreatedate(payment.getCreateDate());
         paymentDto.setPaymentType(payment.getPaymentType());
         paymentDto.setReservation(payment.getReservation());
         return paymentDto;

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${board.title}"></title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/getBoard.css}">
+</head>
+<body>
+<input type="hidden" id="message" th:value="${message}" />
+<input class="boardNum" type="hidden" th:value="${board.board_id}">
+<div sec:authorize="isAuthenticated()">
+    <input type="hidden" id="currentUser" th:value="${#authentication.principal.username}">
+</div>
+<div sec:authorize="!isAuthenticated()">
+</div>
+
+    <div class="top_element">
+        <div class="top_button_list">
+            <button onclick="back()">전체 게시글 목록</button>
+            <div sec:authorize="isAuthenticated()">
+                <button onclick="deleteboard()">삭제하기</button>
+                <button onclick="updateboard()">수정하기</button>
+            </div>
+        </div>
+    </div>
+    <p class="boardID" th:text="${board.board_id}"></p>
+    <div class="normal_board" th:if="${board.tab=='일반'}">
+        <button onclick="window.location.href='/board/normal'">일반 게시글 목록으로</button>
+        <h1 id="nomal_title" th:text="${board.title}"></h1>
+
+        <div class="boardElement">
+            <p th:text="${board.tab}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.content}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.user_login_Id}"></p>
+        </div>
+
+    </div>
+
+    <div class="review_board" th:if="${board.tab=='리뷰'}">
+        <button onclick="window.location.href='/board/review'">리뷰 게시글 목록으로</button>
+        <h1 id="review_title" th:text="${board.title}"></h1>
+
+        <div class="boardElement">
+            <p th:text="${board.tab}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.content}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.user_login_Id}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.attraction_Name}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p>리뷰 평점</p>
+            <p th:text="${board.rate}"></p>
+        </div>
+
+        <!-- 리뷰 이미지 목록 -->
+        <div class="boardElement">
+            <div th:each="image : ${board.boardImages}">
+                <div class="imageElement">
+                    <p th:text="${image.name}"></p>
+                    <img class="boardimgElement" th:src="@{/resources/upload/{UUIDName}(UUIDName=${image.UUIDName})}" alt="게시글 이미지" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="inquiry_board" th:if="${board.tab=='문의'}">
+        <button onclick="window.location.href='/board/inquiry'">문의 게시글 목록으로</button>
+        <h1 id="inquiry_title" th:text="${board.title}"></h1>
+
+        <div class="boardElement">
+            <p th:text="${board.tab}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.content}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.user_login_Id}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.attraction_Name}"></p>
+        </div>
+
+        <!-- 문의 이미지 목록 -->
+        <div class="boardElement">
+            <div th:each="image : ${board.boardImages}">
+                <div class="imageElement">
+                    <p th:text="${image.name}"></p>
+                    <img class="boardimgElement" th:src="@{/resources/upload/{UUIDName}(UUIDName=${image.UUIDName})}" alt="게시글 이미지" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="report_board" th:if="${board.tab=='신고'}">
+        <button onclick="window.location.href='/board/report'">신고 게시글 목록으로</button>
+        <h1 id="report_title" th:text="${board.title}"></h1>
+
+        <div class="boardElement">
+            <p th:text="${board.tab}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.content}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.user_login_Id}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.attraction_Name}"></p>
+        </div>
+
+        <!-- 신고 이미지 목록 -->
+        <div class="boardElement">
+            <div th:each="image : ${board.boardImages}">
+                <div class="imageElement">
+                    <p th:text="${image.name}"></p>
+                    <img class="boardimgElement" th:src="@{/resources/upload/{UUIDName}(UUIDName=${image.UUIDName})}" alt="게시글 이미지" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="announce_board" th:if="${board.tab=='공지'}">
+        <button onclick="window.location.href='/board/announce'">공지 게시글 목록으로</button>
+        <label for="announce_title">공지</label>
+        <h1 id="announce_title" th:text="${board.title}"></h1>
+
+        <div class="boardElement">
+            <p th:text="${board.tab}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.content}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.user_login_Id}"></p>
+        </div>
+
+        <div class="boardElement">
+            <p th:text="${board.attraction_Name}"></p>
+        </div>
+
+        <!-- 공지 이미지 목록 -->
+        <div class="boardElement">
+            <div th:each="image : ${board.boardImages}">
+                <div class="imageElement">
+                    <p th:text="${image.name}"></p>
+                    <img class="boardimgElement" th:src="@{/resources/upload/{UUIDName}(UUIDName=${image.UUIDName})}" alt="게시글 이미지"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="bottom">
+        <div class="comment count">
+            <p>현재 댓글수</p>
+            <p id="commentCount" th:text="${board.comment_Num}"></p>
+        </div>
+        <div class="comment insert" sec:authorize="isAuthenticated()">
+            <input class="commentInput" name="commentInput" type="text" placeholder="Insert comment">
+            <button class="comment_insert" onclick="commentInsert()">등록</button>
+        </div>
+        <div class="comment list" id="commentList">
+            <div th:if="${commentlist != null and !commentlist.isEmpty()}">
+            <button class="comment_refresh" onclick="commentRefresh()">새로고침</button>
+            <div class="comment elements">
+            <div class="comment element" th:each="comment, loop: ${commentlist}">
+                <div class="comment element content">
+                    <input class="comment element content num" type="hidden" th:value="${comment.id}">
+                    <p class="comment element content user" th:text="${comment.userLoginId}"></p>
+                    <p class="comment element content content" th:text="${comment.content}"></p>
+                    <p class="comment element content credate" th:text="${comment.createDate}"></p>
+                    <p class="comment element content update" th:text="${comment.updateDate}"></p>
+                </div>
+                <div class="comment button" sec:authorize="isAuthenticated()">
+                    <button class="comment_delete" onclick="commentDelete(this)">삭제하기</button>
+                    <div th:if="${comment.userLoginId == #authentication.principal.username}">
+                        <button class="comment_update" onclick="commentUpdate(this)">수정하기</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
+        </div>
+        <div class="comment list" id="emptyCommentList">
+            <div th:if="${commentlist == null or commentlist.isEmpty()}">
+                <button class="comment_refresh" onclick="commentRefresh()">새로고침</button>
+                <p>댓글이 없습니다.</p>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" th:src="@{/js/getBoard.js}"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>오류 화면</title>
+</head>
+<body>
+<input type="hidden" id="message"  th:value="${message}" />
+    <h1>Error</h1>
+    <p>찾을 수 없는 링크거나 서버 내 오류입니다.</p>
+    <a th:href="@{/board/list}">전체 게시글 리스트로 돌아가기</a>
+    <div>
+
+    </div>
+</body>
+</html>
