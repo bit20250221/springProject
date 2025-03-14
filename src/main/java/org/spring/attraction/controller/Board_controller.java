@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.net.URLEncoder;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -316,7 +317,7 @@ public class Board_controller {
     */
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/insertBoard")
-    public String InsertBoardView(Model model, Board_dto boardDto, HttpSession session, String tab, Principal principal,RedirectAttributes redirectAttributes){
+    public String InsertBoardView(Model model, Board_dto boardDto, HttpSession session,@RequestParam String tab, Principal principal,RedirectAttributes redirectAttributes){
 
         //탭과 사용자에 따라 다르게 적용
         String message;
@@ -366,6 +367,7 @@ public class Board_controller {
     public String InsertBoardAction(Board_dto dto, HttpSession session, Principal principal,RedirectAttributes redirectAttributes){
         //만약 로그인된 사용자와 작성자 아이디 다르면 취소(사용자 아이디 조작 방지)(스프링 시큐리티 활용)
         String message;
+        String tab=session.getAttribute("orgTab").toString();
         User currentUser=boardSecurityService.getUserEntity();
         String auth=SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority();
         if(dto.getUser_login_Id().compareTo(principal.getName())!=0){
@@ -391,28 +393,39 @@ public class Board_controller {
         Long attraction_id = dto.getAttraction_id();
         Long writer_attraction_id=currentUser.getAttraction() != null
                 ? currentUser.getAttraction().getId() : null;
-        if(auth.compareTo("attraction")==0 && attraction_id != writer_attraction_id){
-            message="본인 관광지 리뷰만 작성 가능합니다.";
-            redirectAttributes.addFlashAttribute("message",message);
-            return "redirect:/board/insertBoard";
+        if(auth.compareTo("attraction")==0 && attraction_id != writer_attraction_id) {
+            message = "본인 관광지 리뷰만 작성 가능합니다.";
+            session.removeAttribute("tempImages");
+            session.removeAttribute("orgTab");
+            redirectAttributes.addFlashAttribute("message", message);
+            try {
+                return "redirect:/board/insertBoard?tab=" + URLEncoder.encode(tab, "UTF-8");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                return "redirect:board/error";
+            }
         }
 
         //기타 옵션을 선택한 경우 값이 존재
         String attractionName=dto.getAttraction_Name();
         if(attractionName!=null &&!attractionName.equals("기타")){
-            System.out.println(attraction_id);
-            if(attraction_id!=null) {
-                if (attractionService.findById(attraction_id) == null) {
-                    session.removeAttribute("tempImages");
-                    session.removeAttribute("orgTab");
-                    message="등록된 관광지 정보가 서버상에 존재하지 않습니다.";
-                    redirectAttributes.addFlashAttribute("message",message);
-                    return "redirect:/board/insertBoard";
-                }
-                dto.setAttraction_id(attraction_id);
-            }
             dto.setAttraction_Name(attractionName);
-        }
+        }else if(attraction_id!=null){
+            if (attractionService.findById(attraction_id) == null) {
+                session.removeAttribute("tempImages");
+                session.removeAttribute("orgTab");
+                message = "등록된 관광지 정보가 서버상에 존재하지 않습니다.";
+                redirectAttributes.addFlashAttribute("message", message);
+                try {
+                    return "redirect:/board/insertBoard?tab=" + URLEncoder.encode(tab, "UTF-8");
+                }catch (Exception e){
+                    e.printStackTrace();
+                    return "redirect:board/error";
+                }
+            }
+            dto.setAttraction_id(attraction_id);
+    }
 
         //이미지도 본인이 해당 게시글에 올린게 맞는지 검증 필요(파일 조작 방지)
         Board writeBoard=boardService.writeBoard(dto);
@@ -421,19 +434,35 @@ public class Board_controller {
 
             List<BoardImage_dto> images=(List<BoardImage_dto>)session.getAttribute("tempImages");
             List<MultipartFile> dtoimages=dto.getImglist();
-            if(dtoimages!=null){
+            if(dtoimages!=null && !dtoimages.isEmpty()){
                 int i=0;
-                for(BoardImage_dto image:images){
-                    if(!boardImageService.saveImageFile(writeBoard,image,dtoimages.get(i))){
-                        log.info("파일 정식 등록 메소드 실행중 오류 발생");
-                        session.removeAttribute("tempImages");
-                        message="이미지 등록 중 오류 발생";
-                        redirectAttributes.addFlashAttribute("message", message);
-                        return "redirect:/board/insertBoard";
+                try {
+                    for(BoardImage_dto image : images) {
+                        if(!boardImageService.saveImageFile(writeBoard, image, dtoimages.get(i))) {
+                            log.info("파일 정식 등록 메소드 실행중 오류 발생");
+                            session.removeAttribute("tempImages");
+                            session.removeAttribute("orgTab");
+                            message = "이미지 등록 중 오류 발생";
+                            redirectAttributes.addFlashAttribute("message", message);
+                            return "redirect:/board/insertBoard?tab="+ URLEncoder.encode(tab, "UTF-8");
+                        }
+                        i++;
                     }
-                    i++;
+                }catch(Exception e) {
+                    log.info("파일 등록 메소드 실행중 오류 발생: {}", e.getMessage());
+                    session.removeAttribute("tempImages");
+                    session.removeAttribute("orgTab");
+                    message = "이미지를 한번에 업로드 해주세요!!";
+                    redirectAttributes.addFlashAttribute("message", message);
+                    try {
+                        return "redirect:/board/insertBoard?tab=" + URLEncoder.encode(tab, "UTF-8");
+                    }catch (Exception e2){
+                        e2.printStackTrace();
+                        return "redirect:board/error";
+                    }
                 }
             }
+
             session.removeAttribute("tempImages");
             session.removeAttribute("orgTab");
             message=writeBoard.getId()+" 번 게시글 등록 완료";
@@ -443,8 +472,14 @@ public class Board_controller {
             session.removeAttribute("tempImages");
             session.removeAttribute("orgTab");
             message="게시글 등록 실패";
-            redirectAttributes.addFlashAttribute("message",message);
-            return "redirect:/board/insertBoard";
+            redirectAttributes.addFlashAttribute("message", message);
+            try {
+                return "redirect:/board/insertBoard?tab=" + URLEncoder.encode(tab, "UTF-8");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                return "redirect:board/error";
+            }
         }
     }
 
