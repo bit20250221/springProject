@@ -86,6 +86,15 @@ public class Comment_service {
     }
 
     @Transactional
+    public void deleteCommentByBoardId(Long BoardId){
+        try{
+            commentRepository.deleteByBoardId(BoardId);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Transactional
     public ArrayList<Comment_dto> getCommentsByBoard(Long boardId) {
         List<Comment> comments = commentRepository.findByBoardId(boardId);
         return (ArrayList<Comment_dto>) comments.stream().map(Comment_dto::toDTO).collect(Collectors.toList());

@@ -45,6 +45,9 @@ public class Board_service {
     @Autowired
     public AttractionRepository attractionRepository;
 
+    @Autowired
+    public Comment_service commentService;
+
     //게시글 한개 읽기, 댓글은 따로 처리
     @Transactional
     public Board_dto getBoard(Long Board_id){
@@ -216,7 +219,7 @@ public class Board_service {
         try {
             if (isExist.isPresent()) {
                 if((isExist.get().getUser().getUserLoginId().compareTo(user.getUserLoginId())!=0)
-                        || user.getUserType().name().compareTo("manager")==0){
+                        || user.getUserType().name().compareTo("manager")!=0){
                     return false;
                 }
 
@@ -227,6 +230,7 @@ public class Board_service {
                     }
                 }
 
+                commentService.deleteCommentByBoardId(id);
                 repository.deleteById(id);
                 return true;
             } else {
