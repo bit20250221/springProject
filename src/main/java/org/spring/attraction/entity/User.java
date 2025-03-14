@@ -6,11 +6,9 @@ import lombok.Setter;
 import org.spring.attraction.ENUM.Grade;
 import org.spring.attraction.ENUM.UserType;
 import org.hibernate.annotations.ColumnDefault;
-import org.spring.attraction.dto.user.UserDTO;
+import org.spring.attraction.dto.UserDto;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,11 +21,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId")
     private Long id;
-
-    @Column(length = 45, nullable = false, unique = true)
+  
+    @Column(name = "user_login_id", length = 45, nullable = false, unique = true, updatable = false)
     private String userLoginId;
 
-    @Column(length = 255, nullable = false)
+    @Column(nullable = false)
     private String pass;
 
     @Column(nullable = false)
@@ -55,13 +53,14 @@ public class User {
     @JoinColumn(name = "attractionId", nullable = true)
     private Attraction attraction;
 
-    public static User toUser(UserDTO userDTO, String existingPass) {
+    public static User toEntity(UserDto userDto) {
         User user = new User();
-        user.setUserLoginId(userDTO.getUserLoginId());
-        user.setPass(userDTO.getPass() != null ? userDTO.getPass() : existingPass);        user.setBirthDate(userDTO.getBirthDate());
-        user.setUserType(userDTO.getUserType());
-        user.setGrade(userDTO.getGrade());
-        user.setAttraction(userDTO.getAttraction() != null ? user.getAttraction() : null);
+        user.setId(userDto.getId());
+        user.setUserLoginId(userDto.getUserLoginId());
+        user.setPass(userDto.getPass());
+        user.setBirthDate(userDto.getBirthDate());
+        user.setUserType(UserType.nomal);
+        user.setGrade(Grade.bronze);
         return user;
     }
 }

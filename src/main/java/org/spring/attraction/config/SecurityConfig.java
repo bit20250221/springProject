@@ -18,18 +18,19 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/","/index","/user/login","/user/register", "/user/loginProc","/user/registerProc").permitAll()
-                        .requestMatchers("/attraction").hasAnyRole(attraction.name(),manager.name())
+                        .requestMatchers("/","/index","/user/login","/user/save", "/js/**", "/css/**", "/img/**").permitAll()
+                        //.requestMatchers("/attraction").hasAnyRole(attraction.name(),manager.name())
                         .requestMatchers("/admin").hasAuthority(manager.name())
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 );
 
         http
                 .formLogin((auth) -> auth.loginPage("/user/login") // 접근을 제한한 폼이 login 폼으로 바뀜
-                        .loginProcessingUrl("/user/loginProc")     // 로그인 데이터를 form 태그의 경로로 보냄
+
+                        .loginProcessingUrl("/user/login")     // 로그인 데이터를 form 태그의 경로로 보냄
                         .usernameParameter("userLoginId")     // 시큐리티 기본 파라미터는 username
                         .passwordParameter("pass")            // 시큐리티 기본 파라미터는 userPassword
-                        .defaultSuccessUrl("/main")
+                        .defaultSuccessUrl("/attraction/list", true)
                         .permitAll()
                 );
 

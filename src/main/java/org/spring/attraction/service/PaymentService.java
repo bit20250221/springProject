@@ -33,7 +33,7 @@ public class PaymentService {
     }
 
     public Payment update(ReservationUpdateDto reservationUpdateDto) {
-        Payment payment = paymentRepository.findByReservationId(reservationUpdateDto.getId());
+        Payment payment = paymentRepository.findByReservationId(reservationUpdateDto.getId()).orElse(null);
         if (payment != null) {
             PaymentType paymentType = paymentTypeRepository.findById(reservationUpdateDto.getPaymentTypeId()).orElse(null);
             Reservation reservation = reservationRepository.findById(reservationUpdateDto.getId()).orElse(null);

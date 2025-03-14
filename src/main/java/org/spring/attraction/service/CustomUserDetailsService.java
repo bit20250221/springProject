@@ -1,7 +1,7 @@
 package org.spring.attraction.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.spring.attraction.dto.user.CustomUserDetails;
+import org.spring.attraction.dto.CustomUserDetails;
 import org.spring.attraction.entity.User;
 import org.spring.attraction.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

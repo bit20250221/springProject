@@ -2,12 +2,16 @@ package org.spring.attraction.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.spring.attraction.dto.AttractionImgDto;
+import org.spring.attraction.service.UserService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -21,9 +25,11 @@ import java.nio.file.Paths;
 @Controller
 @RequiredArgsConstructor
 public class AttractionImgController {
+    private final UserService userService;
 
     @GetMapping("/files/{filename}")
-    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+    public ResponseEntity<Resource> getFile(@PathVariable String filename, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         try {
             Path filePath = Paths.get(AttractionImgDto.IMG_DIR_URL).resolve(filename).normalize();
             Resource resource = new UrlResource(filePath.toUri());

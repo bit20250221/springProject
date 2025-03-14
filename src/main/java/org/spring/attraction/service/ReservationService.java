@@ -6,6 +6,9 @@ import org.spring.attraction.ENUM.ReservationMessage;
 import org.spring.attraction.dto.*;
 import org.spring.attraction.entity.*;
 import org.spring.attraction.repository.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,8 +25,8 @@ public class ReservationService {
     private final ViewReservationRepository viewReservationRepository;
     private final PaymentTypeRepository paymentTypeRepository;
 
-    public List<ViewReservationDto> findAllByView() {
-        List<ViewReservation> viewReservationList = viewReservationRepository.findAll();
+    public List<ViewReservationDto> findViewAllByUserLoginId(String userLoginId) {
+        List<ViewReservation> viewReservationList = viewReservationRepository.findByUserLoginId(userLoginId);
         List<ViewReservationDto> viewReservationDtoList = new ArrayList<>();
         for (ViewReservation viewReservation : viewReservationList) {
             ViewReservationDto viewReservationDto = ViewReservationDto.toDto(viewReservation);
@@ -44,7 +47,15 @@ public class ReservationService {
             return result;
         }
 
-        User user = userRepository.findById(1L).orElse(null);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
+            return ReservationMessage.getTypeById(-12);
+
+        }
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findByUserLoginId(userDetails.getUsername()).orElse(null);
+
         if(user == null) {
             return ReservationMessage.getTypeById(-1);
         }
@@ -87,7 +98,7 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findById(id).orElse(null);
         if(reservation != null) {
             ReservationDto reservationDto = ReservationDto.toDto(reservation);
-            Payment payment = paymentRepository.findByReservationId(reservation.getId());
+            Payment payment = paymentRepository.findByReservationId(reservation.getId()).orElse(null);
             reservationDto.setPaymentId(payment.getId());
             return reservationDto;
         }
@@ -127,5 +138,25 @@ public class ReservationService {
             return ReservationMessage.getTypeById(3);
         }
         return ReservationMessage.getTypeById(-4);
+    }
+
+    public List<ViewReservationDto> findViewAll() {
+        List<ViewReservation> viewReservationList = viewReservationRepository.findAll();
+        List<ViewReservationDto> viewReservationDtoList = new ArrayList<>();
+        for (ViewReservation viewReservation : viewReservationList) {
+            ViewReservationDto viewReservationDto = ViewReservationDto.toDto(viewReservation);
+            viewReservationDtoList.add(viewReservationDto);
+        }
+        return viewReservationDtoList;
+    }
+
+    public List<ViewReservationDto> findViewAllByAttractionId(Long attractionId) {
+        List<ViewReservation> viewReservationList = viewReservationRepository.findByAttractionId(attractionId);
+        List<ViewReservationDto> viewReservationDtoList = new ArrayList<>();
+        for (ViewReservation viewReservation : viewReservationList) {
+            ViewReservationDto viewReservationDto = ViewReservationDto.toDto(viewReservation);
+            viewReservationDtoList.add(viewReservationDto);
+        }
+        return viewReservationDtoList;
     }
 }

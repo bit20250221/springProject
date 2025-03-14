@@ -23,7 +23,7 @@ public class AttractionImgService {
 
 
     public AttractionImgDto findByAttractionId(Long id) {
-        AttractionImg attractionImg = attractionImgRepository.findByAttractionId(id);
+        AttractionImg attractionImg = attractionImgRepository.findByAttractionId(id).orElse(null);
         if(attractionImg == null) {
             return null;
         }
@@ -54,7 +54,7 @@ public class AttractionImgService {
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
-            AttractionImg attractionImg = attractionImgRepository.findByAttractionId(attractionImgDto.getAttractionId());
+            AttractionImg attractionImg = attractionImgRepository.findByAttractionId(attractionImgDto.getAttractionId()).orElse(null);
             if(attractionImg == null) {
                 return AttractionMessage.getTypeById(-14);
             }
@@ -84,7 +84,7 @@ public class AttractionImgService {
 
     public AttractionMessage delete(Long attractionId) {
         try{
-            AttractionImg attractionImg = attractionImgRepository.findByAttractionId(attractionId);
+            AttractionImg attractionImg = attractionImgRepository.findByAttractionId(attractionId).orElse(null);
             if(attractionImg == null) {
                 return AttractionMessage.getTypeById(-14);
             }

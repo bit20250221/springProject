@@ -6,12 +6,18 @@ import org.spring.attraction.ENUM.AttractionMessage;
 import org.spring.attraction.dto.*;
 import org.spring.attraction.entity.*;
 import org.spring.attraction.repository.*;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +34,9 @@ public class AttractionService {
     private final ReservationRepository reservationRepository;
     private final AttractionImgRepository attractionImgRepository;
     private final AttractionImgService attractionImgService;
+    private final ViewAttractionRepository viewAttractionRepository;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Transactional
     public AttractionMessage save(AttractionDto attractionDto) {
@@ -64,6 +73,13 @@ public class AttractionService {
                 return AttractionMessage.getTypeById(-11);
             }
 
+        }
+
+        User user = userService.getUser(attractionDto.getUserDetails());
+        if(user != null) {
+            user.setAttraction(attraction);
+        }else{
+            return AttractionMessage.getTypeById(-16);
         }
 
         return AttractionMessage.getTypeById(1);
@@ -141,7 +157,7 @@ public class AttractionService {
         for(Long id : attractionDto.getAttractionTypeDtoIdList()) {
             AttractionType attractionType = attractionTypeRepository.findById(id).orElse(null);
             if(attractionType != null) {
-                AttractionTypeList attractionTypeList = attractionTypeListRepository.findByAttractionIdAndAttractionTypeId(attraction.getId(), attractionType.getId());
+                AttractionTypeList attractionTypeList = attractionTypeListRepository.findByAttractionIdAndAttractionTypeId(attraction.getId(), attractionType.getId()).orElse(null);
                 if(attractionTypeList == null) {
                     AttractionTypeList newAttractionTypeList = new AttractionTypeList();
                     newAttractionTypeList.setAttraction(attraction);
@@ -154,9 +170,9 @@ public class AttractionService {
             }
         }
 
-        if(attractionDto.getImg() != null) {
+        if(attractionDto.getImg() != null && !attractionDto.getImg().isEmpty()) {
 
-            AttractionImg findAttractionImg = attractionImgRepository.findByAttractionId(attractionDto.getId());
+            AttractionImg findAttractionImg = attractionImgRepository.findByAttractionId(attractionDto.getId()).orElse(null);
             if(findAttractionImg != null) {
                 AttractionImgDto attractionImgDto = new AttractionImgDto();
                 attractionImgDto.setAttractionId(attractionDto.getId());
@@ -193,7 +209,7 @@ public class AttractionService {
             return AttractionMessage.getTypeById(-3);
         }
 
-        AttractionImg attractionImg = attractionImgRepository.findByAttractionId(attraction.getId());
+        AttractionImg attractionImg = attractionImgRepository.findByAttractionId(attraction.getId()).orElse(null);
         if(attractionImg != null) {
             AttractionMessage result = attractionImgService.delete(attraction.getId());
             if(result != null) {
@@ -202,12 +218,80 @@ public class AttractionService {
         }
 
         attraction.getAttractionsTypeLists().clear();
-        attractionRepository.delete(attraction);
+        User user = userRepository.findByAttraction(attraction);
+        if(user == null) {
+            return AttractionMessage.getTypeById(-16);
+        }
 
+        user.setAttraction(null);
+        attractionRepository.delete(attraction);
 
         return AttractionMessage.getTypeById(3);
 
+    }
 
+    public Page<ViewAttractionDto> findViewAll(Pageable pageable) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = 10;
 
+        Page<ViewAttraction> viewAttractionPage = viewAttractionRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+
+        Page<ViewAttractionDto> viewAttractionDtoPage = viewAttractionPage.
+                map(viewAttraction ->
+                        new ViewAttractionDto(
+                                viewAttraction.getId(), viewAttraction.getName(), viewAttraction.getAvgrate(),
+                                viewAttraction.getPrice(), viewAttraction.getOpenTime(), viewAttraction.getCloseTime(),
+                                viewAttraction.getType(), viewAttraction.getArea()));
+
+        return viewAttractionDtoPage;
+
+    }
+
+    public Page<ViewAttractionDto> findViewByName(Pageable pageable, String search) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = 10;
+
+        Page<ViewAttraction> viewAttractionPage = viewAttractionRepository.findByNameContaining(search, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+
+        Page<ViewAttractionDto> viewAttractionDtoPage = viewAttractionPage.
+                map(viewAttraction ->
+                        new ViewAttractionDto(
+                                viewAttraction.getId(), viewAttraction.getName(), viewAttraction.getAvgrate(),
+                                viewAttraction.getPrice(), viewAttraction.getOpenTime(), viewAttraction.getCloseTime(),
+                                viewAttraction.getType(), viewAttraction.getArea()));
+
+        return viewAttractionDtoPage;
+    }
+
+    public Page<ViewAttractionDto> findViewByType(Pageable pageable, String search) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = 10;
+
+        Page<ViewAttraction> viewAttractionPage = viewAttractionRepository.findByTypeContaining(search, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+
+        Page<ViewAttractionDto> viewAttractionDtoPage = viewAttractionPage.
+                map(viewAttraction ->
+                        new ViewAttractionDto(
+                                viewAttraction.getId(), viewAttraction.getName(), viewAttraction.getAvgrate(),
+                                viewAttraction.getPrice(), viewAttraction.getOpenTime(), viewAttraction.getCloseTime(),
+                                viewAttraction.getType(), viewAttraction.getArea()));
+
+        return viewAttractionDtoPage;
+    }
+
+    public Page<ViewAttractionDto> findViewByArea(Pageable pageable, String search) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = 10;
+
+        Page<ViewAttraction> viewAttractionPage = viewAttractionRepository.findByAreaContaining(search, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+
+        Page<ViewAttractionDto> viewAttractionDtoPage = viewAttractionPage.
+                map(viewAttraction ->
+                        new ViewAttractionDto(
+                                viewAttraction.getId(), viewAttraction.getName(), viewAttraction.getAvgrate(),
+                                viewAttraction.getPrice(), viewAttraction.getOpenTime(), viewAttraction.getCloseTime(),
+                                viewAttraction.getType(), viewAttraction.getArea()));
+
+        return viewAttractionDtoPage;
     }
 }

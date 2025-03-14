@@ -27,7 +27,7 @@ public class AttractionTypeService {
         if(result != null) {
             return result;
         }
-        AttractionType attractionType = attractionTypeRepository.findByType(attractionTypeDto.getType());
+        AttractionType attractionType = attractionTypeRepository.findByType(attractionTypeDto.getType()).orElse(null);
         if(attractionType == null) {
             attractionTypeRepository.save(AttractionType.toEntity(attractionTypeDto));
             return AttractionTypeMessage.getTypeById(1);

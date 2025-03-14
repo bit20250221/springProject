@@ -1,15 +1,16 @@
 package org.spring.attraction.service;
-
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.spring.attraction.dto.user.UserDTO;
+import org.spring.attraction.dto.UserDto;
 import org.spring.attraction.entity.User;
 import org.spring.attraction.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 import static org.spring.attraction.ENUM.Grade.bronze;
 import static org.spring.attraction.ENUM.UserType.manager;
@@ -17,29 +18,28 @@ import static org.spring.attraction.ENUM.UserType.nomal;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserService {
-    @Autowired
-    UserRepository userRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void registerProcess(UserDTO userDTO) {
+    public void registerProcess(UserDto userDto) {
 
-        boolean isUser = userRepository.existsByUserLoginId(userDTO.getUserLoginId());
+        boolean isUser = userRepository.existsByUserLoginId(userDto.getUserLoginId());
         if(isUser) {
             return;
         }
 
         User user = new User();
-
-        user.setId(userDTO.getId());
-        user.setUserLoginId(userDTO.getUserLoginId());
+        System.out.println(userDto);
+        user.setId(userDto.getId());
+        user.setUserLoginId(userDto.getUserLoginId());
         user.setUserType(nomal);
-        user.setPass(bCryptPasswordEncoder.encode(userDTO.getPass()));
-        user.setBirthDate(userDTO.getBirthDate());
+        user.setPass(bCryptPasswordEncoder.encode(userDto.getPass()));
+        user.setBirthDate(userDto.getBirthDate());
         user.setGrade(bronze);
-
+        System.out.println(user.getUserLoginId() + " " + user.getPass());
         userRepository.save(user);
     }
 
@@ -66,28 +66,67 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public UserDTO getUserByLoginId(String userLoginId) {
+    public UserDto getUserByLoginId(String userLoginId) {
         User user = userRepository.findByUserLoginId(userLoginId)
                 .orElseThrow(() -> new RuntimeException("유저가 없습니다"));
         // 엔티티 -> DTO 변환해서 리턴
-        UserDTO userDTO = UserDTO.fromUser(user);
 
-        return userDTO;
+        UserDto userDto = UserDto.fromUser(user);
+
+
+
+        return userDto;
     }
 
-    public UserDTO getUserById(Long id) {
+    public UserDto getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("유저가 없습니다"));
-        return UserDTO.fromUser(user);
+        return UserDto.fromUser(user);
     }
 
-    public String getCurrentUserAuthority() {
-        // 현재 로그인된 사용자 정보 가져오기
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            // 로그인한 사용자 권한 가져오기
-            return authentication.getAuthorities().iterator().next().getAuthority();
+    public String getUserRole(UserDetails userDetails) {
+        if (userDetails != null) {  // 로그인한 사용자가 있을 경우
+            String userRole = userDetails.getAuthorities().stream()
+                    .map(grantedAuthority -> grantedAuthority.getAuthority())
+                    .collect(Collectors.joining(", "));
+            return userRole;
         }
-        return null; // 인증되지 않은 사용자
+        return null;
+    }
+
+    public String getUserLoginId(UserDetails userDetails) {
+        if (userDetails != null) {  // 로그인한 사용자가 있을 경우
+            return userDetails.getUsername();
+        }
+        return null;
+    }
+
+    public Long getAttractionId(UserDetails userDetails) {
+        if (userDetails != null) {  // 로그인한 사용자가 있을 경우
+            String userRole = userDetails.getAuthorities().stream()
+                    .map(grantedAuthority -> grantedAuthority.getAuthority())
+                    .collect(Collectors.joining(", "));
+            if(userRole.equals("attraction")){
+                User user = userRepository.findByUserLoginId(userDetails.getUsername()).orElse(null);
+                if(user != null){
+                    if(user.getAttraction() != null){
+                        return user.getAttraction().getId();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public User getUser(UserDetails userDetails) {
+        if (userDetails != null) {
+            String userLoginId = userDetails.getUsername();
+            User user = userRepository.findByUserLoginId(userLoginId).orElse(null);
+            if(user != null){
+                return user;
+            }
+        }
+        return null;
     }
 }
+

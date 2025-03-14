@@ -10,16 +10,11 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AttractionImgDto {
-    public static final String IMG_DIR_URL = "C:/Users/seung/IdeaProjects/attraction/src/main/resources/static/img";
-
+    public static final String IMG_DIR_URL = "C:/Users/seung/IdeaProjects/springProject/src/main/resources/static/img";
     private Long id;
-
     private String name;
-
     private String UUID;
-
     private Long attractionId;
-
     private MultipartFile img;
 
     public static AttractionImgDto toDto(AttractionImg attractionImg) {

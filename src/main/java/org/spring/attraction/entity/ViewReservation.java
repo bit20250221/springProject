@@ -21,6 +21,9 @@ public class ViewReservation {
     private Long id;
 
     @Column
+    private Long attractionId;
+
+    @Column
     private String attractionName;
 
     @Column

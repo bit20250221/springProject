@@ -4,31 +4,40 @@ import lombok.RequiredArgsConstructor;
 import org.spring.attraction.ENUM.AreaMessage;
 import org.spring.attraction.dto.AreaDto;
 import org.spring.attraction.service.AreaService;
+import org.spring.attraction.service.UserService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/area")
 @RequiredArgsConstructor
 public class AreaController {
     private final AreaService areaService;
+    private final UserService userService;
 
     @GetMapping(value = {"", "/", "/index", "/main"})
-    public String area() {
+    public String area(Model model,@AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         return "/area/main";
     }
 
     @GetMapping("/save")
-    public String save() {
+    public String save(Model model,@AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         return "/area/save";
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute AreaDto areaDto, RedirectAttributes redirectAttributes) {
+    public String save(@ModelAttribute AreaDto areaDto, RedirectAttributes redirectAttributes,
+                       @AuthenticationPrincipal UserDetails userDetails, Model model) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         AreaMessage result = areaService.save(areaDto);
         redirectAttributes.addFlashAttribute("message", result.getMessage());
         if(result.getId() < 0) {
@@ -39,14 +48,16 @@ public class AreaController {
     }
 
     @GetMapping("/list")
-    public String list(Model model) {
+    public String list(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         List<AreaDto> areaDtoList = areaService.findAll();
         model.addAttribute("areaDtoList", areaDtoList);
         return "/area/list";
     }
 
     @GetMapping("/update/{id}")
-    public String update(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+    public String update(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         try{
             AreaDto areaDto = areaService.findById(id);
             if(areaDto != null) {
@@ -61,7 +72,8 @@ public class AreaController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute AreaDto areaDto, RedirectAttributes redirectAttributes) {
+    public String update(@ModelAttribute AreaDto areaDto, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         AreaMessage result = areaService.save(areaDto);
         redirectAttributes.addFlashAttribute("message", result.getMessage());
         if(result.getId() < 0) {
@@ -71,7 +83,8 @@ public class AreaController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+    public String detail(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         try{
             AreaDto areaDto = areaService.findById(id);
             if(areaDto != null) {
@@ -87,7 +100,8 @@ public class AreaController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         AreaMessage result = areaService.delete(id);
         redirectAttributes.addFlashAttribute("message", result.getMessage());
         return "redirect:/area/list";

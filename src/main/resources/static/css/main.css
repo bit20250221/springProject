@@ -1,0 +1,39 @@
+body{
+    padding: 20px;
+}
+.user-h2{
+    margin: 50px;
+    text-align: center;
+}
+.user-pagination{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.user-search{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+.user-form{
+    width: 500px;
+    margin: auto;
+}
+.user-footer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+.user-footer p{
+    margin: 0 0;
+    padding: 0.2em;
+}
+.user-error-message{
+    color: red;
+    font-weight: bold;
+
+}
