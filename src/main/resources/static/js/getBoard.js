@@ -78,11 +78,11 @@ const alertMessage = (message) => {
                             `;
                      commentElementsDiv.appendChild(commentDiv);
                  });
-                    document.getElementById("commentList").style.display = "block";
+                    document.querySelector(".comment.elements").style.display = "block";
                     document.getElementById("emptyCommentList").style.display = "none";
                     document.getElementById("commentCount").textContent = data.length;
                 }else{
-                    document.getElementById("commentList").style.display = "none";
+                    document.querySelector(".comment.elements").style.display = "none";
                     document.getElementById("emptyCommentList").style.display = "block";
                     document.getElementById("commentCount").textContent = "0";
                 }

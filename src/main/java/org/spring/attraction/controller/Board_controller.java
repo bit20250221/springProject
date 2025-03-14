@@ -587,12 +587,18 @@ public class Board_controller {
                     String url = UpdateImage.getImagePath();
                     log.info("세션 내 이미지 url: {}", url);
                     //임시 폴더에 업로드된 이미지면(신규 이미지)
-                    boardImageService.saveImageFile(Board_service.toEntity(UpdateBoard
-                                ,userRepository.getReferenceById(UpdateBoard.getUser_id())
-                                ,attractionRepository.getReferenceById(UpdateBoard.getAttraction_id())
-                                ,null),UpdateImage,multipartFiles.get(i));
+                    if(UpdateBoard.getAttraction_id()!=null) {
+                        boardImageService.saveImageFile(Board_service.toEntity(UpdateBoard
+                                , userRepository.getReferenceById(UpdateBoard.getUser_id())
+                                , attractionRepository.getReferenceById(UpdateBoard.getAttraction_id())
+                                , null), UpdateImage, multipartFiles.get(i));
 
-
+                    }else{
+                        boardImageService.saveImageFile(Board_service.toEntity(UpdateBoard
+                                , userRepository.getReferenceById(UpdateBoard.getUser_id())
+                                , null
+                                , null), UpdateImage, multipartFiles.get(i));
+                    }
                 }
             }
         }
