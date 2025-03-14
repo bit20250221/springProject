@@ -190,9 +190,9 @@
             <button class="comment_insert" onclick="commentInsert()">등록</button>
         </div>
         <div class="comment list" id="commentList">
-            <div th:if="${commentlist != null and !commentlist.isEmpty()}">
             <button class="comment_refresh" onclick="commentRefresh()">새로고침</button>
             <div class="comment elements">
+            <div th:if="${commentlist != null and !commentlist.isEmpty()}">
             <div class="comment element" th:each="comment, loop: ${commentlist}">
                 <div class="comment element content">
                     <input class="comment element content num" type="hidden" th:value="${comment.id}">
