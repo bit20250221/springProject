@@ -10,38 +10,41 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-<div th:replace="fragments/header :: header(${userRole})"></div>
-<h2 class="user-h2">관광지 예약 리스트</h2>
-<table class="table table-striped">
-    <tr>
-        <th>id</th>
-        <th>관광지명</th>
-        <th>가격</th>
-        <th>인원수</th>
-        <th>예약자</th>
-        <th>예약일자</th>
-        <th>결제방법</th>
-        <th>총 비용</th>
-        <th>상세</th>
-        <th th:if="${userRole == 'manager'}">삭제</th>
-    </tr>
-    <tr th:each="viewReservationDto, index: ${viewReservationDtoList}">
-        <td th:text="${viewReservationDto.getId()}"></td>
-        <td th:text="${viewReservationDto.getAttractionName()}"></td>
-        <td th:text="${viewReservationDto.getAttractionPrice()}"></td>
-        <td th:text="${viewReservationDto.getReservationPeplenum()}"></td>
-        <td th:text="${viewReservationDto.getUserLoginId()}"></td>
-        <td th:text="${viewReservationDto.getReservationReservedate()}"></td>
-        <td th:text="${viewReservationDto.getPaymentTypeType()}"></td>
-        <td th:text="${viewReservationDto.getTotalPrice()}"></td>
-        <td><button th:onclick="|reservationDetailLink(${viewReservationDto.getId()})|">상세</button></td>
-        <td th:if="${userRole == 'manager'}"><button th:onclick="|reservationDeleteLink(${viewReservationDto.getId()})|">삭제</button></td>
-    </tr>
-</table>
-<button onclick="attractionListLink()">관광지 리스트</button>
-<div th:replace="fragments/footer :: footer"></div>
-<script th:inline="javascript">
-    alertMessage([[${message}]])
-</script>
+    <div th:replace="fragments/header :: header(${userRole})"></div>
+
+    <h2 class="user-h2">관광지 예약 리스트</h2>
+
+    <table class="table table-striped">
+        <tr>
+            <th>id</th>
+            <th>관광지명</th>
+            <th>가격</th>
+            <th>인원수</th>
+            <th>예약자</th>
+            <th>예약일자</th>
+            <th>결제방법</th>
+            <th>총 비용</th>
+            <th>상세</th>
+            <th th:if="${userRole == 'manager'}">삭제</th>
+        </tr>
+        <tr th:each="viewReservationDto, index: ${viewReservationDtoList}">
+            <td th:text="${viewReservationDto.getId()}"></td>
+            <td th:text="${viewReservationDto.getAttractionName()}"></td>
+            <td th:text="${viewReservationDto.getAttractionPrice()}"></td>
+            <td th:text="${viewReservationDto.getReservationPeplenum()}"></td>
+            <td th:text="${viewReservationDto.getUserLoginId()}"></td>
+            <td th:text="${viewReservationDto.getReservationReservedate()}"></td>
+            <td th:text="${viewReservationDto.getPaymentTypeType()}"></td>
+            <td th:text="${viewReservationDto.getTotalPrice()}"></td>
+            <td><button th:onclick="|reservationDetailLink(${viewReservationDto.getId()})|">상세</button></td>
+            <td th:if="${userRole == 'manager'}"><button th:onclick="|reservationDeleteLink(${viewReservationDto.getId()})|">삭제</button></td>
+        </tr>
+    </table>
+
+    <button onclick="attractionListLink()">관광지 리스트</button>
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:inline="javascript">alertMessage([[${message}]])</script>
 </body>
 </html>

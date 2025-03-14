@@ -15,8 +15,8 @@ document.getElementById("saveForm").addEventListener("submit", function(event){
 
     if(userLoginId === ""){
         errorMessageUserLoginId.innerText = "아이디를 입력하세요.";
-    }else if(userLoginId.length > 10){
-        errorMessageUserLoginId.innerText = "아이디는 10자리 이하로 입력이 가능합니다.";
+    }else if(userLoginId.length > 20 || userLoginId.length < 5){
+        errorMessageUserLoginId.innerText = "아이디는 5~20자리로 입력이 가능합니다.";
     }
 
     if(pass === ""){

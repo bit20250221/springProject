@@ -51,7 +51,7 @@ public class Attraction{
     @OneToMany(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Board> Boards = new HashSet<>();
 
-    @OneToOne(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "attraction")
     private User user;
 
     @OneToMany(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
