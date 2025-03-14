@@ -1,4 +1,9 @@
 <div th:fragment="header(userRole)" class="user-header">
+  <style>
+    .nav-item.dropdown:hover .dropdown-menu {
+      display: block;
+    }
+  </style>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">관광지 정보 사이트</a>
@@ -25,8 +30,17 @@
           <li class="nav-item" th:if="${userRole == 'manager'}">
             <a class="nav-link" href="/admin">어드민 페이지</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/board/list">게시판 리스트 페이지</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuLink" role="button" aria-expanded="false">
+              게시글 메뉴
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <li><a class="dropdown-item" href="/board/list">전체</a></li>
+              <li><a class="dropdown-item" href="/board/inquiry">문의</a></li>
+              <li><a class="dropdown-item" href="/board/report">신고</a></li>
+              <li><a class="dropdown-item" href="/board/normal">일반</a></li>
+              <li><a class="dropdown-item" href="/board/review">리뷰</a></li>
+            </ul>
           </li>
           <li class="nav-item" th:if="${userRole != null}">
             <a class="nav-link" href="/user/login">로그아웃</a>

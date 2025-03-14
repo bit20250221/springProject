@@ -15,8 +15,9 @@ import org.spring.attraction.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +57,7 @@ public class Board_controller {
     @PermitAll
     @GetMapping("/announce")
     public String announce(Model model,
+                           @AuthenticationPrincipal UserDetails userDetails,
                            @RequestParam(name = "pageAmount",defaultValue = "10") int pageAmount,
                            @RequestParam(name = "page", defaultValue = "0") int page,
                            @RequestParam(name = "type", defaultValue = "") String type,
@@ -65,6 +67,7 @@ public class Board_controller {
         Page<Board_dto> boardPageList=boardService.getSearchPageBoard(tab,type,Keyword,page,pageAmount);
         Integer boardSize=boardPageList.getSize();
 
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         model.addAttribute("method","Announce");
         model.addAttribute("result","NORMAL");
         if(!boardPageList.isEmpty()) {
@@ -83,6 +86,7 @@ public class Board_controller {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/inquiry")
     public String inquiry(Model model,
+                          @AuthenticationPrincipal UserDetails userDetails,
                           @RequestParam(name = "pageAmount",defaultValue = "10") int pageAmount,
                           @RequestParam(name = "page", defaultValue = "0") int page,
                           @RequestParam(name = "type", defaultValue = "") String type,
@@ -92,6 +96,7 @@ public class Board_controller {
         Page<Board_dto> boardPageList=boardService.getSearchPageBoard(tab,type,Keyword,page,pageAmount);
         Integer boardSize=boardPageList.getSize();
 
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         model.addAttribute("method","Inquiry");
         model.addAttribute("result","NORMAL");
         if(!boardPageList.isEmpty()) {
@@ -111,6 +116,7 @@ public class Board_controller {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/review")
     public String review(Model model,
+                         @AuthenticationPrincipal UserDetails userDetails,
                          @RequestParam(name = "pageAmount",defaultValue = "10") int pageAmount,
                          @RequestParam(name = "page", defaultValue = "0") int page,
                          @RequestParam(name = "type", defaultValue = "") String type,
@@ -120,6 +126,7 @@ public class Board_controller {
         Page<Board_dto> boardPageList=boardService.getSearchPageBoard(tab,type,Keyword,page,pageAmount);
         Integer boardSize=boardPageList.getSize();
 
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         model.addAttribute("method","Review");
         model.addAttribute("result","NORMAL");
         if(!boardPageList.isEmpty()) {
@@ -138,6 +145,7 @@ public class Board_controller {
     @PermitAll
     @GetMapping("/normal")
     public String normal(Model model,
+                         @AuthenticationPrincipal UserDetails userDetails,
                          @RequestParam(name = "pageAmount",defaultValue = "10") int pageAmount,
                          @RequestParam(name = "page", defaultValue = "0") int page,
                          @RequestParam(name = "type", defaultValue = "") String type,
@@ -148,6 +156,7 @@ public class Board_controller {
         Page<Board_dto> boardPageList=boardService.getSearchPageBoard(tab,type,Keyword,page,pageAmount);
         Integer boardSize=boardPageList.getSize();
 
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         model.addAttribute("method","Normal");
         model.addAttribute("result","NORMAL");
         if(!boardPageList.isEmpty()) {
@@ -167,6 +176,7 @@ public class Board_controller {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/report")
     public String report(Model model,
+                         @AuthenticationPrincipal UserDetails userDetails,
                          @RequestParam(name = "pageAmount",defaultValue = "10") int pageAmount,
                          @RequestParam(name = "page", defaultValue = "0") int page,
                          @RequestParam(name = "type", defaultValue = "") String type,
@@ -177,6 +187,7 @@ public class Board_controller {
         Page<Board_dto> boardPageList=boardService.getSearchPageBoard(tab,type,Keyword,page,pageAmount);
         Integer boardSize=boardPageList.getSize();
 
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         model.addAttribute("method","Report");
         model.addAttribute("result","NORMAL");
         if(!boardPageList.isEmpty()) {
@@ -197,6 +208,7 @@ public class Board_controller {
     @PermitAll
     @GetMapping("/list")
     public String list(Model model,
+                       @AuthenticationPrincipal UserDetails userDetails,
                        @RequestParam(name = "pageAmount",defaultValue = "10") int pageAmount,
                        @RequestParam(name = "page", defaultValue = "0") int page,
                        @RequestParam(name = "type", defaultValue = "") String type,
@@ -206,6 +218,7 @@ public class Board_controller {
         Page<Board_dto> boardPageList=boardService.getSearchPageBoard(tab,type,Keyword,page,pageAmount);
         Integer boardSize=boardPageList.getSize();
 
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         model.addAttribute("method","AllList");
         model.addAttribute("result","NORMAL");
         if(!boardPageList.isEmpty()) {
@@ -230,7 +243,10 @@ public class Board_controller {
 
     @GetMapping("/getBoard/{id}")
     public String getBoard(Model model,
+                           @AuthenticationPrincipal UserDetails userDetails,
                            @PathVariable("id") Long id, Principal principal, RedirectAttributes redirectAttributes) {
+
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         String message;
         Board_dto OneBoard=boardService.getBoard(id);
         ArrayList<Comment_dto> commentList= (ArrayList<Comment_dto>) commentService.getCommentsByBoard(id);
@@ -310,8 +326,15 @@ public class Board_controller {
     */
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/insertBoard")
-    public String InsertBoardView(Model model, Board_dto boardDto, HttpSession session,@RequestParam String tab, Principal principal,RedirectAttributes redirectAttributes){
+    public String InsertBoardView(Model model,
+                                  @AuthenticationPrincipal UserDetails userDetails,
+                                  Board_dto boardDto,
+                                  HttpSession session,
+                                  @RequestParam String tab,
+                                  Principal principal,
+                                  RedirectAttributes redirectAttributes){
 
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         //탭과 사용자에 따라 다르게 적용
         String message;
         String Auth=SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority();
@@ -480,7 +503,14 @@ public class Board_controller {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/updateBoard/{id}")
     public String updateBoardView(Model model,
-                                  @PathVariable("id") Long id, Board_dto boardDTO, HttpSession session, Principal principal, RedirectAttributes redirectAttributes){
+                                  @AuthenticationPrincipal UserDetails userDetails,
+                                  @PathVariable("id") Long id,
+                                  Board_dto boardDTO,
+                                  HttpSession session,
+                                  Principal principal,
+                                  RedirectAttributes redirectAttributes){
+
+        model.addAttribute("userRole", userService.getUserRole(userDetails));
         Board_dto UpdateBoard=boardService.getBoard(id);
         String message;
         UserDto user=boardSecurityService.getUser();
@@ -529,7 +559,11 @@ public class Board_controller {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/updateBoard/{id}")
-    public String updateBoardAction(@PathVariable("id") Long id, Board_dto boardDTO, HttpSession session, Principal principal,RedirectAttributes redirectAttributes){
+    public String updateBoardAction(@PathVariable("id") Long id,
+                                    Board_dto boardDTO,
+                                    HttpSession session,
+                                    Principal principal,
+                                    RedirectAttributes redirectAttributes){
         log.info(id+" board info: {},{},{},{},{},{},{},{},{}",
                 boardDTO.getBoard_id(), boardDTO.getTab(), boardDTO.getTitle(),
                 boardDTO.getContent(), boardDTO.getAttraction_id(), boardDTO.getUser_id(),
@@ -573,7 +607,9 @@ public class Board_controller {
     //글 작성자만 삭제하도록 필요
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/deleteBoard/{id}")
-    public String deleteBoard(@PathVariable("id") Long id, Principal principal, RedirectAttributes redirectAttributes){
+    public String deleteBoard(@PathVariable("id") Long id,
+                              Principal principal,
+                              RedirectAttributes redirectAttributes){
         String CurrentUser=principal.getName();
         String message;
         if(boardService.deleteBoard(id)) {
