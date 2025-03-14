@@ -36,6 +36,7 @@ public class AttractionService {
     private final AttractionImgService attractionImgService;
     private final ViewAttractionRepository viewAttractionRepository;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @Transactional
     public AttractionMessage save(AttractionDto attractionDto) {
@@ -217,6 +218,12 @@ public class AttractionService {
         }
 
         attraction.getAttractionsTypeLists().clear();
+        User user = userRepository.findByAttraction(attraction);
+        if(user == null) {
+            return AttractionMessage.getTypeById(-16);
+        }
+
+        user.setAttraction(null);
         attractionRepository.delete(attraction);
 
         return AttractionMessage.getTypeById(3);
