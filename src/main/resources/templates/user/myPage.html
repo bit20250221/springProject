@@ -14,6 +14,7 @@
             form.classList.toggle("hidden");
         }
     </script>
+    <link rel="stylesheet" th:href="@{/css/myPage.css}">
 </head>
 <body>
 <h2>마이 페이지</h2>
@@ -21,6 +22,10 @@
 <p>유저 타입: <span th:text="${user.userType}"></span></p>
 <p>생년월일: <span th:text="${user.birthDate}"></span></p>
 <p>등급: <span th:text="${user.grade}"></span></p>
+
+<hr>
+
+<button class="button" onclick="location.href='http://localhost:8080/'">홈으로 가기</button>
 
 <hr>
 

@@ -1,9 +1,14 @@
 package org.spring.attraction.service;
 
+import org.spring.attraction.ENUM.UserType;
 import org.spring.attraction.dto.UserDto;
 import org.spring.attraction.entity.User;
 import org.spring.attraction.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +17,18 @@ import java.util.List;
 public class AdminService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
+
+    // 관리자 추가
+    public void createUser(UserDto userDto, UserType userType) {
+        // UserDto에 UserType 설정
+        userDto.setUserType(userType);
+
+        // UserService의 registerProcess 호출
+        userService.registerProcess(userDto);
+    }
 
     // 전체 유저 조회
     public List<UserDto> getAllUsers() {
@@ -40,5 +57,20 @@ public class AdminService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public Page<UserDto> paging(Pageable pageable) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = 20; // 한 페이지에 보여줄 개수
+        Page<User> user = userRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC,"id")));
+
+        Page<UserDto> userDtoPage = user.map(userEntity -> new UserDto(
+                userEntity.getId(),
+                userEntity.getUserLoginId(),
+                userEntity.getBirthDate(),
+                userEntity.getUserType(),
+                userEntity.getGrade(),
+                userEntity.getAttraction() != null ? userEntity.getAttraction().getId() : null));
+        return userDtoPage;
     }
 }

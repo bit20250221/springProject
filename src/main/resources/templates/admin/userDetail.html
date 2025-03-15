@@ -5,7 +5,7 @@
   <title>유저 정보</title>
   <script th:inline="javascript">
     const listReq = () => {
-      location.href = "/admin/userList";
+      location.href = "/admin/user/";
     }
     const updateReq = () => {
       const userLoginId = [[${user.id}]];
@@ -16,6 +16,7 @@
       location.href = "/admin/user/delete/" + userLoginId;
     }
   </script>
+  <link rel="stylesheet" th:href="@{/css/userDetail.css}">
 </head>
 <body>
 <h2>유저 상세 정보</h2>

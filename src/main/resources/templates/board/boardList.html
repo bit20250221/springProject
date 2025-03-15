@@ -23,6 +23,9 @@
             <th>게시글 제목</th>
             <th>회원의 아이디</th>
             <th>댓글 수</th>
+            <div th:if="${userRole == 'manager'}">
+                <button onclick="deletePost(${post.id})">삭제</button>
+            </div>
         </tr>
         </thead>
         <tbody>
@@ -172,6 +175,12 @@
 
             <input class="search_keyword" type="text">
             <button class="subsearch_button_2">찾기</button>
+        </div>
+
+        <div class="search_box_2">
+            <label>관광지 이름</label>
+            <input class="search_keyword_2" type="text" placeholder="관광지 이름">
+            <button class="subsearch_button_6">찾기</button>
         </div>
 
         <div sec:authorize="isAuthenticated()">

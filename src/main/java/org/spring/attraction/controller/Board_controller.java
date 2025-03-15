@@ -123,7 +123,13 @@ public class Board_controller {
                          @RequestParam(name = "Keyword",defaultValue = "") String Keyword)
     {
         String tab="리뷰";
-        Page<Board_dto> boardPageList=boardService.getSearchPageBoard(tab,type,Keyword,page,pageAmount);
+        Page<Board_dto> boardPageList = null;
+        if(type.compareTo("attraction")!=0) {
+            boardPageList=boardService.getSearchPageBoard(tab,type,Keyword,page,pageAmount);
+        }else{
+            boardPageList = boardService.getSearchReviewBoard(Keyword,page,pageAmount);
+        }
+
         Integer boardSize=boardPageList.getSize();
 
         model.addAttribute("userRole", userService.getUserRole(userDetails));
@@ -450,7 +456,7 @@ public class Board_controller {
 
             List<BoardImage_dto> images=(List<BoardImage_dto>)session.getAttribute("tempImages");
             List<MultipartFile> dtoimages=dto.getImglist();
-            if(dtoimages!=null && !dtoimages.isEmpty()){
+            if(dtoimages!=null && !dtoimages.isEmpty()&& images!=null&& !images.isEmpty()){
                 int i=0;
                 try {
                     for(BoardImage_dto image : images) {
@@ -587,12 +593,18 @@ public class Board_controller {
                     String url = UpdateImage.getImagePath();
                     log.info("세션 내 이미지 url: {}", url);
                     //임시 폴더에 업로드된 이미지면(신규 이미지)
-                    boardImageService.saveImageFile(Board_service.toEntity(UpdateBoard
-                                ,userRepository.getReferenceById(UpdateBoard.getUser_id())
-                                ,attractionRepository.getReferenceById(UpdateBoard.getAttraction_id())
-                                ,null),UpdateImage,multipartFiles.get(i));
+                    if(UpdateBoard.getAttraction_id()!=null) {
+                        boardImageService.saveImageFile(Board_service.toEntity(UpdateBoard
+                                , userRepository.getReferenceById(UpdateBoard.getUser_id())
+                                , attractionRepository.getReferenceById(UpdateBoard.getAttraction_id())
+                                , null), UpdateImage, multipartFiles.get(i));
 
-
+                    }else{
+                        boardImageService.saveImageFile(Board_service.toEntity(UpdateBoard
+                                , userRepository.getReferenceById(UpdateBoard.getUser_id())
+                                , null
+                                , null), UpdateImage, multipartFiles.get(i));
+                    }
                 }
             }
         }

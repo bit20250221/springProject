@@ -57,12 +57,11 @@ public class Board_dto {
         dto.setUpdatedate(entity.getUpdateDate());
         dto.setUser_id(user_id);
         dto.setAttraction_id(attraction_id);
-
         dto.setUser_login_Id(entity.getUser().getUserLoginId());
         if(entity.getAttraction()!=null) {
             dto.setAttraction_Name(entity.getAttraction().getName());
         }else{
-            dto.setAttraction_Name("NONE");
+            dto.setAttraction_Name("기타");
         }
         dto.setComment_Num(entity.getCommentCount());
         return dto;

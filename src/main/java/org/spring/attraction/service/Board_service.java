@@ -45,6 +45,9 @@ public class Board_service {
     @Autowired
     public AttractionRepository attractionRepository;
 
+    @Autowired
+    public Comment_service commentService;
+
     //게시글 한개 읽기, 댓글은 따로 처리
     @Transactional
     public Board_dto getBoard(Long Board_id){
@@ -118,6 +121,26 @@ public class Board_service {
         }else{
             return null;
         }
+    }
+
+    //관광지 별 리뷰 검색(리뷰 게시판에서만 이용)
+    public Page<Board_dto> getSearchReviewBoard(String AttractionName, int pageNum, int pageAmount){
+        List<Sort.Order> sorts=new ArrayList<>();
+        sorts.add(Sort.Order.desc("id"));
+        Pageable pageable= PageRequest.of(pageNum,pageAmount,Sort.by(sorts));
+
+        Page<Board> entityPage;
+        if(!AttractionName.isEmpty()) {
+            entityPage=repository.findReviewAttraction(AttractionName, pageable);
+        }else{
+            entityPage=repository.findByTab(Tab.valueOf("리뷰"),pageable);
+        }
+        return Objects.requireNonNull(entityPage).map(
+                entity-> Board_dto.to_dto_2(
+                        entity,
+                        entity.getUser().getId(),
+                        entity.getAttraction() != null ? entity.getAttraction().getId() : null)
+        );
     }
 
     //게시판 검색(페이징 처리 포함)
@@ -216,7 +239,7 @@ public class Board_service {
         try {
             if (isExist.isPresent()) {
                 if((isExist.get().getUser().getUserLoginId().compareTo(user.getUserLoginId())!=0)
-                        || user.getUserType().name().compareTo("manager")==0){
+                        || user.getUserType().name().compareTo("manager")!=0){
                     return false;
                 }
 
@@ -227,6 +250,7 @@ public class Board_service {
                     }
                 }
 
+                commentService.deleteCommentByBoardId(id);
                 repository.deleteById(id);
                 return true;
             } else {
