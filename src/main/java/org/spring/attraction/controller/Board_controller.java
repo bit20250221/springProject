@@ -336,7 +336,7 @@ public class Board_controller {
                                   @AuthenticationPrincipal UserDetails userDetails,
                                   Board_dto boardDto,
                                   HttpSession session,
-                                  @RequestParam String tab,
+                                  @RequestParam("tab") String tab,
                                   Principal principal,
                                   RedirectAttributes redirectAttributes){
 
@@ -385,7 +385,7 @@ public class Board_controller {
     //따로 유저 DTO, 관광지 DTO 받아오는 로직 필요, 검증 코드 필요(회원의 아이디, 탭, 파일)
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/insertBoard")
-    public String InsertBoardAction(Board_dto dto, HttpSession session,@RequestParam String activeTab,Principal principal,RedirectAttributes redirectAttributes){
+    public String InsertBoardAction(Board_dto dto, HttpSession session,@RequestParam("activeTab") String activeTab,Principal principal,RedirectAttributes redirectAttributes){
         //만약 로그인된 사용자와 작성자 아이디 다르면 취소(사용자 아이디 조작 방지)(스프링 시큐리티 활용)
         String message;
         User currentUser=boardSecurityService.getUserEntity();
@@ -396,7 +396,18 @@ public class Board_controller {
             redirectAttributes.addFlashAttribute("message",message);
             return "redirect:board/error";
         }
-
+        if(dto.getTab().compareTo("공지")==0 && auth.compareTo("manager")!=0){
+            message="관리자만 공지 작성할 수 있습니다.";
+            session.removeAttribute("tempImages");
+            redirectAttributes.addFlashAttribute("message", message);
+            try {
+                return "redirect:/board/insertBoard?tab=" + URLEncoder.encode(activeTab, "UTF-8");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                return "redirect:board/error";
+            }
+        }
         /*
             관광지 확인 필요(실제 존재하는지 검증), 만약 기타에 db에 없는 관광지를 입력했다면
             기존의 라디오 선택을 무시하고 기타 내 입력된 값을 저장(attraction_id는 null)

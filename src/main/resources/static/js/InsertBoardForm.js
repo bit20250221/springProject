@@ -100,17 +100,19 @@ document.addEventListener("DOMContentLoaded", function() {
             const container = this.closest('.card-body');
             const form = container ? container.querySelector('form') : null;
             if (form) {
-                const activeTabElement = document.querySelector('.nav-link.active');
+                const activeTabElement = document.querySelector('#boardTab .nav-link.active');
                 if(activeTabElement){
                     const activeTabValue = activeTabElement.textContent.trim();
                     let hiddenTabInput = form.querySelector('input[name="activeTab"]');
-                    if (!hiddenTabInput) {
+                    if (hiddenTabInput) {
+                        hiddenTabInput.value = activeTabValue;
+                     } else {
                         hiddenTabInput = document.createElement('input');
                         hiddenTabInput.type = 'hidden';
                         hiddenTabInput.name = 'activeTab';
+                        hiddenTabInput.value = activeTabValue;
                         form.appendChild(hiddenTabInput);
                     }
-                    hiddenTabInput.value = activeTabValue;
                 }
                 form.submit();
 
