@@ -1,0 +1,508 @@
+[33mcommit 2e685c7dac029198a2320c981f97a8f6a08fa966[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mseung2[m[33m)[m
+Author: sujinqq <161200938+sujinqq@users.noreply.github.com>
+Date:   Sun Mar 16 11:33:49 2025 +0900
+
+    Add insertBoard.html
+
+[33mcommit 139b2affc3e48f52962bbb00c5a4a7209157586d[m
+Merge: 81b472f 4e80343
+Author: sujinqq <161200938+sujinqq@users.noreply.github.com>
+Date:   Sat Mar 15 12:11:26 2025 +0900
+
+    Merge remote-tracking branch 'origin/seung2' into seung2
+
+[33mcommit 81b472ff9a8a3ae54ec6a3f0c9b75041cfb18254[m
+Author: sujinqq <161200938+sujinqq@users.noreply.github.com>
+Date:   Sat Mar 15 12:09:02 2025 +0900
+
+    원래상태
+
+[33mcommit 4e80343571bb9f1e5d92b196360fa71e7155f231[m
+Author: adward27 <whalsrnr2741@gmail.com>
+Date:   Fri Mar 14 21:25:42 2025 +0900
+
+    feat : 관리자 추가 및 어트랙션 추가 매핑
+
+[33mcommit d0da78fa7e04ab902ad5cdc54b2a88c9127b2cc8[m[33m ([m[1;31morigin/seung2_add[m[33m)[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Fri Mar 14 20:52:05 2025 +0900
+
+    html 링크 수정(로그아웃 되게), 시큐리티 permitAll 요소 추가
+
+[33mcommit 9748fb5ef6a53bf2042478b7b42964134c526f4a[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Fri Mar 14 19:51:45 2025 +0900
+
+    관광지별 리뷰 검색 기능 추가
+
+[33mcommit c92ac3f6850472ac314c3bd9a85261d95f391159[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Fri Mar 14 16:29:02 2025 +0900
+
+    게시글 수정기능 오류 수정, 댓글 부분 ui 수정
+
+[33mcommit fa75355cf42c400a29d93b5e99d21809b137a05b[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Fri Mar 14 15:57:01 2025 +0900
+
+    게시글 삭제 오류 수정, 게시글 내 댓글 일괄 삭제 기능 추가
+
+[33mcommit 9f2e0d4cc910e6db0cfaf4f4b2ab6f659a3dcc5b[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Fri Mar 14 15:15:09 2025 +0900
+
+    게시글 페이지 오류 수정
+
+[33mcommit 2b739cb1a41e1581b1800ed2a941dbc5d21fddb7[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Fri Mar 14 15:05:26 2025 +0900
+
+    게시글 페이지 ui 수정
+
+[33mcommit 11ab358d6452ad86f3b722826141b8d1592c0366[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Fri Mar 14 13:40:54 2025 +0900
+
+    게시글 페이지 오류 수정
+
+[33mcommit 90599f674ca33b1c90723729dbbc93bba9df06f5[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Fri Mar 14 12:21:44 2025 +0900
+
+    병합 오류 수정
+
+[33mcommit 3ad78409fa02d73eb088d632ad10bff70056d8ad[m
+Merge: db00853 0a43c2a
+Author: somecreater <127456520+somecreater@users.noreply.github.com>
+Date:   Fri Mar 14 11:44:03 2025 +0900
+
+    Merge pull request #13 from bit20250221/Yoon
+    
+    게시판 기능 수정 및 추가
+
+[33mcommit 0a43c2aadb1bdcc0388e44d38ec2448ad0c5c5b3[m[33m ([m[1;31morigin/Yoon[m[33m)[m
+Merge: cba3743 db00853
+Author: somecreater <127456520+somecreater@users.noreply.github.com>
+Date:   Fri Mar 14 11:43:31 2025 +0900
+
+    Merge branch 'seung2' into Yoon
+
+[33mcommit db00853ba9284b48216c29b2d8ffc2ea633b22fd[m
+Author: seung <seungchan753@naver.com>
+Date:   Fri Mar 14 10:55:29 2025 +0900
+
+    css 적용 및 로그인, 회원가입 js 예외처리
+
+[33mcommit cba3743e3462427cf7fbdc517af66be0def228e5[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Fri Mar 14 10:21:41 2025 +0900
+
+    에러 처리 추가
+
+[33mcommit 2cbfa4d25d91b87db2b39bc8cfa52b510874dd66[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Fri Mar 14 10:17:39 2025 +0900
+
+    에러 처리 추가
+
+[33mcommit 0e713c67a02a3033fb5b50615f6da27fc344ee50[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Fri Mar 14 02:10:22 2025 +0900
+
+    댓글 기능 일부 수정 및 html, js 코드 수정
+
+[33mcommit 4c2ca853848bcb32c5f66261e7f0f20e4823052a[m
+Author: seung <seungchan753@naver.com>
+Date:   Thu Mar 13 20:01:53 2025 +0900
+
+    css 적용 및 로그인, 회원가입 js 예외처리
+
+[33mcommit 682b94152b508be5b9a3ee2dc3fc2275a716ba90[m
+Author: seung <seungchan753@naver.com>
+Date:   Thu Mar 13 19:42:21 2025 +0900
+
+    css 적용 및 로그인, 회원가입 js 예외처리
+
+[33mcommit f5bac088c0a344f5da7d3011c1e37cf8b1a7d347[m
+Author: seung <seungchan753@naver.com>
+Date:   Thu Mar 13 18:50:31 2025 +0900
+
+    css 적용 및 로그인, 회원가입 js 예외처리
+
+[33mcommit b36e54775abef908e35a78cc14fb4bf957c35ae4[m
+Author: seung <seungchan753@naver.com>
+Date:   Thu Mar 13 18:41:07 2025 +0900
+
+    css 적용 및 로그인, 회원가입 js 예외처리
+
+[33mcommit 2aa97c95941e77585e0fdabfeed797c196e7146f[m[33m ([m[1;31morigin/Yoon_jin[m[33m)[m
+Author: sujinqq <161200938+sujinqq@users.noreply.github.com>
+Date:   Thu Mar 13 16:59:39 2025 +0900
+
+    댓글기능 추가
+
+[33mcommit d1c83072576a7098d72bbec17b5ea7e7a22452e3[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Thu Mar 13 16:33:11 2025 +0900
+
+    오류 수정
+
+[33mcommit 6cd72d36627f27c2ee3b44b0d8beaefa1b332e9b[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Thu Mar 13 16:16:27 2025 +0900
+
+    관광지 본인이 본인 관광지 리뷰를 쓰면 게시글 제목에 표시, 관광지 계정으로 다른 관광지 리뷰 작성 방지 기능 추가
+
+[33mcommit 6a3ed5a5ae660855209e1533558d8e67c816db8b[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Thu Mar 13 14:10:27 2025 +0900
+
+    ui 수정과 기타 수정
+
+[33mcommit bd794f232e37feabfd1868e75b34e02dfb20cb6d[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Thu Mar 13 13:27:34 2025 +0900
+
+    게시판에 오류 메시지 기능 추가
+
+[33mcommit 61ffe85de8be8db065ba4fd103cd15ebd143312a[m
+Author: seung <seungchan753@naver.com>
+Date:   Thu Mar 13 11:49:35 2025 +0900
+
+    권한 확인 및 관광지 수정 시 이미지 등록 오류 수정
+
+[33mcommit 591b6a6706dbeca4f30b250fd16feb0fcb3e6a3f[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Thu Mar 13 10:39:58 2025 +0900
+
+    html 오류 수정
+
+[33mcommit 5795c4fa5ff3561b1b74f810d2992570c3a2e878[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Thu Mar 13 10:07:19 2025 +0900
+
+    일부 주석과 코드 오류 수정
+
+[33mcommit 62aced5c8903c2e6a5300aeeada27486fa7c5d79[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Thu Mar 13 01:37:51 2025 +0900
+
+    임시 이미지 따로 저장 안하도록 코드 변경
+
+[33mcommit 7c9b7bfd9588b4bd6e51ca1da2e139ea26203437[m
+Author: seung <seungchan753@naver.com>
+Date:   Wed Mar 12 16:55:19 2025 +0900
+
+    img 저장 위치 수정
+
+[33mcommit 3a513437678b016d6032ee71a4f501323c65c367[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Wed Mar 12 14:17:26 2025 +0900
+
+    리뷰, 신고 등 게시글 URL, HTML 재구성
+
+[33mcommit 6119bf577e01e5278582f601be3879edc3eaa214[m
+Author: seung <seungchan753@naver.com>
+Date:   Wed Mar 12 13:44:22 2025 +0900
+
+    img 저장 위치 수정
+
+[33mcommit 3296c97c33c93b4efb227a704f6c3e398153009e[m
+Author: seung <seungchan753@naver.com>
+Date:   Wed Mar 12 13:34:13 2025 +0900
+
+    img 저장 위치 수정
+
+[33mcommit e88753ae7c15c33ecc6c0eb0e9d810e6827c94eb[m
+Author: seung <seungchan753@naver.com>
+Date:   Wed Mar 12 11:50:44 2025 +0900
+
+    관광지 검색기능 추가
+
+[33mcommit 5ec6d2d3bf69f32405975e232b8ec4d00caa4baa[m
+Author: seung <seungchan753@naver.com>
+Date:   Wed Mar 12 11:31:21 2025 +0900
+
+    관광지 검색기능 추가
+
+[33mcommit 27231cf468a10ec94dcc563c0f936161a8e77cc2[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Wed Mar 12 11:29:26 2025 +0900
+
+    스프링 시큐리티 기능에 따른 게시글 기능 수정 및 추가
+
+[33mcommit 6cfb49cf465a07ebc4e90c4b2bbfd7945b58cb53[m
+Author: seung <seungchan753@naver.com>
+Date:   Wed Mar 12 11:05:34 2025 +0900
+
+    관광지 검색기능 추가
+
+[33mcommit fc70c785a8972260fe929ba364e7274776907e69[m
+Author: seung <seungchan753@naver.com>
+Date:   Tue Mar 11 18:54:07 2025 +0900
+
+    페이징 추가
+
+[33mcommit a640869f84247ba5d4aaacfc20bf7a592ea84099[m
+Author: seung <seungchan753@naver.com>
+Date:   Tue Mar 11 18:45:29 2025 +0900
+
+    페이징 추가
+
+[33mcommit 8fa56c193aff88e15f4932d36920a52f5a02306b[m
+Author: seung <seungchan753@naver.com>
+Date:   Tue Mar 11 18:41:31 2025 +0900
+
+    페이징 추가
+
+[33mcommit a1f785d940d11ac2f84ed9c902af67a1cbe37b1c[m
+Author: seung <seungchan753@naver.com>
+Date:   Tue Mar 11 18:24:01 2025 +0900
+
+    페이징 추가
+
+[33mcommit 1c41462ff24766f73694b9f1d328916b70f61aae[m
+Author: seung <seungchan753@naver.com>
+Date:   Tue Mar 11 18:05:58 2025 +0900
+
+    페이징 추가
+
+[33mcommit 0445cb0fb722ed1e5485963e95fbfb68ded06d2f[m
+Author: seung <seungchan753@naver.com>
+Date:   Tue Mar 11 14:28:53 2025 +0900
+
+    관광지 이미지 추가
+
+[33mcommit e41126b1bb112f8354b08865a3c106c7dab4b51e[m
+Author: seung <seungchan753@naver.com>
+Date:   Tue Mar 11 14:05:04 2025 +0900
+
+    관광지 이미지 추가
+
+[33mcommit d90b13010196db704e11af18dffc5fe257a8b25f[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Tue Mar 11 10:14:02 2025 +0900
+
+    다른 브렌치에 있었던 기능 반영3
+
+[33mcommit eccc295efa063d61010c729a364b087b3f0646eb[m
+Merge: 5db426d 68a6cf8
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Tue Mar 11 10:10:40 2025 +0900
+
+    Merge remote-tracking branch 'refs/remotes/origin/Minguk' into Yoon
+    
+    # Conflicts:
+    #       src/main/java/org/spring/attraction/entity/User.java
+
+[33mcommit 5db426d1ef590c47e1528bb69c25fb3cb798ceb2[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Tue Mar 11 10:08:33 2025 +0900
+
+    다른 브렌치에 있었던 기능 반영2
+
+[33mcommit 47321a04ca7d6bee1d7edadec9782a90f4755c61[m
+Merge: c52702c b95d87c
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Tue Mar 11 09:59:49 2025 +0900
+
+    다른 브렌치에 있었던 기능 반영
+
+[33mcommit 68a6cf825201f919a03360ab54e0e00df0224cca[m
+Author: adward27 <whalsrnr2741@gmail.com>
+Date:   Tue Mar 11 03:32:45 2025 +0900
+
+    feat : 어드민 유저 목록 crud
+
+[33mcommit 72fed558547e9c222ccb6a6a85f6d2c31b1766e0[m
+Author: adward27 <whalsrnr2741@gmail.com>
+Date:   Tue Mar 11 01:56:15 2025 +0900
+
+    feat : 비밀번호 변경 및 회원 정보 수정
+
+[33mcommit c52702c22ba8eb7086fd48b337a54c4b250b1e33[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Mon Mar 10 19:54:30 2025 +0900
+
+    Revert "Revert "게시글 입력화면 내에서 임시 이미지 삭제 기능 구현""
+    
+    This reverts commit 28e007759edae75dc179794bd9dbbade00031e5c.
+
+[33mcommit 28e007759edae75dc179794bd9dbbade00031e5c[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Mon Mar 10 19:48:55 2025 +0900
+
+    Revert "게시글 입력화면 내에서 임시 이미지 삭제 기능 구현"
+    
+    This reverts commit 57e8f497ae6f56dece088c09ad4085a563ea2247.
+
+[33mcommit 2159956b7521cff544720bceeb384b63b476f1d0[m
+Merge: 57e8f49 f8775c3
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Mon Mar 10 18:54:32 2025 +0900
+
+    Merge remote-tracking branch 'refs/remotes/origin/Minguk' into Yoon
+    
+    # Conflicts:
+    #       src/main/java/org/spring/attraction/entity/Attraction.java
+    #       src/main/java/org/spring/attraction/entity/Reservation.java
+    #       src/main/java/org/spring/attraction/entity/User.java
+    #       src/main/java/org/spring/attraction/repository/UserRepository.java
+    #       src/main/resources/application.yml
+    #       src/main/resources/templates/index.html
+
+[33mcommit 57e8f497ae6f56dece088c09ad4085a563ea2247[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Mon Mar 10 18:14:24 2025 +0900
+
+    게시글 입력화면 내에서 임시 이미지 삭제 기능 구현
+
+[33mcommit 5893c4172e521c2edc005a2ed4abc0a6a9b71dad[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Mon Mar 10 17:47:40 2025 +0900
+
+    오류 수정
+
+[33mcommit f92549af8f0178a0b5253fce07f4c320f1ba4c6e[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Mon Mar 10 17:37:49 2025 +0900
+
+    게시글 수정 기능 구현(이미지 수정 포함)
+
+[33mcommit b95d87cb9f053868afa911b86be37e4247f76ef2[m
+Author: seung <seungchan753@naver.com>
+Date:   Mon Mar 10 16:56:17 2025 +0900
+
+    관광지 이미지 추가
+
+[33mcommit 5be6b2a19f52859d2af0a49807df04f1953afe37[m
+Author: seung <seungchan753@naver.com>
+Date:   Mon Mar 10 16:55:58 2025 +0900
+
+    관광지 이미지 추가
+
+[33mcommit eba4f087e4ef8949f2057fec4879d837267833c3[m
+Author: seung <seungchan753@naver.com>
+Date:   Mon Mar 10 16:16:39 2025 +0900
+
+    관광지 이미지 추가
+
+[33mcommit 76b352b663e12557c63bcc3d81a42ab6dd94ac58[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Sun Mar 9 21:52:08 2025 +0900
+
+    오류 수정 및 html 소스 간소화
+
+[33mcommit f8775c39a97ab820593c085b8ee077c52af4ad16[m
+Author: adward27 <whalsrnr2741@gmail.com>
+Date:   Sat Mar 8 01:22:00 2025 +0900
+
+    feat : 로그인 및 전체 회원 정보 출력
+
+[33mcommit 89a5ca8d73ff8c99a798f8e786959820073d38fe[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Fri Mar 7 19:44:15 2025 +0900
+
+    기존에 구현된 관광지 관련 기능 브렌치에 추가
+
+[33mcommit 99396dda45c4a6e829968e933f684654278b05a1[m
+Author: seung <seungchan753@naver.com>
+Date:   Fri Mar 7 18:49:12 2025 +0900
+
+    예외처리 추가
+
+[33mcommit dd4f8c2779ec71a0c0ce3a3c8ac7656c891be886[m
+Author: adward27 <whalsrnr2741@gmail.com>
+Date:   Fri Mar 7 18:46:00 2025 +0900
+
+    feat : 로그인 및 전체 회원 정보 출력
+
+[33mcommit 48537b3e4fbf0b1b3c956c386c4dbd4924f44818[m
+Author: seung <seungchan753@naver.com>
+Date:   Fri Mar 7 17:51:36 2025 +0900
+
+    예외처리 추가
+
+[33mcommit 3c872dea209020258c1c02714cd84d013caf7043[m
+Author: seung <seungchan753@naver.com>
+Date:   Fri Mar 7 15:45:29 2025 +0900
+
+    예외처리 추가
+
+[33mcommit ea04a50c2064813a88cb256f0f09f760334dcd9e[m
+Author: seung <seungchan753@naver.com>
+Date:   Fri Mar 7 15:24:43 2025 +0900
+
+    예외처리 추가
+
+[33mcommit c1687af48c0ca80a93338c0cf7bd3d4f9590a791[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Fri Mar 7 09:48:23 2025 +0900
+
+    게시글 내 관광지 관련 기능 추가 필요에 따른 이미 구현되었던 관광지 관련 Service, Controller 클래스 추가
+
+[33mcommit 334903f6b7a6f55c7689082db9cbd208d37db278[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Fri Mar 7 09:41:51 2025 +0900
+
+    게시글 내 관광지 관련 기능 추가 필요에 따른 이미 구현되었던 관광지 관련 DTO, Repository 추가
+
+[33mcommit 4df07d290f2dc34194526043bcc8db087a480b5e[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Thu Mar 6 21:09:06 2025 +0900
+
+    게시글 읽기, 검색, 삭제, 등록 기능 완료(요구 사항에 따라 수정될 수도 있음) 및 UI 추가 구현
+
+[33mcommit a6df52ba71b56deb0adc1f0c7b4ad25e4860b1d4[m
+Author: seung <seungchan753@naver.com>
+Date:   Thu Mar 6 16:35:01 2025 +0900
+
+    관광지 예약, 수정, 리스트 추가
+
+[33mcommit 89a59ce12c6cde259f823b5a379ad366576aabf3[m
+Author: seung <seungchan753@naver.com>
+Date:   Thu Mar 6 16:01:06 2025 +0900
+
+    관광지 예약, 수정, 리스트 추가
+
+[33mcommit eee0a1cc067e3020ef76ab395084c7f969643f8c[m
+Author: seung <seungchan753@naver.com>
+Date:   Thu Mar 6 14:52:35 2025 +0900
+
+    관광지 예약, 수정, 리스트 추가
+
+[33mcommit 90704f6f50f1bb31903872522815f12c355d40c1[m
+Author: adward27 <whalsrnr2741@gmail.com>
+Date:   Thu Mar 6 09:24:30 2025 +0900
+
+    feat : 회원가입 로직 추가
+
+[33mcommit d3b238bf3dceed17aa50c4147ca79a9ee1e8fa85[m
+Author: seung <seungchan753@naver.com>
+Date:   Wed Mar 5 19:37:08 2025 +0900
+
+    관광지 정보 수정완료
+
+[33mcommit cf425711a8a4836c60e3236a7188f3bd1fa943e7[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Wed Mar 5 19:11:28 2025 +0900
+
+    게시판 이미지 Entity, Repository, DTO, 서비스, 컨트롤러, 테스트 코드 추가 및 수정, 이미지 기능 추가에 따른 게시글 DTO, Entity, 컨트롤러 수정, 그외 기타 ui 수정 및 파일 추가
+
+[33mcommit 2f878409014cf90de5ac755f5cfe0c0b11139237[m
+Author: seung <seungchan753@naver.com>
+Date:   Wed Mar 5 17:29:20 2025 +0900
+
+    초기 커밋
+
+[33mcommit 096eb491d9b6843d18fe3186d2db6dac62611961[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Tue Mar 4 19:05:44 2025 +0900
+
+    게시글 리스트 html, 에러 html, 초기 html, 입력 html 생성
+
+[33mcommit 043356db9326d728becbbebdd47a9f420a00c265[m
+Author: somecreater <dbstjrgy123@gmail.com>
+Date:   Tue Mar 4 19:04:51 2025 +0900
+
+    설정 변경, 게시글 엔티티내 댓글 수 컬럼 추가 및, 이미지와 연관관계 형성, 컨트롤러 수정, 게시글 dto 댓글 수, 로그인 아이디, 관광지 이름 속성 추가, 게시글 리포지터리 오류 수정, 게시글 서비스 수정, 초기 데이터 넣는 메소드 구현, 게시글 이미지 관련 클래스 생성, 유저 엔티티 수정, 유저 리포지터리 추가, 그외 기타 클래스 생성
