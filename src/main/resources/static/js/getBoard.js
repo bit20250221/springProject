@@ -17,9 +17,18 @@ function deleteboard(){
     if(confirm("삭제하시겠습니까?")){
         const board_id = document.querySelector(".boardNum").value;
         const form = document.createElement("form");
-        form.id = "deleteForm";
         form.method = "post";
         form.action = "/board/deleteBoard/" + board_id;
+
+        const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
+        const csrfParamMeta = document.querySelector('meta[name="_csrf_parameterName"]');
+        if(csrfTokenMeta && csrfParamMeta){
+            const csrfInput = document.createElement("input");
+            csrfInput.type = "hidden";
+            csrfInput.name = csrfParamMeta.getAttribute("content");
+            csrfInput.value = csrfTokenMeta.getAttribute("content");
+            form.appendChild(csrfInput);
+        }
 
         const input = document.createElement("input");
         input.type = "hidden";

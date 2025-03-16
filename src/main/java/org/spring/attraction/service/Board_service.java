@@ -239,7 +239,7 @@ public class Board_service {
         try {
             if (isExist.isPresent()) {
                 if((isExist.get().getUser().getUserLoginId().compareTo(user.getUserLoginId())!=0)
-                        || user.getUserType().name().compareTo("manager")!=0){
+                        && user.getUserType().name().compareTo("manager")!=0){
                     return false;
                 }
 
