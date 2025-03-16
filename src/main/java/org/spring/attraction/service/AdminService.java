@@ -2,7 +2,9 @@ package org.spring.attraction.service;
 
 import org.spring.attraction.ENUM.UserType;
 import org.spring.attraction.dto.UserDto;
+import org.spring.attraction.entity.Attraction;
 import org.spring.attraction.entity.User;
+import org.spring.attraction.repository.AttractionRepository;
 import org.spring.attraction.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,9 @@ public class AdminService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AttractionRepository attractionRepository;
+
     // 관리자 추가
     public void createUser(UserDto userDto, UserType userType) {
         // UserDto에 UserType 설정
@@ -36,24 +41,34 @@ public class AdminService {
     }
 
     // 유저 정보 업데이트
-    public UserDto updateUser(UserDto userDTO) {
-        User existingUser = userRepository.findById(userDTO.getId())
+    public UserDto updateUser(UserDto userDto) {
+        User existingUser = userRepository.findById(userDto.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // 비밀번호는 기존 값 유지
-        if (userDTO.getPass() == null || userDTO.getPass().isEmpty()) {
-            userDTO.setPass(existingUser.getPass());
+        if (userDto.getPass() == null || userDto.getPass().isEmpty()) {
+            userDto.setPass(existingUser.getPass());
         }
 
-        // 업데이트할 필드들을 설정
-        existingUser.setUserLoginId(userDTO.getUserLoginId());
-        existingUser.setUserType(userDTO.getUserType());
-        existingUser.setBirthDate(userDTO.getBirthDate());
-        existingUser.setGrade(userDTO.getGrade());
+        // 업데이트할 필드 설정
+        existingUser.setUserLoginId(userDto.getUserLoginId());
+        existingUser.setUserType(userDto.getUserType());
+        existingUser.setBirthDate(userDto.getBirthDate());
+        existingUser.setGrade(userDto.getGrade());
 
-        userRepository.save(existingUser);
-        return userDTO;
+        // Attraction 설정 추가
+        if (userDto.getAttraction() != null) {
+            Attraction attraction = attractionRepository.findById(userDto.getAttraction())
+                    .orElseThrow(() -> new RuntimeException("Attraction not found"));
+            existingUser.setAttraction(attraction); // Attraction 매핑
+        } else {
+            existingUser.setAttraction(null); // Attraction 초기화
+        }
+
+        userRepository.save(existingUser); // 변경 사항 저장
+        return userDto;
     }
+
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
