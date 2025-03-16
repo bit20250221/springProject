@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>유저 정보</title>
+  <script th:inline="javascript">
+    const listReq = () => {
+      location.href = "/admin/userList";
+    }
+    const updateReq = () => {
+      const userLoginId = [[${user.id}]];
+      location.href = "/admin/user/update/" + userLoginId;
+    }
+    const deleteReq = () => {
+      const userLoginId = [[${user.id}]]; // Thymeleaf 변수 렌더링
+      location.href = "/admin/user/delete/" + userLoginId;
+    }
+  </script>
+</head>
+<body>
+<h2>유저 상세 정보</h2>
+<p>순번: <span th:text="${user.id}"></span></p>
+<p>아이디: <span th:text="${user.userLoginId}"></span></p>
+<p>생년월일: <span th:text="${user.birthDate}"></span></p>
+<p>권한: <span th:text="${user.userType}"></span></p>
+<p>등급: <span th:text="${user.grade}"></span></p>
+<p>관광지 id: <span th:text="${user.attraction}"></span></p>
+<button onclick="listReq()">목록 가기</button>
+<button onclick="updateReq()">수정</button>
+<button onclick="deleteReq()">삭제</button>
+</body>
+</html>

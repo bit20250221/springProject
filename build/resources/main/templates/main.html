@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>main</title>
+    <script>
+        const logout = () =>{
+            location.href = "/user/logout"
+        }
+        const myPage = () =>{
+            location.href = "/user/myPage"
+        }
+        const admin = () =>{
+            location.href = "/admin"
+        }
+    </script>
+</head>
+<body>
+  <h2>메인 화면</h2>
+  <button onclick="logout()">로그 아웃</button>
+  <button onclick="myPage()">마이 페이지</button>
+  <button onclick="admin()">어드민 페이지</button>
+</body>
+</html>

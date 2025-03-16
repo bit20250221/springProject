@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>myPage</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        function toggleForm(formId) {
+            const form = document.getElementById(formId);
+            form.classList.toggle("hidden");
+        }
+    </script>
+</head>
+<body>
+<h2>마이 페이지</h2>
+<p>아이디: <span th:text="${user.userLoginId}"></span></p>
+<p>유저 타입: <span th:text="${user.userType}"></span></p>
+<p>생년월일: <span th:text="${user.birthDate}"></span></p>
+<p>등급: <span th:text="${user.grade}"></span></p>
+
+<hr>
+
+<h3>화면 열기</h3>
+<button class="button" onclick="toggleForm('updatePasswordForm')">비밀번호 변경</button>
+<form id="updatePasswordForm" class="hidden" action="/user/update" method="post">
+    현재 비밀번호: <input type="password" name="currentPassword" placeholder="현재 비밀번호" required/><br>
+    새 비밀번호: <input type="password" name="newPassword" placeholder="새 비밀번호" required/><br>
+    비밀번호 확인: <input type="password" name="confirmNewPassword" placeholder="비밀번호 확인" required/><br>
+    <input type="submit" value="비밀번호 변경"/>
+</form>
+
+<hr>
+
+<h3>화면 열기</h3>
+<button class="button" onclick="toggleForm('deleteForm')">회원 탈퇴</button>
+<form id="deleteForm" class="hidden" action="/user/delete" method="post" onsubmit="return confirm('정말로 탈퇴하시겠습니까?');">
+    <input type="password" name="password" placeholder="비밀번호" required/><br>
+    <input type="submit" value="회원 탈퇴"/>
+</form>
+</body>
+</html>

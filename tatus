@@ -1,0 +1,37 @@
+[1mdiff --git a/build/reports/problems/problems-report.html b/build/reports/problems/problems-report.html[m
+[1mindex 1971d25..4b87841 100644[m
+[1m--- a/build/reports/problems/problems-report.html[m
+[1m+++ b/build/reports/problems/problems-report.html[m
+[36m@@ -650,7 +650,7 @@[m [mcode + .copy-button {[m
+ <script type="text/javascript">[m
+ function configurationCacheProblems() { return ([m
+ // begin-report-data[m
+[31m-{"diagnostics":[{"locations":[{"path":"initialization script 'C:\\Users\\USER\\AppData\\Local\\Temp\\AttractionApplication_main__3.gradle'","line":27},{"path":"initialization script 'C:\\Users\\USER\\AppData\\Local\\Temp\\AttractionApplication_main__3.gradle'","line":27}],"problem":[{"text":"The org.gradle.api.plugins.Convention type has been deprecated."}],"severity":"WARNING","problemDetails":[{"text":"This is scheduled to be removed in Gradle 9.0."}],"contextualLabel":"The org.gradle.api.plugins.Convention type has been deprecated.","documentationLink":"https://docs.gradle.org/8.12.1/userguide/upgrading_version_8.html#deprecated_access_to_conventions","problemId":[{"name":"deprecation","displayName":"Deprecation"},{"name":"the-org-gradle-api-plugins-convention-type-has-been-deprecated","displayName":"The org.gradle.api.plugins.Convention type has been deprecated."}]}],"problemsReport":{"totalProblemCount":1,"buildName":"springProject2","requestedTasks":":AttractionApplication.main()","documentationLink":"https://docs.gradle.org/8.12.1/userguide/problems-report.html","documentationLinkCaption":"Problem report","summaries":[]}}[m
+[32m+[m[32m{"diagnostics":[{"locations":[{"path":"C:\\springProject\\src\\main\\java\\org\\spring\\attraction\\controller\\BoardImage_controller.java"},{"taskPath":":compileJava"}],"problem":[{"text":"Java compilation note"}],"severity":"ADVICE","problemDetails":[{"text":"Note: Some input files use unchecked or unsafe operations."}],"contextualLabel":"Some input files use unchecked or unsafe operations.","problemId":[{"name":"java","displayName":"Java compilation"},{"name":"compilation","displayName":"Compilation"},{"name":"compiler-note-unchecked-plural","displayName":"Java compilation note"}]},{"locations":[{"path":"C:\\springProject\\src\\main\\java\\org\\spring\\attraction\\controller\\BoardImage_controller.java"},{"taskPath":":compileJava"}],"problem":[{"text":"Java compilation note"}],"severity":"ADVICE","problemDetails":[{"text":"Note: Recompile with -Xlint:unchecked for details."}],"contextualLabel":"Recompile with -Xlint:unchecked for details.","problemId":[{"name":"java","displayName":"Java compilation"},{"name":"compilation","displayName":"Compilation"},{"name":"compiler-note-unchecked-recompile","displayName":"Java compilation note"}]}],"problemsReport":{"totalProblemCount":2,"buildName":"springProject","requestedTasks":":org.spring.attraction.AttractionApplication.main()","documentationLink":"https://docs.gradle.org/8.12.1/userguide/problems-report.html","documentationLinkCaption":"Problem report","summaries":[]}}[m
+ // end-report-data[m
+ );}[m
+ </script>[m
+[1mdiff --git a/build/resources/main/application.yml b/build/resources/main/application.yml[m
+[1mindex 3dc3b4c..e229f92 100644[m
+[1m--- a/build/resources/main/application.yml[m
+[1m+++ b/build/resources/main/application.yml[m
+[36m@@ -18,4 +18,4 @@[m [mspring:[m
+         open-in-view: false[m
+         show-sql: true[m
+         hibernate:[m
+[31m-            ddl-auto: update[m
+\ No newline at end of file[m
+[32m+[m[32m            ddl-auto: create[m
+\ No newline at end of file[m
+[1mdiff --git a/src/main/resources/application.yml b/src/main/resources/application.yml[m
+[1mindex 26a904a..3dc3b4c 100644[m
+[1m--- a/src/main/resources/application.yml[m
+[1m+++ b/src/main/resources/application.yml[m
+[36m@@ -18,4 +18,4 @@[m [mspring:[m
+         open-in-view: false[m
+         show-sql: true[m
+         hibernate:[m
+[31m-            ddl-auto: none[m
+\ No newline at end of file[m
+[32m+[m[32m            ddl-auto: update[m
+\ No newline at end of file[m
