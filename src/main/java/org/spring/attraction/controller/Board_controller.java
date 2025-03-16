@@ -313,6 +313,7 @@ public class Board_controller {
                     writerattraction = isExist.getAttraction();
                     if (writerattraction != null
                             && BoardAttractionId == writerattraction.getId()) {
+                        OneBoard.setRate(0);
                         OneBoard.setTitle(OneBoard.getTitle() + " (본인 관광지 계정입니다.)");
                     }
                 }
