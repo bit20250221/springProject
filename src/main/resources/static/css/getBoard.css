@@ -1,5 +1,100 @@
-.imageElement img {
-    max-width: 300px;
-    max-height: 300px;
-}
+        .imageElement img {
+         max-width: 300px;
+         max-height: 300px;
+        }
 
+
+        .board-wrapper {
+          background-color: #fff;
+          padding: 2rem;
+          border: 1px solid #dee2e6;
+          border-radius: 0.5rem;
+          box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+          margin-bottom: 2rem;
+        }
+        .board-wrapper h1 {
+          font-size: 2.5rem;
+          margin-bottom: 0.5rem;
+          position: relative;
+          padding-bottom: 0.5rem;
+          border-bottom: 2px solid #ddd;
+        }
+
+        .board-wrapper h1::before {
+          content: "제목: ";
+          font-size: 1.5rem;
+          color: #555;
+          margin-right: 0.5rem;
+        }
+
+        .tab_element p {
+          background-color: #e7f3ff;
+          display: inline-block;
+          padding: 0.3rem 0.8rem;
+          border-radius: 4px;
+          font-size: 0.9rem;
+          color: #31708f;
+        }
+
+        .content_element p {
+          line-height: 1.6;
+          font-size: 1.5rem;
+          color: #333;
+          margin-top: 1rem;
+          min-height: 300px;
+        }
+
+        .attraction_element p::before{
+          content: "관광지: ";
+          color: black;
+        }
+        .writer_element p::before{
+          content: "작성자: ";
+          color: black;
+        }
+        .writer_element p,
+        .attraction_element p {
+          font-size: 1.1rem;
+          color: #777;
+        }
+
+        .rate_element p:first-child {
+          font-weight: bold;
+          margin-bottom: 0.2rem;
+        }
+        .rate_element p:last-child {
+          color: #e67e22;
+          font-size: 1.2rem;
+        }
+
+       .imageList {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1rem;
+          margin-bottom: 1rem;
+          justify-content: center;
+        }
+
+       .imageElement {
+          width: 300px;
+          padding: 0.5rem;
+          background-color: #fff;
+          text-align: center;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          transition: transform 0.3s ease;
+       }
+
+       .imageElement:hover {
+          transform: scale(1.05);
+       }
+
+       .image_title {
+          font-weight: bold;
+          margin-bottom: 0.5rem;
+       }
+
+       .boardimgElement {
+          max-width: 100%;
+          height: auto;
+       }

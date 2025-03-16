@@ -68,47 +68,77 @@
 <!-- 일반 게시글 영역 -->
 <div class="normal_board container my-4 board-wrapper" th:if="${board.tab=='일반'}">
     <button class="btn btn-sm btn-outline-primary mb-3" onclick="window.location.href='/board/normal'">일반 게시글 목록으로</button>
-    <h1 id="nomal_title" th:text="${board.title}"></h1>
-    <div class="boardElement my-2">
-        <p th:text="${board.tab}"></p>
+    <div class="title_element">
+        <h1 id="nomal_title" th:text="${board.title}"></h1>
     </div>
-    <div class="boardElement my-2">
-        <p th:text="${board.content}"></p>
+
+    <div class="tab_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.tab}"></p>
+        </div>
     </div>
-    <div class="boardElement my-2">
-        <p th:text="${board.user_login_Id}"></p>
+
+    <div class="content_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.content}"></p>
+        </div>
+    </div>
+
+    <div class="writer_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.user_login_Id}"></p>
+        </div>
     </div>
 </div>
 
 <!-- 리뷰 게시글 영역 -->
 <div class="review_board container my-4 board-wrapper" th:if="${board.tab=='리뷰'}">
     <button class="btn btn-sm btn-outline-primary mb-3" onclick="window.location.href='/board/review'">리뷰 게시글 목록으로</button>
-    <h1 id="review_title" th:text="${board.title}"></h1>
-    <div class="boardElement my-2">
-        <p th:text="${board.tab}"></p>
+    <div class="title_element">
+        <h1 id="review_title" th:text="${board.title}"></h1>
     </div>
-    <div class="boardElement my-2">
-        <p th:text="${board.content}"></p>
+
+    <div class="tab_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.tab}"></p>
+        </div>
     </div>
-    <div class="boardElement my-2">
-        <p th:text="${board.user_login_Id}"></p>
+
+    <div class="content_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.content}"></p>
+        </div>
     </div>
-    <div class="boardElement my-2">
-        <p th:text="${board.attraction_Name}"></p>
+
+    <div class="writer_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.user_login_Id}"></p>
+        </div>
     </div>
-    <div class="boardElement my-2">
-        <p>리뷰 평점</p>
-        <p th:text="${board.rate}"></p>
+
+    <div class="attraction_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.attraction_Name}"></p>
+        </div>
+    </div>
+
+    <div class="rate_element">
+        <div class="boardElement my-2">
+            <p>리뷰 평점</p>
+            <p th:text="${board.rate}"></p>
+        </div>
     </div>
     <!-- 리뷰 이미지 목록 -->
     <div class="boardElement my-3">
+        <div class="imageList">
         <div class="row row-cols-2 row-cols-md-3 g-3" th:each="image : ${board.boardImages}">
             <div class="col">
                 <div class="imageElement text-center">
-                    <p th:text="${image.name}"></p>
+                    <p class="image_title" th:text="${image.name}"></p>
                     <img class="boardimgElement rounded" th:src="@{/resources/upload/{UUIDName}(UUIDName=${image.UUIDName})}" alt="게시글 이미지" />
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </div>
@@ -116,28 +146,45 @@
 <!-- 문의 게시글 영역 -->
 <div class="inquiry_board container my-4 board-wrapper" th:if="${board.tab=='문의'}">
     <button class="btn btn-sm btn-outline-primary mb-3" onclick="window.location.href='/board/inquiry'">문의 게시글 목록으로</button>
-    <h1 id="inquiry_title" th:text="${board.title}"></h1>
-    <div class="boardElement my-2">
-        <p th:text="${board.tab}"></p>
+
+    <div class="title_element">
+        <h1 id="inquiry_title" th:text="${board.title}"></h1>
     </div>
-    <div class="boardElement my-2">
-        <p th:text="${board.content}"></p>
+
+    <div class="tab_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.tab}"></p>
+        </div>
     </div>
-    <div class="boardElement my-2">
-        <p th:text="${board.user_login_Id}"></p>
+
+    <div class="content_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.content}"></p>
+        </div>
     </div>
-    <div class="boardElement my-2">
-        <p th:text="${board.attraction_Name}"></p>
+
+    <div class="writer_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.user_login_Id}"></p>
+        </div>
+    </div>
+
+    <div class="attraction_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.attraction_Name}"></p>
+        </div>
     </div>
     <!-- 문의 이미지 목록 -->
     <div class="boardElement my-3">
+        <div class="imageList">
         <div class="row row-cols-2 row-cols-md-3 g-3" th:each="image : ${board.boardImages}">
             <div class="col">
                 <div class="imageElement text-center">
-                    <p th:text="${image.name}"></p>
+                    <p class="image_title" th:text="${image.name}"></p>
                     <img class="boardimgElement rounded" th:src="@{/resources/upload/{UUIDName}(UUIDName=${image.UUIDName})}" alt="게시글 이미지" />
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </div>
@@ -145,28 +192,46 @@
 <!-- 신고 게시글 영역 -->
 <div class="report_board container my-4 board-wrapper" th:if="${board.tab=='신고'}">
     <button class="btn btn-sm btn-outline-primary mb-3" onclick="window.location.href='/board/report'">신고 게시글 목록으로</button>
-    <h1 id="report_title" th:text="${board.title}"></h1>
-    <div class="boardElement my-2">
-        <p th:text="${board.tab}"></p>
+
+    <div class="title_element">
+        <h1 id="report_title" th:text="${board.title}"></h1>
     </div>
-    <div class="boardElement my-2">
-        <p th:text="${board.content}"></p>
+
+    <div class="tab_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.tab}"></p>
+        </div>
     </div>
-    <div class="boardElement my-2">
-        <p th:text="${board.user_login_Id}"></p>
+
+    <div class="content_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.content}"></p>
+        </div>
     </div>
-    <div class="boardElement my-2">
-        <p th:text="${board.attraction_Name}"></p>
+
+    <div class="writer_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.user_login_Id}"></p>
+        </div>
     </div>
+
+    <div class="attraction_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.attraction_Name}"></p>
+        </div>
+    </div>
+
     <!-- 신고 이미지 목록 -->
     <div class="boardElement my-3">
+        <div class="imageList">
         <div class="row row-cols-2 row-cols-md-3 g-3" th:each="image : ${board.boardImages}">
             <div class="col">
                 <div class="imageElement text-center">
-                    <p th:text="${image.name}"></p>
+                    <p class="image_title" th:text="${image.name}"></p>
                     <img class="boardimgElement rounded" th:src="@{/resources/upload/{UUIDName}(UUIDName=${image.UUIDName})}" alt="게시글 이미지" />
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </div>
@@ -175,25 +240,40 @@
 <div class="announce_board container my-4 board-wrapper" th:if="${board.tab=='공지'}">
     <button class="btn btn-sm btn-outline-primary mb-3" onclick="window.location.href='/board/announce'">공지 게시글 목록으로</button>
     <label for="announce_title" class="fw-bold">공지</label>
-    <h1 id="announce_title" th:text="${board.title}"></h1>
-    <div class="boardElement my-2">
-        <p th:text="${board.tab}"></p>
+
+    <div class="title_element">
+        <h1 id="announce_title" th:text="${board.title}"></h1>
     </div>
-    <div class="boardElement my-2">
-        <p th:text="${board.content}"></p>
+
+    <div class="tab_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.tab}"></p>
+        </div>
     </div>
-    <div class="boardElement my-2">
-        <p th:text="${board.user_login_Id}"></p>
+
+    <div class="content_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.content}"></p>
+        </div>
     </div>
-    <div class="boardElement my-2">
-        <p th:text="${board.attraction_Name}"></p>
+
+    <div class="writer_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.user_login_Id}"></p>
+        </div>
+    </div>
+
+    <div class="attraction_element">
+        <div class="boardElement my-2">
+            <p th:text="${board.attraction_Name}"></p>
+        </div>
     </div>
     <!-- 공지 이미지 목록 -->
     <div class="boardElement my-3">
         <div class="row row-cols-2 row-cols-md-3 g-3" th:each="image : ${board.boardImages}">
             <div class="col">
                 <div class="imageElement text-center">
-                    <p th:text="${image.name}"></p>
+                    <p class="image_title" th:text="${image.name}"></p>
                     <img class="boardimgElement rounded" th:src="@{/resources/upload/{UUIDName}(UUIDName=${image.UUIDName})}" alt="게시글 이미지"/>
                 </div>
             </div>
