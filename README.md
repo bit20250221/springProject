@@ -12,7 +12,7 @@
  - `JPA`, `Lombok`, `Spring Security`
  - **DataBase**: `MySQL`
  - **Front End**: `Thymeleaf`, `JavaScript`
- - **IDE** : `IntelliJ IDEA 2024.1.4` , `MySQL Workbench`
+ - **IDE** : `IntelliJ IDEA` , `MySQL Workbench`
  - `GitHub`
 
    
