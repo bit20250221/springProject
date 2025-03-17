@@ -1,6 +1,7 @@
 # Tourist attraction reservation service
 관광지 예약 및 리뷰, 문의 사이트
 
+
 ## 주제
 
 
@@ -13,6 +14,7 @@
  - **Front End**: `Thymeleaf`, `JavaScript`
  - **IDE** : `IntelliJ IDEA 2024.1.4` , `MySQL Workbench`
  - `GitHub`
+
    
 ## 역할
 
