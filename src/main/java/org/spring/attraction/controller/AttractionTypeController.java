@@ -27,7 +27,7 @@ public class AttractionTypeController {
     @GetMapping("/save")
     public String save(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("userRole", userService.getUserRole(userDetails));
-        return "/attractionType/save";
+        return "attractionType/save";
     }
 
     @PostMapping("/save")
@@ -46,7 +46,7 @@ public class AttractionTypeController {
         model.addAttribute("userRole", userService.getUserRole(userDetails));
         List<AttractionTypeDto> attractionTypeDtoList = attractionTypeService.findAll();
         model.addAttribute("attractionTypeDtoList", attractionTypeDtoList);
-        return "/attractionType/list";
+        return "attractionType/list";
     }
 
     @GetMapping("/delete/{id}")

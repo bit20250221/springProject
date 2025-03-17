@@ -34,7 +34,7 @@ public class AttractionController {
     @GetMapping(value = {"", "/", "/index", "/main"})
     public String attraction(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("userRole", userService.getUserRole(userDetails));
-        return "/attraction/main";
+        return "attraction/main";
     }
 
     @GetMapping("/save")
@@ -44,7 +44,7 @@ public class AttractionController {
         List<AttractionTypeDto> attractionTypeDtoList = attractionTypeService.findAll();
         model.addAttribute("areaDtoList", areaDtoList);
         model.addAttribute("attractionTypeDtoList", attractionTypeDtoList);
-        return "/attraction/save";
+        return "attraction/save";
     }
 
     @PostMapping("/save")
@@ -96,7 +96,7 @@ public class AttractionController {
         model.addAttribute("viewAttractionDtoPage", viewAttractionDtoPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
-        return "/attraction/list";
+        return "attraction/list";
     }
 
     @GetMapping("/detail/{id}")
@@ -122,7 +122,7 @@ public class AttractionController {
         model.addAttribute("selectedAttractionTypeIdList", selectedAttractionTypeIdList);
         model.addAttribute("areaDtoList", areaDtoList);
         model.addAttribute("attractionTypeDtoList", attractionTypeDtoList);
-        return "/attraction/detail";
+        return "attraction/detail";
     }
 
     @GetMapping("/update/{id}")
@@ -147,7 +147,7 @@ public class AttractionController {
         model.addAttribute("selectedAttractionTypeIdList", selectedAttractionTypeIdList);
         model.addAttribute("areaDtoList", areaDtoList);
         model.addAttribute("attractionTypeDtoList", attractionTypeDtoList);
-        return "/attraction/update";
+        return "attraction/update";
     }
 
     @PostMapping("/update")

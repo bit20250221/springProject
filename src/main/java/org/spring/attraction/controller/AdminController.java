@@ -48,7 +48,7 @@ public class AdminController {
         model.addAttribute("userList", userList);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
-        return "/admin/userList";
+        return "admin/userList";
     }
 
     // 특정 유저 조회
@@ -60,7 +60,7 @@ public class AdminController {
 
         model.addAttribute("userRole", userService.getUserRole(userDetails));
         model.addAttribute("user", userDto);
-        return "/admin/userDetail";
+        return "admin/userDetail";
     }
 
     // 특정 유저 생성 (관리자 생성)
@@ -68,7 +68,7 @@ public class AdminController {
     public String saveForm(@AuthenticationPrincipal UserDetails userDetails,
                            Model model){
         model.addAttribute("userRole", userService.getUserRole(userDetails));
-        return "/admin/save";
+        return "admin/save";
     }
 
     @PostMapping("/user/save")
@@ -95,7 +95,7 @@ public class AdminController {
         model.addAttribute("user", userDto);
         model.addAttribute("attractionList", attractionList); // Attraction 리스트 전달
         model.addAttribute("userRole", userService.getUserRole(userDetails));
-        return "/admin/userUpdate";
+        return "admin/userUpdate";
     }
 
     // 수정 처리 (ID 사용)

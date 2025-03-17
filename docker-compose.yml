@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: db_springproject
+      MYSQL_USER: user_springproject
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  springboot-app:
+    build: .
+    container_name: springboot_container
+
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_springproject?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: user_springproject
+      SPRING_DATASOURCE_PASSWORD: 1234
+      APP_UPLOAD_DIR: ./upload/board_images/
+      APP_IMG_DIR: ./upload/attraction_img/
+      #SPRING_CONFIG_LOCATION: classpath:/,file:/app/config/
+    volumes:
+      #- ./external-config/application.yml:/app/config/application.yml
+      - /host/path/to/board_images:/external/board_images
+      - /host/path/to/attraction_img:/external/attraction_img
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  mysql_data:

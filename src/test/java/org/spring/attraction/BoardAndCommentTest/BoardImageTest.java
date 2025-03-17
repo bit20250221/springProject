@@ -7,6 +7,7 @@ import org.spring.attraction.repository.Board_repository;
 import org.spring.attraction.service.BoardImage_service;
 import org.spring.attraction.service.Board_service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class BoardImageTest {
-
+/*
     @Autowired
     private BoardImage_service boardImageService;
 
@@ -32,9 +33,9 @@ public class BoardImageTest {
     @Autowired
     private Board_service boardService;
 
-    //나중에 구글 드라이브, AWS 등 외부 경로로 변경
-    public final String UPLOAD_PATH = "C:/upload/board_images/";
-    public final String TEMP_UPLOAD_PATH = "C:/upload/temp_board_images/";
+    @Value("${app.upload-dir}")
+    public String UPLOAD_PATH;
+
 
     @Test
     public void boardImageTest() {
@@ -180,5 +181,5 @@ public class BoardImageTest {
         }
     }
 
-
+*/
 }

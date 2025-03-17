@@ -25,13 +25,13 @@ public class AreaController {
     @GetMapping(value = {"", "/", "/index", "/main"})
     public String area(Model model,@AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("userRole", userService.getUserRole(userDetails));
-        return "/area/main";
+        return "area/main";
     }
 
     @GetMapping("/save")
     public String save(Model model,@AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("userRole", userService.getUserRole(userDetails));
-        return "/area/save";
+        return "area/save";
     }
 
     @PostMapping("/save")
@@ -52,7 +52,7 @@ public class AreaController {
         model.addAttribute("userRole", userService.getUserRole(userDetails));
         List<AreaDto> areaDtoList = areaService.findAll();
         model.addAttribute("areaDtoList", areaDtoList);
-        return "/area/list";
+        return "area/list";
     }
 
     @GetMapping("/update/{id}")
@@ -62,7 +62,7 @@ public class AreaController {
             AreaDto areaDto = areaService.findById(id);
             if(areaDto != null) {
                 model.addAttribute("areaDto", areaDto);
-                return "/area/update";
+                return "area/update";
             }
             return "redirect:/area/list";
         }catch (Exception e){
@@ -89,7 +89,7 @@ public class AreaController {
             AreaDto areaDto = areaService.findById(id);
             if(areaDto != null) {
                 model.addAttribute("areaDto", areaDto);
-                return "/area/detail";
+                return "area/detail";
             }
             return "redirect:/area/list";
         }catch (Exception e){

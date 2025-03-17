@@ -6,6 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
@@ -21,18 +22,18 @@ public class SchemaRunner implements ApplicationRunner {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
-        String[] isExistsTable={"viewAttraction","viewReservation"};
+    public void run(ApplicationArguments args){
+        String[] isExistsTable={"viewattraction","viewreservation"};
         String[] viewQueries={
-                "create view viewAttraction as" +
+                "create view viewattraction as" +
                         " select a.attraction_id 'id', a.name 'name', a.avgrate 'avgrate', a.price 'price', a.opentime 'open_time'," +
                         " a.closetime 'close_time', group_concat(c.type) 'type', concat(d.country, ' : ', d.city) 'area'" +
                         " from attraction a, attractiontypelist b, attractiontype c, area d" +
                         " where a.attraction_id = b.attraction_id" +
                         " and b.attraction_type_id = c.attraction_type_id" +
                         " and a.area_id = d.area_id" +
-                        "group by a.attraction_id",
-                "create view viewReservation as" +
+                        " group by a.attraction_id",
+                "create view viewreservation as" +
                         " select a.reservation_id 'id', b.attraction_id 'attraction_id', b.name 'attraction_name', b.price 'attraction_price'," +
                         " a.peplenum 'reservation_peplenum', d.user_login_id 'user_login_id', a.reservedate 'Reservation_reservedate'," +
                         " e.type 'payment_type_type', b.price * a.peplenum 'total_price'" +
@@ -43,13 +44,20 @@ public class SchemaRunner implements ApplicationRunner {
                         " and a.user_id = d.user_id"
         };
 
-
-        for(int i=0;i<isExistsTable.length;i++){
-            if(dropTableIfExists(isExistsTable[i])){
+    try {
+        for (int i = 0; i < isExistsTable.length; i++) {
+            if (dropTableIfExists(isExistsTable[i])) {
+                createViewIfNotExists(viewQueries[i]);
+                log.info("View " + isExistsTable[i] + " created successfully.");
+            } else {
+                log.info("Table " + isExistsTable[i] + " Not exists.");
                 createViewIfNotExists(viewQueries[i]);
             }
-            System.out.println("View "+isExistsTable[i]+" created successfully.");
         }
+    }catch (Exception e){
+        e.printStackTrace();
+        log.info("뷰 생성 도중 오류 발생");
+    }
         if(!insertInitData()){
             log.info("이미 데이터가 존재합니다.");
         }
@@ -57,15 +65,22 @@ public class SchemaRunner implements ApplicationRunner {
     }
 
     public boolean dropTableIfExists(String tableName) {
-        String checkTableQuery = "SELECT 1 FROM information_schema.tables WHERE table_schema = SCHEMA() AND table_name = '" + tableName + "'";
-        Integer result = jdbcTemplate.queryForObject(checkTableQuery, Integer.class);
-        if(result!=null || result>0){
-            String dropTableQuery = "DROP TABLE IF EXISTS " + tableName;
-            jdbcTemplate.execute(dropTableQuery);
-            return true;
-        }else{
+        try {
+            String checkTableQuery = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = SCHEMA() AND table_name = '" + tableName + "'";
+            Integer result = jdbcTemplate.queryForObject(checkTableQuery, Integer.class);
+            if (result != null || result > 0) {
+                String dropTableQuery = "DROP TABLE IF EXISTS " + tableName;
+                log.info(dropTableQuery);
+                jdbcTemplate.execute(dropTableQuery);
+                return true;
+            }
+        } catch (EmptyResultDataAccessException e) {
+            // 테이블이 존재하지 않으므로 아무 작업도 하지 않음
+            e.printStackTrace();
+            log.info("에러발생!!!");
             return false;
         }
+        return false;
     }
 
     public void createViewIfNotExists(String viewQuery){
@@ -81,6 +96,7 @@ public class SchemaRunner implements ApplicationRunner {
             for(String statement : statements) {
                 statement = statement.trim();
                 if(!statement.isEmpty()){
+                    log.info("Insert data : " + statement);
                     jdbcTemplate.execute(statement);
                 }
             }

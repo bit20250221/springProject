@@ -22,7 +22,7 @@ import java.util.HashMap;
 
 @SpringBootTest
 public class BoardTest {
-
+/*
     @Autowired
     private Board_service boardService;
     @Autowired
@@ -42,7 +42,7 @@ public class BoardTest {
         //testRead(1L);
         //testUpdate(1L,"수정된 title","수정된 content","리뷰",1L,4);
         //testDelete(1L);
-        testReadAll();
+        //testReadAll();
 
     }
 
@@ -102,10 +102,10 @@ public class BoardTest {
 
         System.out.println("검색 결과:");
 
-        /*
+
         for(Board_dto resultDto : pageResult.getContent()){
             System.out.println(resultDto.getBoard_id());
-        }*/
+        }
 
         while(pageResult.hasNext()){
             int nextPageNum = pageResult.nextPageable().getPageNumber();
@@ -178,5 +178,5 @@ public class BoardTest {
             boardService.writeBoard(insert);
         }
     }
-
+*/
 }

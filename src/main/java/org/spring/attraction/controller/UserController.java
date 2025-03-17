@@ -30,7 +30,7 @@ public class UserController {
             model.addAttribute("userRole", userRole);
 
         }
-        return "/user/login";
+        return "user/login";
     }
 
     @GetMapping("/myPage")
@@ -44,13 +44,13 @@ public class UserController {
 
         // View로 전달
         model.addAttribute("user", userDTO);
-        return "/user/myPage";
+        return "user/myPage";
     }
 
     @GetMapping("/save")
     public String save(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("userRole", userService.getUserRole(userDetails));
-        return "/user/save";
+        return "user/save";
     }
 
     @PostMapping("/save")
