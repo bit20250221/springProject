@@ -6,13 +6,14 @@
 
 ## 개발 환경
 
- - **programming Language**: 'JAVA 21'
- - 'Spring Boot 3.4.3'
- - 'JPA', 'Lombok', 'Spring Security'
- - **DataBase**: 'MySQL'
- - **Front End**: 'Thymeleaf', 'JavaScript'
- - **IDE** : 'IntelliJ IDEA 2024.1.4' , 'MySQL Workbench'
- - 'GitHub'
+ - **programming Language**: `JAVA 21`
+ - `Spring Boot 3.4.3`
+ - `JPA`, `Lombok`, `Spring Security`
+ - **DataBase**: `MySQL`
+ - **Front End**: `Thymeleaf`, `JavaScript`
+ - **IDE** : `IntelliJ IDEA 2024.1.4` , `MySQL Workbench`
+ - `GitHub`
+   
 ## 역할
 
 
