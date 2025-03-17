@@ -1,1 +1,19 @@
-# 관광지 예약 서비스
+# Tourist attraction reservation service
+
+
+## 주제
+
+
+## 개발 환경
+
+
+## 역할
+
+
+## 기능
+
+
+## Architecture 
+
+
+## API
