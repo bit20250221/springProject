@@ -3,6 +3,7 @@ package org.spring.attraction.controller;
 import lombok.RequiredArgsConstructor;
 import org.spring.attraction.dto.AttractionImgDto;
 import org.spring.attraction.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -27,15 +28,18 @@ import java.nio.file.Paths;
 public class AttractionImgController {
     private final UserService userService;
 
+    @Value("${app.img-dir}")
+    public String IMG_DIR_URL;
+
     @GetMapping("/files/{filename}")
     public ResponseEntity<Resource> getFile(@PathVariable String filename, @AuthenticationPrincipal UserDetails userDetails, Model model) {
         model.addAttribute("userRole", userService.getUserRole(userDetails));
         try {
-            Path filePath = Paths.get(AttractionImgDto.IMG_DIR_URL).resolve(filename).normalize();
+            Path filePath = Paths.get(IMG_DIR_URL).resolve(filename).normalize();
             Resource resource = new UrlResource(filePath.toUri());
 
             if (!resource.exists() || !resource.isReadable()) {
-                Path defaultFilePath = Paths.get(AttractionImgDto.IMG_DIR_URL).resolve("default.png").normalize();
+                Path defaultFilePath = Paths.get(IMG_DIR_URL).resolve("default.png").normalize();
                 Resource defaultResource = new UrlResource(defaultFilePath.toUri());
 
                 if (!defaultResource.exists() || !defaultResource.isReadable()) {

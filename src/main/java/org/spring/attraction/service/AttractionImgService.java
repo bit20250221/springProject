@@ -6,6 +6,7 @@ import org.spring.attraction.ENUM.AttractionMessage;
 import org.spring.attraction.dto.AttractionImgDto;
 import org.spring.attraction.entity.AttractionImg;
 import org.spring.attraction.repository.AttractionImgRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,8 @@ import java.util.UUID;
 public class AttractionImgService {
     private final AttractionImgRepository attractionImgRepository;
 
+    @Value("${app.img-dir}")
+    public String IMG_DIR_URL;
 
     public AttractionImgDto findByAttractionId(Long id) {
         AttractionImg attractionImg = attractionImgRepository.findByAttractionId(id).orElse(null);
@@ -31,7 +34,7 @@ public class AttractionImgService {
     }
 
     public AttractionImg save(MultipartFile multipartFile) throws IOException {
-        Path uploadPath = Paths.get(AttractionImgDto.IMG_DIR_URL);
+        Path uploadPath = Paths.get(IMG_DIR_URL);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
@@ -50,7 +53,7 @@ public class AttractionImgService {
 
     public AttractionMessage update(AttractionImgDto attractionImgDto) {
         try{
-            Path uploadPath = Paths.get(AttractionImgDto.IMG_DIR_URL);
+            Path uploadPath = Paths.get(IMG_DIR_URL);
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
@@ -59,7 +62,7 @@ public class AttractionImgService {
                 return AttractionMessage.getTypeById(-14);
             }
 
-            Path deleteFilePath = Paths.get(AttractionImgDto.IMG_DIR_URL).resolve(attractionImg.getUUID() + "_" + attractionImg.getName()).normalize();
+            Path deleteFilePath = Paths.get(IMG_DIR_URL).resolve(attractionImg.getUUID() + "_" + attractionImg.getName()).normalize();
             if (!Files.exists(deleteFilePath)) {
                 return AttractionMessage.getTypeById(-12);
             }
@@ -88,7 +91,7 @@ public class AttractionImgService {
             if(attractionImg == null) {
                 return AttractionMessage.getTypeById(-14);
             }
-            Path deleteFilePath = Paths.get(AttractionImgDto.IMG_DIR_URL).resolve(attractionImg.getUUID() + "_" + attractionImg.getName()).normalize();
+            Path deleteFilePath = Paths.get(IMG_DIR_URL).resolve(attractionImg.getUUID() + "_" + attractionImg.getName()).normalize();
             if (!Files.exists(deleteFilePath)) {
                 return AttractionMessage.getTypeById(-12);
             }

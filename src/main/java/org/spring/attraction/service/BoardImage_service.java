@@ -8,6 +8,7 @@ import org.spring.attraction.entity.Board;
 import org.spring.attraction.entity.BoardImage;
 import org.spring.attraction.repository.BoardImage_repository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +33,10 @@ public class BoardImage_service {
     public BoardImage_repository boardImageRepository;
 
     //나중에 구글 드라이브, AWS 등 외부 경로로 변경
-    public final String UPLOAD_PATH = "C:/upload/board_images/";
+    @Value("${app.upload-dir}")
+    public String UPLOAD_PATH;
+
+    //public final String UPLOAD_PATH = "C:/upload/board_images/";
     //모든 이미지 파일 읽기
     public List<BoardImage_dto> findAllImages() {
         List<BoardImage> images = boardImageRepository.findAll();

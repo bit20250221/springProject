@@ -19,3 +19,8 @@ spring:
         show-sql: true
         hibernate:
             ddl-auto: update
+
+# 도커 환경 최적화 위한 경로 설정
+app:
+    upload-dir: ./upload/board_images/
+    img-dir: ./upload/attraction_img/
