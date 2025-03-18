@@ -48,5 +48,5 @@
  4. cmd 창에서 docker-compose-extra-2.yml 파일이 있는 위치로 이동하고 'docker compose -f docker-compose-extra-2.yml up -d' 명령을 실행한다.
  5. 'localhost:8080'(기본값)으로 접속하면 서비스를 운영할 수 있다.
   - docker-compose-extra-2.yml 파일, init.sql 파일 변경으로 다양한 설정값을 적용할 수 있다.
-  - 초기 데이터는 src/main/resources/data/insert_data.sql 파일 참고(추후 수정 예정)
+  - 초기 데이터는 github의 src/main/resources/data/insert_data.sql 파일을 사용하거나, ./sql 폴더에 직접 insert_data.sql문을 작성해도 된다.
     
