@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: db_springproject
+      MYSQL_USER: user_springproject
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # 해당 폴더를 만들고 초기 유저 db 생성, 유저 생성, 권한 부여 sql문이 있어야한다. (환경변수 값과 일치, 권한 부여 목적)
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  springboot-app:
+    image: springweb3131/attraction_service
+    container_name: springboot_container
+
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_springproject?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: user_springproject
+      SPRING_DATASOURCE_PASSWORD: 1234
+      APP_UPLOAD_DIR: /external/board_images
+      APP_IMG_DIR: /external/attraction_img
+      #SPRING_CONFIG_LOCATION: classpath:/,file:/app/config/
+    volumes:
+      - ./board_images:/external/board_images
+      - ./attraction_img:/external/attraction_img
+      #- ./external-config/application.yml:/app/config/application.yml
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: >
+      bash -c "chmod -R 777 /external/board_images /external/attraction_img && java -jar app.jar"
+
+volumes:
+  mysql_data:
