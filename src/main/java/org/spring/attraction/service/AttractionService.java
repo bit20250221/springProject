@@ -62,6 +62,7 @@ public class AttractionService {
             try{
                 AttractionImg attractionImg = attractionImgService.save(attractionDto.getImg());
                 attractionImg.setAttraction(attraction);
+                attractionImgRepository.save(attractionImg);
                 log.info("save attractionImage ID"+attractionImg.getName());
             }catch (Exception e){
                 e.printStackTrace();
