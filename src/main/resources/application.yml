@@ -1,27 +1,27 @@
-# ?? ?? ??
+# Server Port
 server:
     port: 8080
 
-# database ?? ??
+# database Local, Docker Environment Variable
 spring:
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
         url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/db_springproject?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true}
-        username: ${SPRING_DATASOURCE_USERNAME:user_springproject}
+        username: ${SPRING_DATASOURCE_USERNAME:user_springProject}
         password: ${SPRING_DATASOURCE_PASSWORD:1234}
     thymeleaf:
         prefix: classpath:/templates/
         suffix: .html
         cache: false
 
-# spring data jpa ??
+# spring data jpa Setting
     jpa:
         database-platform: org.hibernate.dialect.MySQL8Dialect
         open-in-view: false
         show-sql: true
         hibernate:
             ddl-auto: update
-# 도커 환경 최적화 위한 경로 설정
+# File Path Local, Docker variable
 app:
     upload-dir: ${APP_UPLOAD_DIR:./upload/board_images/}
     img-dir: ${APP_IMG_DIR:./upload/attraction_img/}
