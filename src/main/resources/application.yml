@@ -25,3 +25,6 @@ spring:
 app:
     upload-dir: ${APP_UPLOAD_DIR:./upload/board_images/}
     img-dir: ${APP_IMG_DIR:./upload/attraction_img/}
+    sql:
+        local: ${APP_IS_LOCAL:yes}
+        filepath: ${APP_SQL_FILE_PATH:file:data/insert_data.sql}

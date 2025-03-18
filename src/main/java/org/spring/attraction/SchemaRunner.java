@@ -3,9 +3,12 @@ package org.spring.attraction;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -13,6 +16,9 @@ import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Log4j2
 @Component
@@ -20,6 +26,11 @@ import java.nio.charset.StandardCharsets;
 public class SchemaRunner implements ApplicationRunner {
 
     private final JdbcTemplate jdbcTemplate;
+
+    @Value("${app.sql.filepath}")
+    private String SqlFilePath;
+    @Value("${app.sql.local}")
+    private String Local;
 
     @Override
     public void run(ApplicationArguments args){
@@ -89,9 +100,20 @@ public class SchemaRunner implements ApplicationRunner {
 
     //이미 데이터 존재하면 당연히 false 출력하고 나머지 데이터 입력 안됨
     public boolean insertInitData() {
-        ClassPathResource resource = new ClassPathResource("data/insert_data.sql");
+
+        String sql;
+        Path externalFilePath = Paths.get(SqlFilePath);
+        Resource resource;
+
         try {
-            String sql = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+            if (Local.compareTo("yes")!=0&&Files.exists(externalFilePath)) {
+                log.info("외부 SQL 파일 사용: {}", SqlFilePath);
+                resource = new FileSystemResource(SqlFilePath);
+            } else {
+                log.warn("외부 SQL 파일 없음. 기본 SQL 파일 사용: src/main/resources/data/insert_data.sql");
+                resource = new ClassPathResource("data/insert_data.sql");
+            }
+            sql = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
             String[] statements = sql.split(";");
             for(String statement : statements) {
                 statement = statement.trim();

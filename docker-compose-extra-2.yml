@@ -12,7 +12,7 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      # 해당 폴더를 만들고 초기 유저 db 생성, 유저 생성, 권한 부여 sql문이 있어야한다. (환경변수 값과 일치, 권한 부여 목적)
+      # 해당 폴더에 초기 유저 db 생성, 유저 생성, 권한 부여 sql문이 있어야한다. (환경변수 값과 일치, 권한 부여 목적)
       - ./mysql-init:/docker-entrypoint-initdb.d
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
@@ -21,13 +21,16 @@ services:
       retries: 5
 
   springboot-app:
-    image: springweb3131/attraction_service
+    image: springweb3131/attraction_service:v2.0
     container_name: springboot_container
 
     ports:
       - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      # 로컬 데이터 사용 안하고 외부 데이터 이용할 시 no로 변경
+      APP_IS_LOCAL: yes
+      APP_SQL_FILE_PATH: file:/external/sql/insert_data.sql
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_springproject?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: user_springproject
       SPRING_DATASOURCE_PASSWORD: 1234
@@ -37,6 +40,7 @@ services:
     volumes:
       - ./board_images:/external/board_images
       - ./attraction_img:/external/attraction_img
+      - ./sql:/external/sql
       #- ./external-config/application.yml:/app/config/application.yml
     depends_on:
       mysql:
