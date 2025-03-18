@@ -1,6 +1,7 @@
 package org.spring.attraction.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.spring.attraction.dto.AttractionImgDto;
 import org.spring.attraction.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,7 @@ import java.nio.file.Paths;
 
 @Controller
 @RequiredArgsConstructor
+@Log4j2
 public class AttractionImgController {
     private final UserService userService;
 
@@ -36,10 +38,12 @@ public class AttractionImgController {
         model.addAttribute("userRole", userService.getUserRole(userDetails));
         try {
             Path filePath = Paths.get(IMG_DIR_URL).resolve(filename).normalize();
+            log.info("Get file: {}", filePath.toString());
             Resource resource = new UrlResource(filePath.toUri());
 
             if (!resource.exists() || !resource.isReadable()) {
                 Path defaultFilePath = Paths.get(IMG_DIR_URL).resolve("default.png").normalize();
+                log.info("Get file: {}", defaultFilePath.toString());
                 Resource defaultResource = new UrlResource(defaultFilePath.toUri());
 
                 if (!defaultResource.exists() || !defaultResource.isReadable()) {

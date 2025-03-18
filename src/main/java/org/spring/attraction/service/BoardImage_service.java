@@ -64,7 +64,7 @@ public class BoardImage_service {
     //게시글 내 이미지 파일 입력(DTO 내 MultipartFile 정보를 활용하여 직접 저장)
     public boolean saveImageFile(Board board,BoardImage_dto boardImageDto,MultipartFile multipartFile){
 
-        String realUploadPath = UPLOAD_PATH + boardImageDto.getUUIDName();
+        String realUploadPath = UPLOAD_PATH+ "/" + boardImageDto.getUUIDName();
         MultipartFile uploadFile=multipartFile;
         log.info("real upload path: " + realUploadPath);
         File file = new File(realUploadPath);

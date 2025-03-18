@@ -1,13 +1,12 @@
 package org.spring.attraction.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.spring.attraction.ENUM.AttractionMessage;
 import org.spring.attraction.dto.AttractionImgDto;
 import org.spring.attraction.entity.AttractionImg;
 import org.spring.attraction.repository.AttractionImgRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class AttractionImgService {
@@ -28,6 +28,7 @@ public class AttractionImgService {
     public AttractionImgDto findByAttractionId(Long id) {
         AttractionImg attractionImg = attractionImgRepository.findByAttractionId(id).orElse(null);
         if(attractionImg == null) {
+            log.info("이미지가 존재하지 않음");
             return null;
         }
         return AttractionImgDto.toDto(attractionImg);
@@ -41,10 +42,11 @@ public class AttractionImgService {
         String fileUUID = UUID.randomUUID().toString();
         String fileName = multipartFile.getOriginalFilename();
         Path filePath = uploadPath.resolve(fileUUID + "_" + fileName);
-
+        log.info("파일 경로: "+filePath.toAbsolutePath());
         Files.copy(multipartFile.getInputStream(), filePath);
 
         AttractionImg attractionImg = new AttractionImg();
+        log.info(fileName);
         attractionImg.setName(fileName);
         attractionImg.setUUID(fileUUID);
 
@@ -54,6 +56,7 @@ public class AttractionImgService {
     public AttractionMessage update(AttractionImgDto attractionImgDto) {
         try{
             Path uploadPath = Paths.get(IMG_DIR_URL);
+            log.info("파일 경로: "+uploadPath.toAbsolutePath());
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }

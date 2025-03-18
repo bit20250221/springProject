@@ -17,7 +17,7 @@ public class AttractionImg {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(name="uuid", nullable = false)
     private String UUID;
 
     @OneToOne

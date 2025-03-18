@@ -1,6 +1,7 @@
 package org.spring.attraction.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.spring.attraction.ENUM.AttractionMessage;
 import org.spring.attraction.dto.*;
 import org.spring.attraction.repository.AttractionImgRepository;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j2
 @Controller
 @RequestMapping("/attraction")
 @RequiredArgsConstructor
@@ -116,6 +118,8 @@ public class AttractionController {
             String attractionImgUrl = "/files/" + attractionImgDto.getUUID() + "_" + attractionImgDto.getName();
 
             model.addAttribute("attractionImgUrl", attractionImgUrl);
+        }else{
+            log.info("이미지가 존재하지 않습니다!!");
         }
 
         model.addAttribute("attractionDto", attractionDto);
@@ -141,6 +145,8 @@ public class AttractionController {
             String attractionImgUrl = "/files/" + attractionImgDto.getUUID() + "_" + attractionImgDto.getName();
 
             model.addAttribute("attractionImgUrl", attractionImgUrl);
+        }else{
+            log.info("이미지가 존재하지 않습니다.");
         }
 
         model.addAttribute("attractionDto", attractionDto);
