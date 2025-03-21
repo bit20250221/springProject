@@ -13,10 +13,11 @@
  - **DataBase**: `MySQL`
  - **Front End**: `Thymeleaf`, `JavaScript`
  - **IDE** : `IntelliJ IDEA` , `MySQL Workbench`
- - `GitHub`
+ - `GitHub`, `Docker`, `Docker compose`
 
    
 ## 역할
+
 
 
 ## 기능
