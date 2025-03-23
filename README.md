@@ -43,5 +43,8 @@
 ## DB Diagram
 
 
+![ERD_model](https://github.com/user-attachments/assets/ea0b7880-f9f1-4f8b-9521-7323169d1713)
+
+
 ## API
 
